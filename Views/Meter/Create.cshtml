@@ -1,0 +1,78 @@
+﻿
+@{
+
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Meter Reading | SEC</title>
+    <link href="~/Content/Registeration.css" rel="stylesheet" />
+
+</head>
+<body>
+
+    <section class="vh-100 gradient-custom;" ; style="font-family: Verdana, Geneva, Tahoma, sans-serif; background-color: #d3e1e2;">
+        <div class="container py-5 h-100">
+            <div class="row justify-content-center align-items-center h-100">
+                <div class="col-12 col-lg-9 col-xl-7">
+                    <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">
+                        <div class="card-body p-4 p-md-5">
+                            <h2 class="mb-4 pb-2 pb-md-0 mb-md-5">Register Meter Reading</h2>
+                            <form>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-4">
+
+                                        <div class="form-outline">
+                                            <input type="number" id="cusmeter" class="form-control form-control-lg" />
+                                            <label class="form-label" for="cusmeter">Customer ID</label>
+                                        </div>
+
+                                    </div>
+                                    
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-4 d-flex align-items-center">
+
+                                        <div class="form-outline">
+                                            <input type="number" class="form-control form-control-lg" id="readingValue" />
+                                            <label for="readingValue" class="form-label">Reading Value (Kw/H)</label>
+                                        </div>
+
+                                    </div>
+                                   
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-4 pb-2">
+
+                                        <div class="form-outline datepicker w-100">
+                                            <input type="date" class="form-control form-control-lg" id="readingDate" />
+                                            <label for="readingDate" class="form-label">Reading Date</label>
+                                        </div>
+
+
+                                    </div>
+                                    
+                                </div>
+                                                                
+
+                                <div class="mt-4 pt-2">
+                                    <input class="btn btn-dark btn-lg btn-block" type="submit" value="Save" />
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+</body>
+</html>
