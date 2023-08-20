@@ -10,19 +10,27 @@
 
     <link href="https://fonts.googleapis.com/css?family=Source+Serif+Pro:400,600&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="fonts/icomoon/style.css">
 
-    <link rel="stylesheet" href="css/owl.carousel.min.css">
+    <link href="~/NewLayoutMybe/06/fonts/icomoon/style.css" rel="stylesheet" />
+
+
+    <link href="~/NewLayoutMybe/06/css/owl.carousel.min.css" rel="stylesheet" />
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="css/bootstrap.min.css">
+
+    <link href="~/NewLayoutMybe/06/css/bootstrap.min.css" rel="stylesheet" />
 
     <!-- Style -->
-    <link rel="stylesheet" href="css/style.css">
 
-    <title>Sidebar #1</title>
+    <link href="~/NewLayoutMybe/06/css/style.css" rel="stylesheet" />
+
+    <title>@ViewBag.Title EBS | SEC</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+
+
 </head>
-<body>
+<body style="font-family: Verdana, Geneva, Tahoma, sans-serif; background-color: #EEF1F6">
 
 
     <aside class="sidebar">
@@ -50,6 +58,7 @@
             </div>
             <div class="nav-menu">
                 <ul>
+
                     <li class="active"><a href="#" class="d-flex align-items-center"><span class="wrap-icon icon-home2 mr-3"></span><span class="menu-text">Home</span></a></li>
                     <li><a href="#" class="d-flex align-items-center"><span class="wrap-icon icon-videocam mr-3"></span><span class="menu-text">Videos</span></a></li>
                     <li><a href="#" class="d-flex align-items-center"><span class="wrap-icon icon-book mr-3"></span><span class="menu-text">Books</span></a></li>
@@ -63,11 +72,27 @@
     </aside>
 
 
+    <script src="~/NewLayoutMybe/06/js/jquery-3.3.1.min.js"></script>
+   
+    <script src="~/NewLayoutMybe/06/js/popper.min.js"></script>
+
+    <script src="~/NewLayoutMybe/06/js/bootstrap.min.js"></script>
+    
+    <script src="~/NewLayoutMybe/06/js/main.js"></script>
 
 
-    <script src="js/jquery-3.3.1.min.js"></script>
-    <script src="js/popper.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/main.js"></script>
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer style="text-align:center; ">
+            <p>&copy; @DateTime.Now.Year - Somali Electric Company</p>
+        </footer>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+
+
 </body>
 </html>
