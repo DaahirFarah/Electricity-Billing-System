@@ -1,8 +1,105 @@
 ﻿
 @{
-    ViewBag.Title = "Create";
     Layout = "~/Views/Shared/_Layout2.cshtml";
 }
 
-<h2>Create</h2>
+<!DOCTYPE html>
 
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Record New Payment | SEC</title>
+    <link href="~/Content/Registeration.css" rel="stylesheet" />
+
+</head>
+<body>
+
+    <section class="vh-100 gradient-custom;" ; style="font-family: Verdana, Geneva, Tahoma, sans-serif; ">
+        <div class="container py-5 h-100">
+            <div class="row justify-content-center align-items-center h-100">
+
+                <div class="col-12 col-lg-9 col-xl-7">
+                    <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">
+
+                        <div class="card-body p-4 p-md-5">
+                            <h2 class="mb-4 pb-2 pb-md-0 mb-md-5"><strong>Record New Payment</strong></h2>
+                            <form>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-4">
+
+                                        <div class="form-outline">
+                                            <input type="text" id="cusID" class="form-control form-control-lg" />
+                                            <label class="form-label" for="cusID">Customer ID</label>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-md-6 mb-4">
+
+                                        <div class="form-outline">
+                                            <input type="text" id="invID" class="form-control form-control-lg" />
+                                            <label class="form-label" for="invID">Invoice ID</label>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-4 d-flex align-items-center">
+
+                                        <div class="form-outline">
+                                            <input type="text" class="form-control form-control-lg" id="payAmount" />
+                                            <label for="payAmount" class="form-label">Payment Amount ($)</label>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="col-md-6 mb-4 d-flex align-items-center">
+
+
+                                        <div class="form-outline">
+                                            <input type="text" class="form-control form-control-lg" id="payMethod" />
+                                            <label for="payMethod" class="form-label">Payment Method</label>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="row", style="align-content:center">
+                                    <div class="col-md-6 mb-4 pb-2">
+
+                                        <div class="form-outline">
+                                            <input type="date" id="payDate" class="form-control form-control-lg" />
+                                            <label class="form-label" for="payDate">Payment Date</label>
+                                        </div>
+
+                                    </div>
+                                   
+                                </div>
+
+                               
+                                <div class="row">
+                                    <div class="col-md-6 mb-4 pb-2">
+                                        <input type="button" value="Create" class="btn btn-primary btn-lg btn-block" />
+                                        @*<input class="btn btn-primary btn-lg btn-block" type="submit" value="Save" />*@
+                                    </div>
+
+
+                                    <div class="col-md-6 mb-4 pb-2">
+                                        @Html.ActionLink("Back", "Index", "Payment", null, new { @class = "btn btn-secondary btn-lg btn-block" })
+                                    </div>
+
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+</body>
+</html>
