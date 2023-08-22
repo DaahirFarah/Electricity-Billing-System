@@ -1,4 +1,5 @@
-﻿@{
+﻿
+@{
     Layout = "~/Views/Shared/_Layout2.cshtml";
 }
 
@@ -7,61 +8,131 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <title>Record Meter Reading | SEC</title>
+    <title>Create Invoice | SEC</title>
     <link href="~/Content/Registeration.css" rel="stylesheet" />
 
 </head>
 <body>
 
-    <section class="vh-100 gradient-custom;" ; style="font-family: Verdana, Geneva, Tahoma, sans-serif;">
+    <section class="vh-100 gradient-custom;" ; style="font-family: Verdana, Geneva, Tahoma, sans-serif; ">
         <div class="container py-5 h-100">
             <div class="row justify-content-center align-items-center h-100">
+
                 <div class="col-12 col-lg-9 col-xl-7">
                     <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">
+
                         <div class="card-body p-4 p-md-5">
-                            <h2 class="mb-4 pb-2 pb-md-0 mb-md-5"><strong>Record Meter Reading</strong></h2>
+                            <h2 class="mb-4 pb-2 pb-md-0 mb-md-5"><strong>Create Invoice</strong></h2>
                             <form>
 
                                 <div class="row">
                                     <div class="col-md-6 mb-4">
 
                                         <div class="form-outline">
-                                            <input type="number" id="cusmeter" class="form-control form-control-lg" />
-                                            <label class="form-label" for="cusmeter">Customer ID</label>
+                                            <input type="text" id="firstName" class="form-control form-control-lg" />
+                                            <label class="form-label" for="firstName">First Name</label>
                                         </div>
 
                                     </div>
+                                    <div class="col-md-6 mb-4">
 
+                                        <div class="form-outline">
+                                            <input type="text" id="MidName" class="form-control form-control-lg" />
+                                            <label class="form-label" for="MidName">Middle Name</label>
+                                        </div>
+
+                                    </div>
                                 </div>
 
                                 <div class="row">
                                     <div class="col-md-6 mb-4 d-flex align-items-center">
 
                                         <div class="form-outline">
-                                            <input type="number" class="form-control form-control-lg" id="readingValue" />
-                                            <label for="readingValue" class="form-label">Reading Value (Kw/H)</label>
+                                            <input type="text" class="form-control form-control-lg" id="lastName" />
+                                            <label for="lastName" class="form-label">Last Name</label>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="col-md-6 mb-4 d-flex align-items-center">
+
+
+                                        <div class="form-outline">
+                                            <input type="text" class="form-control form-control-lg" id="Address" />
+                                            <label for="Address" class="form-label">Address</label>
                                         </div>
 
                                     </div>
 
                                 </div>
+
+
 
                                 <div class="row">
                                     <div class="col-md-6 mb-4 pb-2">
 
-                                        <div class="form-outline datepicker w-100">
-                                            <input type="date" class="form-control form-control-lg" id="readingDate" />
-                                            <label for="readingDate" class="form-label">Reading Date</label>
+                                        <div class="form-outline">
+                                            <input type="tel" id="phoneNumber" class="form-control form-control-lg" />
+                                            <label class="form-label" for="phoneNumber">Phone Number</label>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-md-6 mb-4 pb-2">
+
+                                        <div class="form-outline">
+                                            <input type="tel" id="phoneNumber" class="form-control form-control-lg" />
+                                            <label class="form-label" for="phoneNumber">Phone Number (optional)</label>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <!--
+                                    <div class="row">
+                                        <div class="col-12">
+
+                                            <select class="select form-control-lg">
+                                                <option value="1" disabled>Choose option</option>
+                                                <option value="2">Subject 1</option>
+                                                <option value="3">Subject 2</option>
+                                                <option value="4">Subject 3</option>
+                                            </select>
+                                            <label class="form-label select-label">Choose option</label>
+
+                                        </div>
+                                    </div>
+                                -->
+                                @*<div class="col-md-6 mb-4">
+
+                                        <h6 class="mb-2 pb-1">gender: </h6>
+
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="inlineradiooptions" id="femalegender"
+                                                   value="option2" checked />
+                                            <label class="form-check-label" for="femalegender">female</label>
+                                        </div>
+
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="inlineradiooptions" id="malegender"
+                                                   value="option1" />
+                                            <label class="form-check-label" for="malegender">male</label>
                                         </div>
 
 
+
+                                    </div>*@
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-4 pb-2">
+                                        <input type="button" value="Create" class="btn btn-primary btn-lg btn-block" />
+                                        @*<input class="btn btn-primary btn-lg btn-block" type="submit" value="Save" />*@
                                     </div>
 
-                                </div>
 
+                                    <div class="col-md-6 mb-4 pb-2">
+                                        @Html.ActionLink("Back", "Index", "Invoice", null, new { @class = "btn btn-secondary btn-lg btn-block" })
+                                    </div>
 
-                                <div class="mt-4 pt-2">
-                                    <input class="btn btn-dark btn-lg btn-block" type="submit" value="Save" />
                                 </div>
 
                             </form>
