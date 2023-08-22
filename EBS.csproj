@@ -126,6 +126,7 @@
     <Compile Include="Controllers\InvoiceController.cs" />
     <Compile Include="Controllers\PaymentController.cs" />
     <Compile Include="Controllers\RateController.cs" />
+    <Compile Include="Controllers\ReceiptController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -329,6 +330,7 @@
     <Content Include="Views\Payment\Index.cshtml" />
     <Content Include="Views\Payment\Create.cshtml" />
     <Content Include="Views\Payment\Edit.cshtml" />
+    <Content Include="Views\Receipt\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
