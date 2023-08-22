@@ -8,22 +8,22 @@ using System.Xml.Linq;
 
 namespace EBS.Controllers
 {
-    public class MeterController : Controller
+    public class InvoiceController : Controller
     {
-        // GET: Meter
+        // GET: Invoice
         public ActionResult Index()
         {
             return View();
         }
 
-        //GET: Register Meter
+        //GET: Register Invoice
         [HttpGet]
         public ActionResult Create()
         {
             return View();
         }
 
-        //SET: Register Meter
+        //SET: Register Invoice
         [ValidateAntiForgeryToken]
         [HttpPost]
         [Display(Name = "Create")]
@@ -33,7 +33,7 @@ namespace EBS.Controllers
         }
 
 
-        //GET: Update Meter
+        //GET: Update Invoice
         public ActionResult Edit()
         {
             return View();
