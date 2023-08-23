@@ -1,6 +1,7 @@
 ﻿
 @{
-  
+    Layout = "~/Views/Shared/_LayoutLogin.cshtml";
+
     ViewBag.Title = "Login | Somali Electric";
 }
 
@@ -39,8 +40,8 @@
 
                                     <div class="pt-1 mb-4">
                                         @* this is for smooth designing. change the action method to login so that the user can be authenticated*@
-                                        @Html.ActionLink("Login", "Index", "Home", null, new { @class = "btn btn-dark btn-lg btn-block" })
-                                      
+                                        @Html.ActionLink("Login", "Index", "Customer", null, new { @class = "btn btn-primary btn-lg btn-block" })
+
                                     </div>
 
                                 </form>

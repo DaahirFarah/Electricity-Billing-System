@@ -1,0 +1,83 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+
+    <link rel="icon" href="~/Assets/_e407f44c-5341-4a3d-b20e-e7ae5a10e34e.jpg" type="image/x-icon">
+    <link rel="shortcut icon" href="~/Assets/_e407f44c-5341-4a3d-b20e-e7ae5a10e34e.jpg" type="image/x-icon">
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400&display=swap" rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500&display=swap" rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css?family=Source+Serif+Pro:400,600&display=swap" rel="stylesheet">
+
+
+    <link href="~/NewLayoutMybe/06/fonts/icomoon/style.css" rel="stylesheet" />
+
+
+    <link href="~/NewLayoutMybe/06/css/owl.carousel.min.css" rel="stylesheet" />
+
+    <!-- Bootstrap CSS -->
+
+    <link href="~/NewLayoutMybe/06/css/bootstrap.min.css" rel="stylesheet" />
+
+    <!-- Style -->
+
+    <link href="~/NewLayoutMybe/06/css/style.css" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="~/lib/datatables/css/dataTables.bootstrap4.css">
+
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+
+    <title>Sign In | SEC</title>
+
+
+
+</head>
+<body style="font-family: Verdana, Geneva, Tahoma, sans-serif; background-color: #EEF1F6">
+
+
+
+
+    <script src="~/NewLayoutMybe/06/js/jquery-3.3.1.min.js"></script>
+
+    <script src="~/NewLayoutMybe/06/js/popper.min.js"></script>
+
+    <script src="~/NewLayoutMybe/06/js/bootstrap.min.js"></script>
+
+    <script src="~/NewLayoutMybe/06/js/main.js"></script>
+
+
+    <div class="container body-content">
+        @RenderBody()
+
+
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+
+    <script type="text/javascript" src="~/lib/datatables/js/jquery.dataTables.js"></script>
+    <script type="text/javascript" src="~/lib/datatables/js/dataTables.bootstrap4.js"></script>
+
+    <script>const menuLinks = document.querySelectorAll('.nav-menu a');
+
+        menuLinks.forEach(link => {
+
+            link.addEventListener('click', () => {
+
+                menuLinks.forEach(link => link.parentElement.classList.remove('active'));
+
+                link.parentElement.classList.add('active');
+
+            });
+
+        });</script>
+
+</body>
+</html>
