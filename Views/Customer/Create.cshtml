@@ -1,4 +1,5 @@
 ﻿
+
 @model EBS.viewModels.customerVM
 
 @{
@@ -16,11 +17,12 @@
 </head>
 <body>
 
-    @using (Html.BeginForm())
+    @using (Html.BeginForm("Create", "Customer", FormMethod.Post))
     {
         @Html.AntiForgeryToken()
+        
 
-        <section class="vh-100 gradient-custom;" ; style="font-family: Verdana, Geneva, Tahoma, sans-serif; ">
+        <section class="vh-100 gradient-custom;" style="font-family: Verdana, Geneva, Tahoma, sans-serif; ">
             <div class="container py-5 h-100">
                 <div class="row justify-content-center align-items-center h-100">
 
@@ -29,27 +31,25 @@
 
                             <div class="card-body p-4 p-md-5">
                                 <h2 class="mb-4 pb-2 pb-md-0 mb-md-5"><strong>Customer Registeration</strong></h2>
-                                <form>
-
+                               
+                                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                                     <div class="row">
                                         <div class="col-md-6 mb-4">
 
-                                            <div class="form-outline">
+                                            <div class="form-outline form-group">
 
                                                 @Html.EditorFor(model => model.cFirstName, new { htmlAttributes = new { @class = "form-control form-control-lg" } })
-
-                                                @*<input type="text" id="firstName" class="form-control form-control-lg" />*@
-                                                <label class="form-label" for="firstName">First Name</label>
-
+                                                @Html.LabelFor(m => m.cFirstName )
                                                 @Html.ValidationMessageFor(model => model.cFirstName, "", new { @class = "text-danger" })
                                             </div>
 
                                         </div>
                                         <div class="col-md-6 mb-4">
 
-                                            <div class="form-outline">
-                                                <input type="text" id="MidName" class="form-control form-control-lg" />
-                                                <label class="form-label" for="MidName">Middle Name</label>
+                                            <div class="form-outline form-group">
+                                                @Html.EditorFor(model => model.cMidName, new { htmlAttributes = new { @class = "form-control form-control-lg" } })
+                                                @Html.LabelFor(model => model.cMidName)
+                                                @Html.ValidationMessageFor(model => model.cMidName, "", new { @class = "text-danger" })
                                             </div>
 
                                         </div>
@@ -58,9 +58,10 @@
                                     <div class="row">
                                         <div class="col-md-6 mb-4 d-flex align-items-center">
 
-                                            <div class="form-outline">
-                                                <input type="text" class="form-control form-control-lg" id="lastName" />
-                                                <label for="lastName" class="form-label">Last Name</label>
+                                            <div class="form-outline form-group">
+                                                @Html.EditorFor(model => model.cLastName, new { htmlAttributes = new { @class = "form-control form-control-lg" } })
+                                                @Html.LabelFor(model => model.cLastName)
+                                                @Html.ValidationMessageFor(model => model.cLastName, "", new { @class = "text-danger" })
                                             </div>
 
                                         </div>
@@ -68,9 +69,10 @@
                                         <div class="col-md-6 mb-4 d-flex align-items-center">
 
 
-                                            <div class="form-outline">
-                                                <input type="text" class="form-control form-control-lg" id="Address" />
-                                                <label for="Address" class="form-label">Address</label>
+                                            <div class="form-outline form-group">
+                                                @Html.EditorFor(model => model.cAddress, new { htmlAttributes = new { @class = "form-control form-control-lg" } })
+                                                @Html.LabelFor(model => model.cAddress)
+                                                @Html.ValidationMessageFor(model => model.cAddress, "", new { @class = "text-danger" })
                                             </div>
 
                                         </div>
@@ -82,71 +84,35 @@
                                     <div class="row">
                                         <div class="col-md-6 mb-4 pb-2">
 
-                                            <div class="form-outline">
-                                                <input type="tel" id="phoneNumber" class="form-control form-control-lg" />
-                                                <label class="form-label" for="phoneNumber">Phone Number</label>
+                                            <div class="form-outline form-group">
+                                                @Html.EditorFor(model => model.cNumber, new { htmlAttributes = new { @class = "form-control form-control-lg" } })
+                                                @Html.LabelFor(model => model.cNumber)
+                                                @Html.ValidationMessageFor(model => model.cNumber, "", new { @class = "text-danger" })
                                             </div>
 
                                         </div>
                                         <div class="col-md-6 mb-4 pb-2">
 
-                                            <div class="form-outline">
-                                                <input type="tel" id="phoneNumber" class="form-control form-control-lg" />
-                                                <label class="form-label" for="phoneNumber">Phone Number (optional)</label>
+                                            <div class="form-outline form-group">
+                                                @Html.EditorFor(model => model.cNumberOp, new { htmlAttributes = new { @class = "form-control form-control-lg" } })
+                                                @Html.LabelFor(model => model.cNumberOp)
+                                                @Html.ValidationMessageFor(model => model.cNumberOp, "", new { @class = "text-danger" })
                                             </div>
 
                                         </div>
                                     </div>
 
-                                    <!--
-                                        <div class="row">
-                                            <div class="col-12">
-
-                                                <select class="select form-control-lg">
-                                                    <option value="1" disabled>Choose option</option>
-                                                    <option value="2">Subject 1</option>
-                                                    <option value="3">Subject 2</option>
-                                                    <option value="4">Subject 3</option>
-                                                </select>
-                                                <label class="form-label select-label">Choose option</label>
-
-                                            </div>
-                                        </div>
-                                    -->
-                                    @*<div class="col-md-6 mb-4">
-
-                                            <h6 class="mb-2 pb-1">gender: </h6>
-
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="inlineradiooptions" id="femalegender"
-                                                       value="option2" checked />
-                                                <label class="form-check-label" for="femalegender">female</label>
-                                            </div>
-
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="inlineradiooptions" id="malegender"
-                                                       value="option1" />
-                                                <label class="form-check-label" for="malegender">male</label>
-                                            </div>
-
-
-
-                                        </div>*@
-
                                     <div class="row">
                                         <div class="col-md-6 mb-4 pb-2">
-                                            <input type="button" value="Create" class="btn btn-primary btn-lg btn-block" />
-                                            @*<input class="btn btn-primary btn-lg btn-block" type="submit" value="Save" />*@
+                                            <button type="submit" value="Create" class="btn btn-primary btn-lg btn-block">Register</button>
                                         </div>
-
-
                                         <div class="col-md-6 mb-4 pb-2">
                                             @Html.ActionLink("Back", "Index", "Customer", null, new { @class = "btn btn-secondary btn-lg btn-block" })
                                         </div>
-
                                     </div>
 
-                                </form>
+                                    
+                                
                             </div>
                         </div>
                     </div>

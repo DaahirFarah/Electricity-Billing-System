@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Configuration;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Reflection;
@@ -23,7 +24,8 @@ namespace EBS.Controllers
         }
 
         //GET: Register Customer
-     
+
+        [HttpGet]
         public ActionResult Create()
         {
             return View();
@@ -32,8 +34,7 @@ namespace EBS.Controllers
         //SET: Register Customer
         [ValidateAntiForgeryToken]
         [HttpPost]
-        [Display(Name = "Create")]
-        public ActionResult CreateConfirm(customerVM model)
+        public ActionResult Create(customerVM model)
         {
             if (ModelState.IsValid)
             {
@@ -129,8 +130,17 @@ namespace EBS.Controllers
                     command.Parameters.AddWithValue("@cMidName", model.cMidName);
                     command.Parameters.AddWithValue("@cLastName", model.cLastName);
                     command.Parameters.AddWithValue("@cAddress", model.cAddress);
-                    command.Parameters.AddWithValue("@cNumber", model.cNumber);
-                    command.Parameters.AddWithValue("@cNumberOp", model.cNumberOp);
+                    command.Parameters.AddWithValue("@cNumber", SqlDbType.Int).Value = model.cNumber;
+                    if (string.IsNullOrWhiteSpace(model.cNumberOp))
+                    {
+                        command.Parameters.AddWithValue("@cNumberOp", DBNull.Value);
+                    }
+                    else
+                    {
+                        command.Parameters.AddWithValue("@cNumberOp", model.cNumberOp);
+                    }
+
+                    command.ExecuteNonQuery();
 
                     command.ExecuteNonQuery();
                 }
