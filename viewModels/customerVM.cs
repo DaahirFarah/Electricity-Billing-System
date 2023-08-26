@@ -7,24 +7,24 @@ using System.Web;
 
 namespace EBS.viewModels
 {
-    public class cutomerVM
+    public class customerVM
     {
         [Key]
         [Required]
         [Display(Name = "Customer ID")]
-        public string cID { get; set; }
+        public int cID { get; set; }
 
         [Required(ErrorMessage = "Customer First name is required.")]
         [Display(Name = "Customer First Name")]
-        public string cFirstName { get;}
+        public string cFirstName { get; set; }
 
         [Required(ErrorMessage = "Customer Middle name is required.")]
         [Display(Name = "Customer Middle Name")]
-        public string cMidName { get; }
+        public string cMidName { get; set; }
 
         [Required(ErrorMessage = "Customer Last name is required.")]
         [Display(Name = "Customer Last Name")]
-        public string cLastName { get; }
+        public string cLastName { get; set; }
 
         [Required(ErrorMessage = "Customer Address is required.")]
         [Display(Name = "Customer Address")]
@@ -37,7 +37,7 @@ namespace EBS.viewModels
 
         [Display(Name = "Customer Phone Number (Optional)")]
         [RegularExpression(@"^\d{10}$", ErrorMessage = "Phone Number Should be 10 digits starting 061.")]
-        public int cNumberOp { get; set; }
+        public string cNumberOp { get; set; }
 
 
     }

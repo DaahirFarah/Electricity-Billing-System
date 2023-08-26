@@ -132,6 +132,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="viewModels\customerVM.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\_e407f44c-5341-4a3d-b20e-e7ae5a10e34e.jpg" />
