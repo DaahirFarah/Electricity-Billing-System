@@ -30,18 +30,18 @@ namespace EBS.Controllers
         }
 
         //SET: Register Customer
-        //[ValidateAntiForgeryToken]
-        //[HttpPost]
-        //[Display(Name = "Create")]
-        //public ActionResult CreateConfirm(customerVM model)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        InsertCustomer(model);
-        //        return RedirectToAction("Index");
-        //    }
-        //    return View(model);
-        //}
+        [ValidateAntiForgeryToken]
+        [HttpPost]
+        [Display(Name = "Create")]
+        public ActionResult CreateConfirm(customerVM model)
+        {
+            if (ModelState.IsValid)
+            {
+                InsertCustomer(model);
+                return RedirectToAction("Index");
+            }
+            return View(model);
+        }
 
 
         ////GET: Update Customer
@@ -114,8 +114,28 @@ namespace EBS.Controllers
             return customers;
         }
 
+        // Inserting Customers To the Database
 
+        private void InsertCustomer(customerVM model)
+        {
+            using (SqlConnection connection = new SqlConnection(SecConn))
+            {
+                connection.Open();
 
+                string query = "INSERT INTO CustomerTbl (cFirstName, cMidName, cLastName, cAddress, cNumber, cNumberOp) VALUES (@cFirstName, @cMidName, @cLastName, @cAddress, @cNumber, @cNumberOp)";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@cFirstName", model.cFirstName);
+                    command.Parameters.AddWithValue("@cMidName", model.cMidName);
+                    command.Parameters.AddWithValue("@cLastName", model.cLastName);
+                    command.Parameters.AddWithValue("@cAddress", model.cAddress);
+                    command.Parameters.AddWithValue("@cNumber", model.cNumber);
+                    command.Parameters.AddWithValue("@cNumberOp", model.cNumberOp);
+
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
 
 
     }
