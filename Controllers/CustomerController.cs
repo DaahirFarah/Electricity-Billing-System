@@ -55,7 +55,7 @@ namespace EBS.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Display(Name = "Edit")]
-        public ActionResult EditConfirmConfirm(customerVM model)
+        public ActionResult Edit(customerVM model)
         {
             if (ModelState.IsValid)
             {
@@ -191,6 +191,7 @@ namespace EBS.Controllers
                 string query = "UPDATE CustomerTbl SET cFirstName = @cFirstName, cMidName = @cMidName, cLastName = @cLastName, cAddress = @cAddress, cNumber = @cNumber, cNumberOp = @cNumberOp WHERE cID = @cID";
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
+                    command.Parameters.AddWithValue("@cID", model.cID);
                     command.Parameters.AddWithValue("@cFirstName", model.cFirstName);
                     command.Parameters.AddWithValue("@cMidName", model.cMidName);
                     command.Parameters.AddWithValue("@cLastName", model.cLastName);
