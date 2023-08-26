@@ -30,13 +30,13 @@ namespace EBS.viewModels
         [Display(Name = "Customer Address")]
         public string cAddress { get; set; }
 
-        [Required(ErrorMessage = "Customer Number is required.")]
+        [Required(ErrorMessage = "Phone Number Should be 10 digits starting 061.")]
         [Display(Name = "Customer Phone Number")]
-        [RegularExpression(@"^\d{10}$", ErrorMessage = "Phone Number Should be 10 digits starting 061.")]
+        //[RegularExpression(@"^\d{10}$", ErrorMessage = "Phone Number Should be 10 digits starting 061.")]
         public int cNumber { get; set; }
 
         [Display(Name = "Customer Phone Number (Optional)")]
-        [RegularExpression(@"^\d{10}$", ErrorMessage = "Phone Number Should be 10 digits starting 061.")]
+        //[RegularExpression(@"^\d{10}$", ErrorMessage = "Phone Number Should be 10 digits starting 061.")]
         public string cNumberOp { get; set; }
 
 

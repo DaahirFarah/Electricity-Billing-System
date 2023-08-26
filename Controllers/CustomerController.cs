@@ -142,7 +142,6 @@ namespace EBS.Controllers
 
                     command.ExecuteNonQuery();
 
-                    command.ExecuteNonQuery();
                 }
             }
         }
