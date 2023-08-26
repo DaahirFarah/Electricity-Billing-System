@@ -13,6 +13,9 @@
 <html>
 <head>
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+
+
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
@@ -39,12 +42,10 @@
         }
 
         .container {
-            padding-top:30px;
-            padding-left:45px;
-            padding-bottom:20px;
-          
+            padding-top: 30px;
+            padding-left: 45px;
+            padding-bottom: 20px;
         }
-
     </style>
 
     <title>Customers | SEC</title>
@@ -70,6 +71,7 @@
                     <th>Address</th>
                     <th>Phone number</th>
                     <th>Phone number (Optional)</th>
+                    <th>Actions</th>
 
                 </tr>
             </thead>
@@ -84,6 +86,14 @@
                         <td>@Html.DisplayFor(modelItem => item.cAddress)</td>
                         <td>@Html.DisplayFor(modelItem => item.cNumber)</td>
                         <td>@Html.DisplayFor(modelItem => item.cNumberOp)</td>
+                        <td>
+                            <a href="@Url.Action("Edit", "Customer", new { id = item.cID })">
+                                <i class="fa-solid fa-square-pen fa-2x" style="color: #194e80;"></i>
+                            </a>
+
+                            <span>          </span>
+                            <i class="fas fa-trash fa-2x"></i>
+                        </td>
                     </tr>
                 }
 
