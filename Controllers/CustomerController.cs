@@ -46,24 +46,24 @@ namespace EBS.Controllers
 
 
         ////GET: Update Customer
-        //public ActionResult Edit(int id)
-        //{
-        //    customerVM customer = GetCustomerById(id);
-        //    return View(customer);
-        //}
+        public ActionResult Edit(int id)
+        {
+            customerVM customer = GetCustomerById(id);
+            return View(customer);
+        }
 
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //[Display(Name = "Edit")]
-        //public ActionResult EditConfirmConfirm(customerVM model)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        UpdateCustomer(model);
-        //        return RedirectToAction("Index");
-        //    }
-        //    return View(model);
-        //}
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Display(Name = "Edit")]
+        public ActionResult EditConfirmConfirm(customerVM model)
+        {
+            if (ModelState.IsValid)
+            {
+                UpdateCustomer(model);
+                return RedirectToAction("Index");
+            }
+            return View(model);
+        }
 
         //public ActionResult Delete(int id)
         //{
@@ -145,6 +145,71 @@ namespace EBS.Controllers
                 }
             }
         }
+
+
+        private customerVM GetCustomerById(int cID)
+        {
+            using (SqlConnection connection = new SqlConnection(SecConn))
+            {
+                connection.Open();
+
+                string query = "SELECT * FROM CustomerTbl WHERE cID = @cID";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@cID", cID);
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            return new customerVM
+                            {
+                                cID = Convert.ToInt32(reader["cID"]),
+                                cFirstName = reader["cFirstName"].ToString(),
+                                cMidName = reader["cMidName"].ToString(),
+                                cLastName = reader["cLastName"].ToString(),
+                                cAddress = reader["cAddress"].ToString(),
+                                cNumber = Convert.ToInt32(reader["cNumber"]),
+                                cNumberOp = reader["cNumberOp"].ToString()
+
+                            };
+                        }
+                    }
+                }
+            }
+
+            return null; // Or throw an exception if not found
+        }
+
+
+        private void UpdateCustomer(customerVM model)
+        {
+            using (SqlConnection connection = new SqlConnection(SecConn))
+            {
+                connection.Open();
+
+                string query = "UPDATE CustomerTbl SET cFirstName = @cFirstName, cMidName = @cMidName, cLastName = @cLastName, cAddress = @cAddress, cNumber = @cNumber, cNumberOp = @cNumberOp WHERE cID = @cID";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@cFirstName", model.cFirstName);
+                    command.Parameters.AddWithValue("@cMidName", model.cMidName);
+                    command.Parameters.AddWithValue("@cLastName", model.cLastName);
+                    command.Parameters.AddWithValue("@cAddress", model.cAddress);
+                    command.Parameters.AddWithValue("@cNumber", SqlDbType.Int).Value = model.cNumber;
+                    if (string.IsNullOrWhiteSpace(model.cNumberOp))
+                    {
+                        command.Parameters.AddWithValue("@cNumberOp", DBNull.Value);
+                    }
+                    else
+                    {
+                        command.Parameters.AddWithValue("@cNumberOp", model.cNumberOp);
+                    }
+
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
 
 
     }

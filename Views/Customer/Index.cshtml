@@ -88,11 +88,12 @@
                         <td>@Html.DisplayFor(modelItem => item.cNumberOp)</td>
                         <td>
                             <a href="@Url.Action("Edit", "Customer", new { id = item.cID })">
-                                <i class="fa-solid fa-square-pen fa-2x" style="color: #194e80;"></i>
+                                <i class="fa-solid fa-square-pen fa-2x" style="color: #1ABC9C; "></i>
                             </a>
 
-                            <span>          </span>
-                            <i class="fas fa-trash fa-2x"></i>
+                            <!--The Delete Button won't point to any page as I want to use a pop up window 
+                                for confirming the deletion instead of a page'-->
+                            <i class="fas fa-trash fa-2x" style="color: #FF5733 "></i>
                         </td>
                     </tr>
                 }
