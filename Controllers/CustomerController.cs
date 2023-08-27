@@ -65,19 +65,19 @@ namespace EBS.Controllers
             return View(model);
         }
 
-        //public ActionResult Delete(int id)
-        //{
-        //    customerVM customer = GetCustomerById(id);
-        //    return View(customer);
-        //}
+        public ActionResult Delete(int id)
+        {
+            customerVM customer = GetCustomerById(id);
+            return View(customer);
+        }
 
-        //[HttpPost]
-        //[ActionName("Delete")]
-        //public ActionResult DeleteConfirmed(int id)
-        //{
-        //    DeleteCustomer(id);
-        //    return RedirectToAction("Index");
-        //}
+        [HttpPost]
+        [ActionName("Delete")]
+        public ActionResult DeleteConfirmed(int id)
+        {
+            DeleteCustomer(id);
+            return RedirectToAction("Index");
+        }
 
 
         // Fetching Customers From the Database
@@ -115,8 +115,8 @@ namespace EBS.Controllers
             return customers;
         }
 
-        // Inserting Customers To the Database
 
+        // Inserting Customers To the Database
         private void InsertCustomer(customerVM model)
         {
             using (SqlConnection connection = new SqlConnection(SecConn))
@@ -147,6 +147,7 @@ namespace EBS.Controllers
         }
 
 
+        // Method that retrieves the ID of the Customer to be updated
         private customerVM GetCustomerById(int cID)
         {
             using (SqlConnection connection = new SqlConnection(SecConn))
@@ -178,10 +179,11 @@ namespace EBS.Controllers
                 }
             }
 
-            return null; // Or throw an exception if not found
+            return null; 
         }
 
 
+        // Update Customer Information Logic
         private void UpdateCustomer(customerVM model)
         {
             using (SqlConnection connection = new SqlConnection(SecConn))
@@ -211,7 +213,22 @@ namespace EBS.Controllers
             }
         }
 
+        // Customer Information Deletion Logic for the Delete ActionResult
+        private void DeleteCustomer(int id)
+        {
+            using (SqlConnection connection = new SqlConnection(SecConn))
+            {
+                connection.Open();
 
+                string query = "DELETE FROM CustomerTbl WHERE cID = @cID";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@cID", id);
+
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
 
     }
 }

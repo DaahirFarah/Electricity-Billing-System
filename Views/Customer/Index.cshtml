@@ -99,7 +99,7 @@
 </head>
 <body>
 
-    
+
     <div class="mt-4 pt-2" style="padding-left: 40px;">
         <form action="@Url.Action("Create", "Customer")" method="get">
             <input class="btn btn-primary btn-lg btn-block" type="submit" value="Register" />
@@ -140,9 +140,9 @@
                                 for confirming the deletion instead of a page'-->
                             @*<i class="fas fa-trash fa-2x" style="color: #FF5733 "></i>*@
 
-                            
-                                <i class="fas fa-trash fa-2x delete-icon item" style="color: #FF5733" data-item-id="@item.cID"></i>
-                           
+
+                            <i class="fas fa-trash fa-2x delete-icon item" style="color: #FF5733" data-item-id="@item.cID"></i>
+
 
                             <!-- Modal -->
                             <div class="modal" id="deleteModal">
@@ -155,7 +155,7 @@
 
                         </td>
                     </tr>
-                }
+                 }
 
 
             </tbody>
@@ -167,25 +167,41 @@
         new DataTable('#myTable');
     </script>
     <script>
-        const deleteIcon = document.querySelector('.delete-icon');
-        const deleteModal = document.getElementById('deleteModal');
-        const confirmDeleteButton = document.getElementById('confirmDelete');
-        const cancelDeleteButton = document.getElementById('cancelDelete');
+            const deleteIcon = document.querySelector('.delete-icon');
+            const deleteModal = document.getElementById('deleteModal');
+            const confirmDeleteButton = document.getElementById('confirmDelete');
+            const cancelDeleteButton = document.getElementById('cancelDelete');
 
-        deleteIcon.addEventListener('click', () => {
-            deleteModal.style.display = 'block';
-        });
+            deleteIcon.addEventListener('click', () => {
+                deleteModal.style.display = 'block';
+            });
 
-        confirmDeleteButton.addEventListener('click', () => {
-            // Code to execute the deletion
-            // For demonstration, let's just hide the modal
-            deleteModal.style.display = 'none';
-        });
+          
+        fetch(`/Customer/Delete/${itemId}`, {
+            method: "POST",
+            // Add any necessary headers or data
+        })
+            .then(function (response) {
+                if (response.ok) {
+                    // Successful delete, close the modal 
+                    modal.style.display = "none";
+                    
+                } else {
+                    
+                    console.error("Delete request failed");
+                }
+            })
+            .catch(function (error) {
+                console.error("Error occurred:", error);
+            });
 
-        cancelDeleteButton.addEventListener('click', () => {
-            deleteModal.style.display = 'none';
-        });
-    </script>
+
+            cancelDeleteButton.addEventListener('click', () => {
+                deleteModal.style.display = 'none';
+            });
+        </script>
+
+    
 
 </body>
 </html>
