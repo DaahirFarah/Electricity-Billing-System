@@ -137,21 +137,24 @@
                             </a>
 
                             <!--The Delete Button won't point to any page as I want to use a pop up window
-                                for confirming the deletion instead of a page'-->
+        for confirming the deletion instead of a page'-->
                             @*<i class="fas fa-trash fa-2x" style="color: #FF5733 "></i>*@
 
+                            <a href="@Url.Action("Delete", "Customer", new { id = item.cID })">
+                                <i class="fas fa-trash fa-2x delete-icon item" style="color: #FF5733"></i>
+                            </a>
 
-                            <i class="fas fa-trash fa-2x delete-icon item" style="color: #FF5733" data-item-id="@item.cID"></i>
+                            @*<i class="fas fa-trash fa-2x delete-icon item" style="color: #FF5733" data-item-id="@item.cID"></i>*@
 
 
                             <!-- Modal -->
-                            <div class="modal" id="deleteModal">
-                                <div class="modal-content">
-                                    <p>Are you sure you want to delete this Customer?</p>
-                                    <button class="modal-button confirm-button" id="confirmDelete">Yes</button>
-                                    <button class="modal-button cancel-button" id="cancelDelete">No</button>
-                                </div>
-                            </div>
+                            <!--<div class="modal" id="deleteModal">
+        <div class="modal-content">
+            <p>Are you sure you want to delete this Customer?</p>
+            <button class="modal-button confirm-button" id="confirmDelete">Yes</button>
+            <button class="modal-button cancel-button" id="cancelDelete">No</button>
+        </div>
+    </div>-->
 
                         </td>
                     </tr>
@@ -166,40 +169,7 @@
     <script>
         new DataTable('#myTable');
     </script>
-    <script>
-            const deleteIcon = document.querySelector('.delete-icon');
-            const deleteModal = document.getElementById('deleteModal');
-            const confirmDeleteButton = document.getElementById('confirmDelete');
-            const cancelDeleteButton = document.getElementById('cancelDelete');
 
-            deleteIcon.addEventListener('click', () => {
-                deleteModal.style.display = 'block';
-            });
-
-          
-        fetch(`/Customer/Delete/${itemId}`, {
-            method: "POST",
-            // Add any necessary headers or data
-        })
-            .then(function (response) {
-                if (response.ok) {
-                    // Successful delete, close the modal 
-                    modal.style.display = "none";
-                    
-                } else {
-                    
-                    console.error("Delete request failed");
-                }
-            })
-            .catch(function (error) {
-                console.error("Error occurred:", error);
-            });
-
-
-            cancelDeleteButton.addEventListener('click', () => {
-                deleteModal.style.display = 'none';
-            });
-        </script>
 
     
 
