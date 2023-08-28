@@ -14,31 +14,38 @@
 </head>
 <body>
 
-    <section class="vh-100 gradient-custom;" ; style="font-family: Verdana, Geneva, Tahoma, sans-serif; ">
-        <div class="container py-5 h-100">
-            <div class="row justify-content-center align-items-center h-100">
+    @using (Html.BeginForm("Create", "Invoice", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
 
-                <div class="col-12 col-lg-9 col-xl-7">
-                    <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">
+        <section class="vh-100 gradient-custom;" ; style="font-family: Verdana, Geneva, Tahoma, sans-serif; ">
+            <div class="container py-5 h-100">
+                <div class="row justify-content-center align-items-center h-100">
 
-                        <div class="card-body p-4 p-md-5">
-                            <h2 class="mb-4 pb-2 pb-md-0 mb-md-5"><strong>Create Invoice</strong></h2>
-                            <form>
+                    <div class="col-12 col-lg-9 col-xl-7">
+                        <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">
+
+                            <div class="card-body p-4 p-md-5">
+                                <h2 class="mb-4 pb-2 pb-md-0 mb-md-5"><strong>Create Invoice</strong></h2>
+                                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
                                 <div class="row">
                                     <div class="col-md-6 mb-4">
 
-                                        <div class="form-outline">
-                                            <input type="text" id="cusId" class="form-control form-control-lg" />
-                                            <label class="form-label" for="cusId">Customer Id</label>
+                                        <div class="form-outline form-group">
+
+                                            @Html.EditorFor(model => model.cFirstName, new { htmlAttributes = new { @class = "form-control form-control-lg" } })
+                                            @Html.LabelFor(m => m.cFirstName)
+                                            @Html.ValidationMessageFor(model => model.cFirstName, "", new { @class = "text-danger" })
                                         </div>
 
                                     </div>
                                     <div class="col-md-6 mb-4">
 
-                                        <div class="form-outline">
-                                            <input type="date" id="readDate" class="form-control form-control-lg" />
-                                            <label class="form-label" for="readDate">Meter Reading Date</label>
+                                        <div class="form-outline form-group">
+                                            @Html.EditorFor(model => model.cMidName, new { htmlAttributes = new { @class = "form-control form-control-lg" } })
+                                            @Html.LabelFor(model => model.cMidName)
+                                            @Html.ValidationMessageFor(model => model.cMidName, "", new { @class = "text-danger" })
                                         </div>
 
                                     </div>
@@ -47,84 +54,74 @@
                                 <div class="row">
                                     <div class="col-md-6 mb-4">
 
-                                        <div class="form-outline">
-                                            <input type="date" id="bpStart" class="form-control form-control-lg" />
-                                            <label class="form-label" for="bpStart">Billing Period Starts</label>
+                                        <div class="form-outline form-group">
+
+                                            @Html.EditorFor(model => model.cFirstName, new { htmlAttributes = new { @class = "form-control form-control-lg" } })
+                                            @Html.LabelFor(m => m.cFirstName)
+                                            @Html.ValidationMessageFor(model => model.cFirstName, "", new { @class = "text-danger" })
                                         </div>
 
                                     </div>
-
                                     <div class="col-md-6 mb-4">
 
-                                        <div class="form-outline">
-                                            <input type="date" id="bpEnd" class="form-control form-control-lg" />
-                                            <label class="form-label" for="bpEnd">Billing Period Ends</label>
-                                        </div>
-
-                                    </div>
-
-                                </div>
-
-
-
-                                <div class="row">
-                                    <div class="col-md-6 mb-4 pb-2">
-
-                                        <div class="form-outline">
-                                            <input type="number" id="prevRead" class="form-control form-control-lg" />
-                                            <label class="form-label" for="prevRead">Previous Reading</label>
-                                        </div>
-
-                                    </div>
-                                    <div class="col-md-6 mb-4 pb-2">
-
-                                        <div class="form-outline">
-                                            <input type="tel" id="curRead" class="form-control form-control-lg" />
-                                            <label class="form-label" for="curRead">Current Reading</label>
+                                        <div class="form-outline form-group">
+                                            @Html.EditorFor(model => model.cMidName, new { htmlAttributes = new { @class = "form-control form-control-lg" } })
+                                            @Html.LabelFor(model => model.cMidName)
+                                            @Html.ValidationMessageFor(model => model.cMidName, "", new { @class = "text-danger" })
                                         </div>
 
                                     </div>
                                 </div>
 
-                                <!--
-                                    <div class="row">
-                                        <div class="col-12">
+                                <div class="row">
+                                    <div class="col-md-6 mb-4">
 
-                                            <select class="select form-control-lg">
-                                                <option value="1" disabled>Choose option</option>
-                                                <option value="2">Subject 1</option>
-                                                <option value="3">Subject 2</option>
-                                                <option value="4">Subject 3</option>
-                                            </select>
-                                            <label class="form-label select-label">Choose option</label>
+                                        <div class="form-outline form-group">
 
+                                            @Html.EditorFor(model => model.cFirstName, new { htmlAttributes = new { @class = "form-control form-control-lg" } })
+                                            @Html.LabelFor(m => m.cFirstName)
+                                            @Html.ValidationMessageFor(model => model.cFirstName, "", new { @class = "text-danger" })
                                         </div>
+
                                     </div>
-                                -->
-                                @*<div class="col-md-6 mb-4">
+                                    <div class="col-md-6 mb-4">
 
-                                        <h6 class="mb-2 pb-1">gender: </h6>
-
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="inlineradiooptions" id="femalegender"
-                                                   value="option2" checked />
-                                            <label class="form-check-label" for="femalegender">female</label>
+                                        <div class="form-outline form-group">
+                                            @Html.EditorFor(model => model.cMidName, new { htmlAttributes = new { @class = "form-control form-control-lg" } })
+                                            @Html.LabelFor(model => model.cMidName)
+                                            @Html.ValidationMessageFor(model => model.cMidName, "", new { @class = "text-danger" })
                                         </div>
 
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="inlineradiooptions" id="malegender"
-                                                   value="option1" />
-                                            <label class="form-check-label" for="malegender">male</label>
-                                        </div>
-
-
-
-                                    </div>*@
+                                    </div>
+                                </div>
 
                                 <div class="row">
+                                    <div class="col-md-6 mb-4">
+
+                                        <div class="form-outline form-group">
+
+                                            @Html.EditorFor(model => model.cFirstName, new { htmlAttributes = new { @class = "form-control form-control-lg" } })
+                                            @Html.LabelFor(m => m.cFirstName)
+                                            @Html.ValidationMessageFor(model => model.cFirstName, "", new { @class = "text-danger" })
+                                        </div>
+
+                                    </div>
+                                    <div class="col-md-6 mb-4">
+
+                                        <div class="form-outline form-group">
+                                            @Html.EditorFor(model => model.cMidName, new { htmlAttributes = new { @class = "form-control form-control-lg" } })
+                                            @Html.LabelFor(model => model.cMidName)
+                                            @Html.ValidationMessageFor(model => model.cMidName, "", new { @class = "text-danger" })
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <!--Below div element holds some buttons. Leave it alone-->
+                                <div class="row">
                                     <div class="col-md-6 mb-4 pb-2">
-                                        <input type="button" value="Create" class="btn btn-primary btn-lg btn-block" />
-                                        @*<input class="btn btn-primary btn-lg btn-block" type="submit" value="Save" />*@
+                                        <input type="submit" value="Create" class="btn btn-primary btn-lg btn-block" />
+
                                     </div>
 
 
@@ -134,14 +131,14 @@
 
                                 </div>
 
-                            </form>
+
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-
-</body>
+    }
+    </body>
 </html>
