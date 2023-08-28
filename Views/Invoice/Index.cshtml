@@ -11,6 +11,8 @@
 <html>
 <head>
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
@@ -27,18 +29,19 @@
         .content {
             display: flex;
             justify-content: center;
-            padding: 20px; /* Add padding around the table */
+            padding: 0px; /* Add padding around the table */
         }
 
         .table-container {
-            max-width: 700px; /* Set a maximum width for the table container */
+            max-width: 300px; /* Set a maximum width for the table container */
             width: 10%;
             padding-top: 20px;
         }
 
         .container {
             padding-top: 30px;
-            padding-left: 45px;
+            padding-left: 40px;
+            padding-right:20px;
             padding-bottom: 20px;
         }
     </style>
@@ -80,20 +83,20 @@
 
                         <td>@Html.DisplayFor(model => item.invoiceID)</td>
                         <td>@Html.DisplayFor(model => item.cID)</td>
-                        <td>@Html.DisplayFor(model => item.billingPeriodStarts)</td>
-                        <td>@Html.DisplayFor(model => item.billingPeriodEnds)</td>
+                        <td>@(item.billingPeriodStarts.Date.ToString("d"))</td>
+                        <td>@(item.billingPeriodEnds.Date.ToString("d"))</td>
                         <td>@Html.DisplayFor(model => item.prev_Reading)</td>
                         <td>@Html.DisplayFor(model => item.cur_Reading)</td>
-                        <td>@Html.DisplayFor(model => item.reading_Date)</td>
+                        <td>@(item.reading_Date.Date.ToString("d"))</td>
                         <td>@Html.DisplayFor(model => item.Rate)</td>
                         <td>@Html.DisplayFor(model => item.reading_Value)</td>
                         <td>@Html.DisplayFor(model => item.total_Fee)</td>
                         <td>
-                            <a href="@Url.Action("Edit", "Invoice", new { id = item.cID })">
+                            <a href="@Url.Action("Edit", "Invoice", new { id = item.invoiceID })">
                                 <i class="fa-solid fa-square-pen fa-2x" style="color: #1ABC9C; "></i>
                             </a>
 
-                            <a href="@Url.Action("Delete", "Invoice", new { id = item.cID })">
+                            <a href="@Url.Action("Delete", "Invoice", new { id = item.invoiceID })">
                                 <i class="fas fa-trash fa-2x delete-icon item" style="color: #FF5733"></i>
                             </a>
                         </td>
