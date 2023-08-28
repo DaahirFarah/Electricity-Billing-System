@@ -6,6 +6,7 @@ using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Reflection;
 using System.Web;
 using System.Web.Mvc;
 using System.Xml.Linq;
@@ -54,17 +55,22 @@ namespace EBS.Controllers
             return View(invoice);
         }
 
-        // POST: Update Invoice
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //[Display(Name = "Edit")]
-        //public ActionResult Edit(invoiceVM model)
-        //{
-        //    UpdateInvoice(model);
-        //    return View(model);
-        //}
+        //POST: Update Invoice
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Display(Name = "Edit")]
+        public ActionResult Edit(invoiceVM model)
+        {
+            if (ModelState.IsValid)
+            {
+                UpdateInvoice(model);
+                return RedirectToAction("Index");
+            }
+            
+            return View(model);
+        }
 
-        
+
         // Fetching Invoices From the Database
         private List<invoiceVM> GetAllInvoices()
         {
@@ -167,5 +173,30 @@ namespace EBS.Controllers
             return null;
         }
 
+        private void UpdateInvoice(invoiceVM model)
+        {
+            using(SqlConnection connection = new SqlConnection(SecConn))
+            {
+                connection.Open();
+                string query = "Update InvoiceTbl SET cID = @cID, Rate = @Rate, billingPeriodStarts = @billingPeriodStarts,"
+                             + "billingPeriodEnds = @billingPeriodEnds, prev_Reading = @prev_Reading, cur_Reading = @cur_Reading,"
+                             + "reading_Value = @reading_Value, reading_Date = @reading_Date, total_Fee = @total_Fee";
+
+                using(SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@cID", model.cID);
+                    command.Parameters.AddWithValue("@Rate", model.Rate);
+                    command.Parameters.AddWithValue("@billingPeriodStarts", model.billingPeriodStarts);
+                    command.Parameters.AddWithValue("@billingPeriodEnds", model.billingPeriodEnds);
+                    command.Parameters.AddWithValue("@prev_Reading", model.prev_Reading);
+                    command.Parameters.AddWithValue("@cur_Reading", model.cur_Reading);
+                    command.Parameters.AddWithValue("@reading_Value", model.reading_Value);
+                    command.Parameters.AddWithValue("@reading_Date", model.reading_Date);
+                    command.Parameters.AddWithValue("@total_Fee", model.total_Fee);
+
+                    command.ExecuteNonQuery();
+                };
+            }
+        }
     }
 }
