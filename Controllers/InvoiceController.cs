@@ -48,18 +48,21 @@ namespace EBS.Controllers
 
 
         //GET: Update Invoice
-        public ActionResult Edit()
+        public ActionResult Edit(int id)
         {
-            return View();
+            invoiceVM invoice = GetInvoiceById(id);
+            return View(invoice);
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Display(Name = "Edit")]
-        public ActionResult EditConfirm()
-        {
-            return View();
-        }
+        // POST: Update Invoice
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //[Display(Name = "Edit")]
+        //public ActionResult Edit(invoiceVM model)
+        //{
+        //    UpdateInvoice(model);
+        //    return View(model);
+        //}
 
         
         // Fetching Invoices From the Database
@@ -126,5 +129,43 @@ namespace EBS.Controllers
                 }
             }
         }
+
+        // Retrieving Invoices by ID for updating
+        private invoiceVM GetInvoiceById(int invoiceID)
+        {
+            using (SqlConnection connection = new SqlConnection(SecConn))
+            {
+                connection.Open();
+                string query = "SELECT * FROM InvoiceTbl WHERE invoiceID = @invoiceID";
+                using(SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@invoiceID", invoiceID);
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            return new invoiceVM
+                            {
+                                invoiceID = Convert.ToInt32(reader["invoiceID"]),
+                                cID = Convert.ToInt32(reader["cID"]),
+                                billingPeriodStarts = Convert.ToDateTime(reader["billingPeriodStarts"]),
+                                billingPeriodEnds = Convert.ToDateTime(reader["billingPeriodEnds"]),
+                                prev_Reading = Convert.ToDecimal(reader["prev_Reading"]),
+                                cur_Reading = Convert.ToDecimal(reader["cur_Reading"]),
+                                reading_Date = Convert.ToDateTime(reader["reading_Date"]),
+                                Rate = Convert.ToDecimal(reader["Rate"]),
+                                reading_Value = Convert.ToDecimal(reader["reading_Value"]),
+                                total_Fee = Convert.ToDecimal(reader["total_Fee"]),
+
+                            };
+                        }
+                    }
+                }
+            }
+
+            return null;
+        }
+
     }
 }
