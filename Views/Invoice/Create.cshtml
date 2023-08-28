@@ -1,4 +1,6 @@
 ﻿
+@model EBS.viewModels.invoiceVM
+
 @{
     Layout = "~/Views/Shared/_Layout2.cshtml";
 }
@@ -18,104 +20,118 @@
     {
         @Html.AntiForgeryToken()
 
-        <section class="vh-100 gradient-custom;" ; style="font-family: Verdana, Geneva, Tahoma, sans-serif; ">
-            <div class="container py-5 h-100">
-                <div class="row justify-content-center align-items-center h-100">
+    <section class="vh-100 gradient-custom;" ; style="font-family: Verdana, Geneva, Tahoma, sans-serif; ">
+        <div class="container py-5 h-100">
+            <div class="row justify-content-center align-items-center h-100">
 
-                    <div class="col-12 col-lg-9 col-xl-7">
-                        <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">
+                <div class="col-12 col-lg-9 col-xl-7">
+                    <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">
 
-                            <div class="card-body p-4 p-md-5">
-                                <h2 class="mb-4 pb-2 pb-md-0 mb-md-5"><strong>Create Invoice</strong></h2>
-                                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                        <div class="card-body p-4 p-md-5">
+                            <h2 class="mb-4 pb-2 pb-md-0 mb-md-5"><strong>Create Invoice</strong></h2>
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-                                <div class="row">
-                                    <div class="col-md-6 mb-4">
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
 
-                                        <div class="form-outline form-group">
+                                    <div class="form-outline form-group">
 
-                                            @Html.EditorFor(model => model.cFirstName, new { htmlAttributes = new { @class = "form-control form-control-lg" } })
-                                            @Html.LabelFor(m => m.cFirstName)
-                                            @Html.ValidationMessageFor(model => model.cFirstName, "", new { @class = "text-danger" })
-                                        </div>
-
+                                        @Html.EditorFor(model => model.cID, new { htmlAttributes = new { @class = "form-control form-control-lg" } })
+                                        @Html.LabelFor(m => m.cID)
+                                        @Html.ValidationMessageFor(model => model.cID, "", new { @class = "text-danger" })
                                     </div>
-                                    <div class="col-md-6 mb-4">
 
-                                        <div class="form-outline form-group">
-                                            @Html.EditorFor(model => model.cMidName, new { htmlAttributes = new { @class = "form-control form-control-lg" } })
-                                            @Html.LabelFor(model => model.cMidName)
-                                            @Html.ValidationMessageFor(model => model.cMidName, "", new { @class = "text-danger" })
-                                        </div>
+                                </div>
+                                <div class="col-md-6 mb-4">
 
+                                    <div class="form-outline form-group">
+                                        @Html.EditorFor(model => model.Rate, new { htmlAttributes = new { @class = "form-control form-control-lg", id = "Rate" } })
+                                        @Html.LabelFor(model => model.Rate)
+                                        @Html.ValidationMessageFor(model => model.Rate, "", new { @class = "text-danger" })
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+
+                                    <div class="form-outline form-group">
+
+                                        @Html.EditorFor(model => model.billingPeriodStarts, new { htmlAttributes = new { @class = "form-control form-control-lg", type = "date" } })
+                                        @Html.LabelFor(m => m.billingPeriodStarts)
+                                        @Html.ValidationMessageFor(model => model.billingPeriodStarts, "", new { @class = "text-danger" })
+                                    </div>
+
+                                </div>
+                                <div class="col-md-6 mb-4">
+
+                                    <div class="form-outline form-group">
+                                        @Html.EditorFor(model => model.billingPeriodEnds, new { htmlAttributes = new { @class = "form-control form-control-lg", type = "date" } })
+                                        @Html.LabelFor(model => model.billingPeriodEnds)
+                                        @Html.ValidationMessageFor(model => model.billingPeriodEnds, "", new { @class = "text-danger" })
+                                    </div>
+
+                                </div>
+                            </div>
+
+
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+
+                                    <div class="form-outline form-group">
+
+                                        @Html.EditorFor(model => model.prev_Reading, new { htmlAttributes = new { @class = "form-control form-control-lg", id = "prev_Reading" } })
+                                        @Html.LabelFor(m => m.prev_Reading)
+                                        @Html.ValidationMessageFor(model => model.prev_Reading, "", new { @class = "text-danger" })
+                                    </div>
+
+                                </div>
+                                <div class="col-md-6 mb-4">
+
+                                    <div class="form-outline form-group">
+                                        @Html.EditorFor(model => model.cur_Reading, new { htmlAttributes = new { @class = "form-control form-control-lg", id = "cur_Reading" } })
+                                        @Html.LabelFor(model => model.cur_Reading)
+                                        @Html.ValidationMessageFor(model => model.cur_Reading, "", new { @class = "text-danger" })
+                                    </div>
+
+                                </div>
+                            </div>
+
+
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+
+                                    <div class="form-outline form-group">
+
+                                        @Html.EditorFor(model => model.reading_Value, new { htmlAttributes = new { @class = "form-control form-control-lg", id = "reading_Value", @readonly = "readonly" } })
+                                        @Html.LabelFor(m => m.reading_Value)
+                                        @Html.ValidationMessageFor(model => model.reading_Value, "", new { @class = "text-danger" })
+                                    </div>
+
+                                </div>
+                                <div class="col-md-6 mb-4">
+
+                                    <div class="form-outline form-group">
+                                        @Html.EditorFor(model => model.reading_Date, new { htmlAttributes = new { @class = "form-control form-control-lg", Type = "date" } })
+                                        @Html.LabelFor(model => model.reading_Date)
+                                        @Html.ValidationMessageFor(model => model.reading_Date, "", new { @class = "text-danger" })
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+
+                                    <div class="form-outline form-group">
+
+                                        @Html.EditorFor(model => model.total_Fee, new { htmlAttributes = new { @class = "form-control form-control-lg", @readonly = "readonly", id = "result" } })
+                                        @Html.LabelFor(m => m.total_Fee)
+                                        @Html.ValidationMessageFor(model => model.total_Fee, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
 
-                                <div class="row">
-                                    <div class="col-md-6 mb-4">
-
-                                        <div class="form-outline form-group">
-
-                                            @Html.EditorFor(model => model.cFirstName, new { htmlAttributes = new { @class = "form-control form-control-lg" } })
-                                            @Html.LabelFor(m => m.cFirstName)
-                                            @Html.ValidationMessageFor(model => model.cFirstName, "", new { @class = "text-danger" })
-                                        </div>
-
-                                    </div>
-                                    <div class="col-md-6 mb-4">
-
-                                        <div class="form-outline form-group">
-                                            @Html.EditorFor(model => model.cMidName, new { htmlAttributes = new { @class = "form-control form-control-lg" } })
-                                            @Html.LabelFor(model => model.cMidName)
-                                            @Html.ValidationMessageFor(model => model.cMidName, "", new { @class = "text-danger" })
-                                        </div>
-
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-md-6 mb-4">
-
-                                        <div class="form-outline form-group">
-
-                                            @Html.EditorFor(model => model.cFirstName, new { htmlAttributes = new { @class = "form-control form-control-lg" } })
-                                            @Html.LabelFor(m => m.cFirstName)
-                                            @Html.ValidationMessageFor(model => model.cFirstName, "", new { @class = "text-danger" })
-                                        </div>
-
-                                    </div>
-                                    <div class="col-md-6 mb-4">
-
-                                        <div class="form-outline form-group">
-                                            @Html.EditorFor(model => model.cMidName, new { htmlAttributes = new { @class = "form-control form-control-lg" } })
-                                            @Html.LabelFor(model => model.cMidName)
-                                            @Html.ValidationMessageFor(model => model.cMidName, "", new { @class = "text-danger" })
-                                        </div>
-
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-md-6 mb-4">
-
-                                        <div class="form-outline form-group">
-
-                                            @Html.EditorFor(model => model.cFirstName, new { htmlAttributes = new { @class = "form-control form-control-lg" } })
-                                            @Html.LabelFor(m => m.cFirstName)
-                                            @Html.ValidationMessageFor(model => model.cFirstName, "", new { @class = "text-danger" })
-                                        </div>
-
-                                    </div>
-                                    <div class="col-md-6 mb-4">
-
-                                        <div class="form-outline form-group">
-                                            @Html.EditorFor(model => model.cMidName, new { htmlAttributes = new { @class = "form-control form-control-lg" } })
-                                            @Html.LabelFor(model => model.cMidName)
-                                            @Html.ValidationMessageFor(model => model.cMidName, "", new { @class = "text-danger" })
-                                        </div>
-
-                                    </div>
-                                </div>
 
                                 <!--Below div element holds some buttons. Leave it alone-->
                                 <div class="row">
@@ -137,8 +153,60 @@
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
+
+
+        <!--The script below performs dynamic calculation to produce the product of the usage and rate-->
+        <!--<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#Rate, #reading_Value').on('input', function () {
+                var Rate = parseFloat($('#Rate').val());
+                var reading_Value = parseFloat($('#reading_Value').val());
+                var result = isNaN(Rate) || isNaN(reading_Value) ? '' : (Rate * reading_Value).toFixed(2);
+
+                $('#result').val(result); // Update the readonly total_Fee field
+            });
+        });
+    </script>-->
+        <!--The Below script performs the dynamic calculation of displaying the electricty usage by subtracting current reading from previous reading-->
+        <!--<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#cur_Reading, #prev_Reading').on('input', function () {
+                var cur_Reading = parseFloat($('#cur_Reading').val());
+                var prev_Reading = parseFloat($('#prev_Reading').val());
+                var reading_Value = isNaN(cur_Reading) || isNaN(prev_Reading) ? '' : (cur_Reading - prev_Reading).toFixed(2);
+
+                $('#reading_Value').val(reading_Value); // Update the readonly total_Fee field
+            });
+        });
+    </script>-->
+
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script>
+            $(document).ready(function () {
+                $('#Rate, #reading_Value, #cur_Reading, #prev_Reading').on('input', function () {
+                    var Rate = parseFloat($('#Rate').val());
+                    var cur_Reading = parseFloat($('#cur_Reading').val());
+                    var prev_Reading = parseFloat($('#prev_Reading').val());
+
+                    var calculatedReading = isNaN(cur_Reading) || isNaN(prev_Reading) ? '' : (cur_Reading - prev_Reading).toFixed(2);
+                    $('#reading_Value').val(calculatedReading); // Update the readonly reading_Value field
+
+                    var result = isNaN(Rate) || isNaN(calculatedReading) ? '' : (Rate * calculatedReading).toFixed(2);
+                    $('#result').val(result); // Update the readonly result field
+                });
+            });
+        </script>
+
+
+
+    </section>
 
     }
-    </body>
+</body>
 </html>
+
+
+

@@ -36,7 +36,7 @@ namespace EBS.viewModels
         [Required(ErrorMessage = "Usage Amount is required")]
         public decimal reading_Value { get; set; }
 
-        [Display(Name = "Total Fee")]
+        [Display(Name = "Total Fee ($)")]
         [Required(ErrorMessage = "Fee is required")]
         public decimal total_Fee { get; set; }
 
