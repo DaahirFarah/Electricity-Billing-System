@@ -70,6 +70,23 @@ namespace EBS.Controllers
             return View(model);
         }
 
+        // GET: Delete Invoice
+        [HttpGet]
+        public ActionResult Delete(int id)
+        {
+            invoiceVM invoice = GetInvoiceById(id);
+            return View(invoice);
+        }
+
+        //POST: Delete Invoice
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Display(Name = "Delete")]
+        public ActionResult DeleteConfirmed(int id)
+        {
+            DeleteInvoice(id);
+            return RedirectToAction("Index");
+        }
 
         // Fetching Invoices From the Database
         private List<invoiceVM> GetAllInvoices()
@@ -173,6 +190,7 @@ namespace EBS.Controllers
             return null;
         }
 
+        // Update Invoice Logic
         private void UpdateInvoice(invoiceVM model)
         {
             using(SqlConnection connection = new SqlConnection(SecConn))
@@ -198,5 +216,22 @@ namespace EBS.Controllers
                 };
             }
         }
+
+        // Delete Invoice Logic 
+        private void DeleteInvoice(int id)
+        {
+            using(SqlConnection connection = new SqlConnection(SecConn))
+            {
+                connection.Open();
+                string query = "DELETE FROM InvoiceTbl WHERE invoiceID = @invoiceID";
+                
+                using(SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@invoiceID", id);
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
     }
 }
