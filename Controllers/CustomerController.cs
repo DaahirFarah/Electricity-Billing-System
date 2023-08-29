@@ -85,9 +85,9 @@ namespace EBS.Controllers
             return RedirectToAction("Index");
         }
 
-        // This action handles exporting customers data from the database using a library called PdfSharp. 
+        // This action handles exporting customers data from the database using a library called iTextSharp. 
         // This actionResult allows the user to easily download the list of customers in a pdf format 
-        public ActionResult GeneratePDF()
+        public ActionResult GenerateCustomerList()
         {
            
             var data = GetAllCustomers();
@@ -111,13 +111,6 @@ namespace EBS.Controllers
             image.SpacingAfter = 20; // Add spacing after the image
             document.Add(image);
 
-            // Add image before the title (centered)
-            //string imagePath = Server.MapPath("~/Assets/_e407f44c-5341-4a3d-b20e-e7ae5a10e34e.jpg"); 
-            //Image image = Image.GetInstance(imagePath);
-            //image.Alignment = Element.ALIGN_CENTER;
-            //image.SpacingAfter = 20; // Add spacing after the image
-            //document.Add(image);
-
             // Create title
             Paragraph title = new Paragraph("SEC Customers Data", new Font(baseFont, 18, Font.BOLD));
             title.Alignment = Element.ALIGN_CENTER;
@@ -129,7 +122,7 @@ namespace EBS.Controllers
             string formattedDate = currentDate.ToString("yyyy-MM-dd");
             Paragraph dateParagraph = new Paragraph("Date: " + formattedDate, new Font(baseFont, 10));
             dateParagraph.Alignment = Element.ALIGN_RIGHT;
-            dateParagraph.SpacingAfter = 4;
+            dateParagraph.SpacingAfter = 5;
             document.Add(dateParagraph);
 
             // Create a table

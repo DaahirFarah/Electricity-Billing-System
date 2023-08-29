@@ -58,6 +58,13 @@
             <input class="btn btn-primary btn-lg btn-block" type="submit" value="Invoice" />
         </form>
     </div>
+
+    <div class="mt-4 pt-2" style="padding-left: 40px;">
+        <form action="@Url.Action("GenerateInvoice", "Invoice")" method="get">
+            <input class="btn btn-secondary btn-lg btn-block" type="submit" value="Download Invoices" />
+        </form>
+    </div>
+
     <div class="container">
         <table id="myTable" class="table table-striped table-bordered" style="width:100%">
             <thead>

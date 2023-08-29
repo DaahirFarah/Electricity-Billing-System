@@ -89,12 +89,7 @@
             color: #333;
         }
 
-        #export{
-            display
-        }
-
-
-    </style>
+        </style>
 
     <title>Customers | SEC</title>
 
@@ -110,8 +105,8 @@
     </div>
 
     <div id="export" class="mt-4 pt-2" style="padding-left: 40px;">
-        <form action="@Url.Action("GeneratePDF", "Customer")" method="get">
-            <input class="btn btn-secondary btn-lg btn-block" type="submit" value="Export Customers Data" />
+        <form action="@Url.Action("GenerateCustomerList", "Customer")" method="get">
+            <input class="btn btn-secondary btn-lg btn-block" type="submit" value="Download Customers" />
         </form>
     </div>
     <div class="container">

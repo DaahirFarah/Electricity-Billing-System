@@ -1,10 +1,13 @@
 ﻿using EBS.viewModels;
+using iTextSharp.text.pdf;
+using iTextSharp.text;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Web;
@@ -87,6 +90,99 @@ namespace EBS.Controllers
             DeleteInvoice(id);
             return RedirectToAction("Index");
         }
+
+        // This action handles exporting Invoices data from the database using a library called iTextSharp. 
+        // This actionResult allows the user to easily download the list of Invoices in a pdf format 
+        public ActionResult GenerateInvoice()
+        {
+
+            var data = GetAllInvoices();
+
+            // Create a new PDF document
+            MemoryStream memoryStream = new MemoryStream();
+            Document document = new Document();
+            PdfWriter writer = PdfWriter.GetInstance(document, memoryStream);
+            document.Open();
+
+            // Define font and table settings
+            BaseFont baseFont = BaseFont.CreateFont(BaseFont.TIMES_ROMAN, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
+            Font headerFont = new Font(baseFont, 12, Font.BOLD);
+            Font contentFont = new Font(baseFont, 10);
+
+            // Add image as a logo at the top of the page
+            string imagePath = Server.MapPath("~/Assets/_e407f44c-5341-4a3d-b20e-e7ae5a10e34e.jpg");
+            Image image = Image.GetInstance(imagePath);
+            image.ScaleToFit(100, 100); // Set the width and height of the logo
+            image.Alignment = Element.ALIGN_CENTER;
+            image.SpacingAfter = 20; // Add spacing after the image
+            document.Add(image);
+
+            // Create title
+            Paragraph title = new Paragraph("SEC Invoices Data", new Font(baseFont, 18, Font.BOLD));
+            title.Alignment = Element.ALIGN_CENTER;
+            title.SpacingAfter = 10; // Add spacing after the title
+            document.Add(title);
+
+            // Add current date (top right side)
+            DateTime currentDate = DateTime.Now;
+            string formattedDate = currentDate.ToString("yyyy-MM-dd");
+            Paragraph dateParagraph = new Paragraph("Date: " + formattedDate, new Font(baseFont, 10));
+            dateParagraph.Alignment = Element.ALIGN_RIGHT;
+            dateParagraph.SpacingAfter = 5;
+            document.Add(dateParagraph);
+
+            // Create a table
+            PdfPTable table = new PdfPTable(10); // Use 10 columns for your data
+            table.WidthPercentage = 100; // Set table width to 100% of the page width
+            table.SetWidths(new float[] { 1, 1, 1.4f, 1.4f, 1.2f, 1.2f, 1.3f, 1.1f, 1.2f, 1.7f }); // Adjust column widths
+            table.DefaultCell.BorderWidth = 1; // Add cell borders with width 1
+
+            // Add column headers with borders
+            AddCellWithBorders(table, "Inv.ID", headerFont);
+            AddCellWithBorders(table, "cID", headerFont);
+            AddCellWithBorders(table, "B.P.Start", headerFont);
+            AddCellWithBorders(table, "B.P.End", headerFont);
+            AddCellWithBorders(table, "Prev.Reading", headerFont);
+            AddCellWithBorders(table, "Cur.Reading", headerFont);
+            AddCellWithBorders(table, "R.Date", headerFont);
+            AddCellWithBorders(table, "Rate ($)", headerFont);
+            AddCellWithBorders(table, "Usage (KwH)", headerFont);
+            AddCellWithBorders(table, "Amount ($)", headerFont);
+
+            //// Add data rows with borders
+            // Add data rows with borders
+            foreach (var item in data)
+            {
+                AddCellWithBorders(table, item.invoiceID.ToString(), contentFont);
+                AddCellWithBorders(table, item.cID.ToString(), contentFont);
+                AddCellWithBorders(table, item.billingPeriodStarts.ToString("yyyy-MM-dd"), contentFont);
+                AddCellWithBorders(table, item.billingPeriodEnds.ToString("yyyy-MM-dd"), contentFont);
+                AddCellWithBorders(table, item.prev_Reading.ToString(), contentFont);
+                AddCellWithBorders(table, item.cur_Reading.ToString(), contentFont);
+                AddCellWithBorders(table, item.reading_Date.ToString("yyyy-MM-dd"), contentFont);
+                AddCellWithBorders(table, item.Rate.ToString(), contentFont);
+                AddCellWithBorders(table, item.reading_Value.ToString(), contentFont);
+                AddCellWithBorders(table, item.total_Fee.ToString(), contentFont);
+            }
+            // Add the table to the document
+            document.Add(table);
+
+            // Close the document
+            document.Close();
+
+            // Return the PDF file to the client
+            return File(memoryStream.ToArray(), "application/pdf", "Invoices Data List.pdf");
+        }
+
+        // Helper method to add cell to table with specified content and font
+        private void AddCellWithBorders(PdfPTable table, string content, Font font)
+        {
+            PdfPCell cell = new PdfPCell(new Phrase(content, font));
+            cell.Padding = 5; // Add padding to the cell content
+            cell.BorderWidth = 1; // Add cell borders with width 1
+            table.AddCell(cell);
+        }
+
 
         // Fetching Invoices From the Database
         private List<invoiceVM> GetAllInvoices()
