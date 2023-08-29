@@ -46,7 +46,7 @@
                                 <div class="col-md-6 mb-4">
 
                                     <div class="form-outline form-group">
-                                        @Html.EditorFor(model => model.Rate, new { htmlAttributes = new { @class = "form-control form-control-lg", id = "Rate" } })
+                                        @Html.EditorFor(model => model.Rate, new { htmlAttributes = new { @class = "form-control form-control-lg", id = "Rate", @readonly = "readonly" } })
                                         @Html.LabelFor(model => model.Rate)
                                         @Html.ValidationMessageFor(model => model.Rate, "", new { @class = "text-danger" })
                                     </div>
