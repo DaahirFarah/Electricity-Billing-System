@@ -56,10 +56,9 @@
 
             <div class="nav-menu">
                 <ul>
-
                     <li class="active"><a href="/Customer/Index" class="d-flex align-items-center"><span class="wrap-icon icon-person mr-3"></span><span class="menu-text">Customers</span></a></li>
                     <li><a href="/Invoice/Index" class="d-flex align-items-center"><span class="wrap-icon icon-videocam mr-3"></span><span class="menu-text">Invoices</span></a></li>
-                    <li><a href="/payment/Index" class="d-flex align-items-center"><span class="wrap-icon icon-add_location mr-3"></span><span class="menu-text">Payments</span></a></li>
+                    <li><a href="/Payment/Index" class="d-flex align-items-center"><span class="wrap-icon icon-add_location mr-3"></span><span class="menu-text">Payments</span></a></li>
                     <li><a href="/Rate/Index" class="d-flex align-items-center"><span class="wrap-icon icon-rate_review mr-3"></span><span class="menu-text">Rate</span></a></li>
                     <li><a href="/Receipt/Index" class="d-flex align-items-center"><span class="wrap-icon icon-receipt mr-3"></span><span class="menu-text">Receipts</span></a></li>
                 </ul>
@@ -80,9 +79,21 @@
 
     <div class="container body-content">
         @RenderBody()
-
-
     </div>
+
+    <script>
+        const menuItems = document.querySelectorAll('.nav-menu li');
+
+        menuItems.forEach(item => {
+            item.addEventListener('click', () => {
+                menuItems.forEach(otherItem => {
+                    otherItem.classList.remove('active');
+                });
+
+                item.classList.add('active');
+            });
+        });
+    </script>
 
     @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/bundles/jquery")
@@ -92,23 +103,7 @@
     <script type="text/javascript" src="~/lib/datatables/js/jquery.dataTables.js"></script>
     <script type="text/javascript" src="~/lib/datatables/js/dataTables.bootstrap4.js"></script>
 
-    <script>
 
-        const menuLinks = document.querySelectorAll('.nav-menu a');
-
-        menuLinks.forEach(link => {
-
-            link.addEventListener('click', () => {
-
-                menuLinks.forEach(link => link.parentElement.classList.remove('active'));
-
-                link.parentElement.classList.add('active');
-
-            });
-
-        });
-
-    </script>
 
 </body>
 </html>
