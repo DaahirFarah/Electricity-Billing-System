@@ -99,14 +99,14 @@
 
 
     <div class="mt-4 pt-2" style="padding-left: 40px;">
-        <form action="@Url.Action("Create", "Customer")" method="get">
-            <input class="btn btn-primary btn-lg btn-block" type="submit" value="Register" />
+        <form action="@Url.Action("GenerateCustomerList", "Customer")" method="get">
+            <input class="btn btn-secondary btn-lg btn-block" type="submit" value="Download Customers" />
         </form>
     </div>
 
     <div id="export" class="mt-4 pt-2" style="padding-left: 40px;">
-        <form action="@Url.Action("GenerateCustomerList", "Customer")" method="get">
-            <input class="btn btn-secondary btn-lg btn-block" type="submit" value="Download Customers" />
+        <form action="@Url.Action("Create", "Customer")" method="get">
+            <input class="btn btn-primary btn-lg btn-block" type="submit" value="Register" />
         </form>
     </div>
     <div class="container">

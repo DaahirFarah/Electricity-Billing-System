@@ -54,14 +54,14 @@
 
 
     <div class="mt-4 pt-2" style="padding-left: 40px;">
-        <form action="@Url.Action("Create", "Invoice")" method="get">
-            <input class="btn btn-primary btn-lg btn-block" type="submit" value="Invoice" />
+        <form action="@Url.Action("GenerateInvoice", "Invoice")" method="get">
+            <input class="btn btn-secondary btn-lg btn-block" type="submit" value="Download Invoices" />
         </form>
     </div>
 
     <div class="mt-4 pt-2" style="padding-left: 40px;">
-        <form action="@Url.Action("GenerateInvoice", "Invoice")" method="get">
-            <input class="btn btn-secondary btn-lg btn-block" type="submit" value="Download Invoices" />
+        <form action="@Url.Action("Create", "Invoice")" method="get">
+            <input class="btn btn-primary btn-lg btn-block" type="submit" value="Create Invoice" />
         </form>
     </div>
 
