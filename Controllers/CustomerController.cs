@@ -89,71 +89,7 @@ namespace EBS.Controllers
         // This actionResult allows the user to easily download the list of customers in a pdf format 
         public ActionResult GeneratePDF()
         {
-            //// Retrieve data from the database using ADO.NET
-            //List<customerVM> data = GetAllCustomers();
-
-            //// Create a new PDF document
-            //PdfDocument document = new PdfDocument();
-            //PdfPage page = document.AddPage();
-            //XGraphics gfx = XGraphics.FromPdfPage(page);
-
-            //// Define font and table settings
-            //XFont headerFont = new XFont("Georgia", 7, XFontStyle.Bold);
-            //XFont contentFont = new XFont("Georgia", 5);
-            //int yPosition = 100;
-            //int rowHeight = 30;
-
-            //// Define column widths
-            //int col1Width = 50;
-            //int col2Width = 100;
-            //int col3Width = 100;
-            //int col4Width = 100;
-            //int col5Width = 150;
-            //int col6Width = 100;
-            //int col7Width = 150;
-
-            //// Draw column headers
-            //gfx.DrawString("Customer ID", headerFont, XBrushes.Black, new XPoint(50, yPosition));
-            //gfx.DrawString("First Name", headerFont, XBrushes.Black, new XPoint(50 + col1Width, yPosition));
-            //gfx.DrawString("Mid Name", headerFont, XBrushes.Black, new XPoint(50 + col1Width + col2Width, yPosition));
-            //gfx.DrawString("Last Name", headerFont, XBrushes.Black, new XPoint(50 + col1Width + col2Width + col3Width, yPosition));
-            //gfx.DrawString("Address", headerFont, XBrushes.Black, new XPoint(50 + col1Width + col2Width + col3Width + col4Width, yPosition));
-            //gfx.DrawString("Number", headerFont, XBrushes.Black, new XPoint(50 + col1Width + col2Width + col3Width + col4Width + col5Width, yPosition));
-            //gfx.DrawString("Number (Op)", headerFont, XBrushes.Black, new XPoint(50 + col1Width + col2Width + col3Width + col4Width + col5Width + col6Width, yPosition));
-            //yPosition += rowHeight;
-
-            //// Draw data rows
-            //foreach (var item in data)
-            //{
-            //    // Draw borders around the cells
-            //    gfx.DrawRectangle(XPens.Black, new XRect(50, yPosition, col1Width, rowHeight));
-            //    gfx.DrawRectangle(XPens.Black, new XRect(50 + col1Width, yPosition, col2Width, rowHeight));
-            //    gfx.DrawRectangle(XPens.Black, new XRect(50 + col1Width + col2Width, yPosition, col3Width, rowHeight));
-            //    gfx.DrawRectangle(XPens.Black, new XRect(50 + col1Width + col2Width + col3Width, yPosition, col4Width, rowHeight));
-            //    gfx.DrawRectangle(XPens.Black, new XRect(50 + col1Width + col2Width + col3Width + col4Width, yPosition, col5Width, rowHeight));
-            //    gfx.DrawRectangle(XPens.Black, new XRect(50 + col1Width + col2Width + col3Width + col4Width + col5Width, yPosition, col6Width, rowHeight));
-            //    gfx.DrawRectangle(XPens.Black, new XRect(50 + col1Width + col2Width + col3Width + col4Width + col5Width + col6Width, yPosition, col7Width, rowHeight));
-
-            //    // Draw data within the cells
-            //    gfx.DrawString(item.cID.ToString(), contentFont, XBrushes.Black, new XPoint(50 + 5, yPosition + 5));
-            //    gfx.DrawString(item.cFirstName, contentFont, XBrushes.Black, new XPoint(50 + col1Width + 5, yPosition + 5));
-            //    gfx.DrawString(item.cMidName, contentFont, XBrushes.Black, new XPoint(50 + col1Width + col2Width + 5, yPosition + 5));
-            //    gfx.DrawString(item.cLastName, contentFont, XBrushes.Black, new XPoint(50 + col1Width + col2Width + col3Width + 5, yPosition + 5));
-            //    gfx.DrawString(item.cAddress, contentFont, XBrushes.Black, new XPoint(50 + col1Width + col2Width + col3Width + col4Width + 5, yPosition + 5));
-            //    gfx.DrawString(item.cNumber.ToString(), contentFont, XBrushes.Black, new XPoint(50 + col1Width + col2Width + col3Width + col4Width + col5Width + 5, yPosition + 5));
-            //    gfx.DrawString(item.cNumberOp.ToString(), contentFont, XBrushes.Black, new XPoint(50 + col1Width + col2Width + col3Width + col4Width + col5Width + col6Width + 5, yPosition + 5));
-
-            //    // Move to the next row's Y-coordinate
-            //    yPosition += rowHeight;
-            //}
-
-            //// Save the PDF to a memory stream
-            //MemoryStream stream = new MemoryStream();
-            //document.Save(stream, false);
-
-            //// Return the PDF file to the client
-            //return File(stream.ToArray(), "application/pdf", "Customers List.pdf");
-
+           
             var data = GetAllCustomers();
 
             // Create a new PDF document
@@ -163,33 +99,63 @@ namespace EBS.Controllers
             document.Open();
 
             // Define font and table settings
-            BaseFont baseFont = BaseFont.CreateFont(BaseFont.HELVETICA, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
+            BaseFont baseFont = BaseFont.CreateFont(BaseFont.TIMES_ROMAN, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
             Font headerFont = new Font(baseFont, 14, Font.BOLD);
             Font contentFont = new Font(baseFont, 12);
 
+            // Add image as a logo at the top of the page
+            string imagePath = Server.MapPath("~/Assets/_e407f44c-5341-4a3d-b20e-e7ae5a10e34e.jpg");
+            Image image = Image.GetInstance(imagePath);
+            image.ScaleToFit(100, 100); // Set the width and height of the logo
+            image.Alignment = Element.ALIGN_CENTER;
+            image.SpacingAfter = 20; // Add spacing after the image
+            document.Add(image);
+
+            // Add image before the title (centered)
+            //string imagePath = Server.MapPath("~/Assets/_e407f44c-5341-4a3d-b20e-e7ae5a10e34e.jpg"); 
+            //Image image = Image.GetInstance(imagePath);
+            //image.Alignment = Element.ALIGN_CENTER;
+            //image.SpacingAfter = 20; // Add spacing after the image
+            //document.Add(image);
+
+            // Create title
+            Paragraph title = new Paragraph("SEC Customers Data", new Font(baseFont, 18, Font.BOLD));
+            title.Alignment = Element.ALIGN_CENTER;
+            title.SpacingAfter = 10; // Add spacing after the title
+            document.Add(title);
+
+            // Add current date (top right side)
+            DateTime currentDate = DateTime.Now;
+            string formattedDate = currentDate.ToString("yyyy-MM-dd");
+            Paragraph dateParagraph = new Paragraph("Date: " + formattedDate, new Font(baseFont, 10));
+            dateParagraph.Alignment = Element.ALIGN_RIGHT;
+            dateParagraph.SpacingAfter = 4;
+            document.Add(dateParagraph);
+
             // Create a table
             PdfPTable table = new PdfPTable(7);
-            table.DefaultCell.BorderWidth = 1;
+            table.WidthPercentage = 100; // Set table width to 100% of the page width
+            table.DefaultCell.BorderWidth = 1; // Add cell borders with width 1
 
-            // Add header row
-            table.AddCell(new PdfPCell(new Phrase("Customer ID", headerFont)));
-            table.AddCell(new PdfPCell(new Phrase("First Name", headerFont)));
-            table.AddCell(new PdfPCell(new Phrase("Mid Name", headerFont)));
-            table.AddCell(new PdfPCell(new Phrase("Last Name", headerFont)));
-            table.AddCell(new PdfPCell(new Phrase("Address", headerFont)));
-            table.AddCell(new PdfPCell(new Phrase("Number", headerFont)));
-            table.AddCell(new PdfPCell(new Phrase("Number (Op)", headerFont)));
+            // Add column headers with borders
+            AddCellWithBorders(table, "Customer ID", headerFont);
+            AddCellWithBorders(table, "First Name", headerFont);
+            AddCellWithBorders(table, "Mid Name", headerFont);
+            AddCellWithBorders(table, "Last Name", headerFont);
+            AddCellWithBorders(table, "Address", headerFont);
+            AddCellWithBorders(table, "Number", headerFont);
+            AddCellWithBorders(table, "Number (Op)", headerFont);
 
-            // Add data rows
+            // Add data rows with borders
             foreach (var item in data)
             {
-                table.AddCell(new PdfPCell(new Phrase(item.cID.ToString(), contentFont)));
-                table.AddCell(new PdfPCell(new Phrase(item.cFirstName, contentFont)));
-                table.AddCell(new PdfPCell(new Phrase(item.cMidName, contentFont)));
-                table.AddCell(new PdfPCell(new Phrase(item.cLastName, contentFont)));
-                table.AddCell(new PdfPCell(new Phrase(item.cAddress, contentFont)));
-                table.AddCell(new PdfPCell(new Phrase(item.cNumber.ToString(), contentFont)));
-                table.AddCell(new PdfPCell(new Phrase(item.cNumberOp.ToString(), contentFont)));
+                AddCellWithBorders(table, item.cID.ToString(), contentFont);
+                AddCellWithBorders(table, item.cFirstName, contentFont);
+                AddCellWithBorders(table, item.cMidName, contentFont);
+                AddCellWithBorders(table, item.cLastName, contentFont);
+                AddCellWithBorders(table, item.cAddress, contentFont);
+                AddCellWithBorders(table, item.cNumber.ToString(), contentFont);
+                AddCellWithBorders(table, item.cNumberOp.ToString(), contentFont);
             }
 
             // Add the table to the document
@@ -199,10 +165,17 @@ namespace EBS.Controllers
             document.Close();
 
             // Return the PDF file to the client
-            return File(memoryStream.ToArray(), "application/pdf", "CustomersList.pdf");
-
+            return File(memoryStream.ToArray(), "application/pdf", "Customers Data.pdf");
         }
 
+        // Helper method to add cell to table with specified content and font
+        private void AddCellWithBorders(PdfPTable table, string content, Font font)
+        {
+            PdfPCell cell = new PdfPCell(new Phrase(content, font));
+            cell.Padding = 5; // Add padding to the cell content
+            cell.BorderWidth = 1; // Add cell borders with width 1
+            table.AddCell(cell);
+        }
 
 
 

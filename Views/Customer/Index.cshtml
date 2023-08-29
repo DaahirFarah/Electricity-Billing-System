@@ -89,6 +89,9 @@
             color: #333;
         }
 
+        #export{
+            display
+        }
 
 
     </style>
@@ -105,9 +108,10 @@
             <input class="btn btn-primary btn-lg btn-block" type="submit" value="Register" />
         </form>
     </div>
-    <div class="mt-4 pt-2" style="padding-left: 40px;">
+
+    <div id="export" class="mt-4 pt-2" style="padding-left: 40px;">
         <form action="@Url.Action("GeneratePDF", "Customer")" method="get">
-            <input class="btn btn-success btn-lg btn-block" type="submit" value="Export Data" />
+            <input class="btn btn-secondary btn-lg btn-block" type="submit" value="Export Customers Data" />
         </form>
     </div>
     <div class="container">
