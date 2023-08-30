@@ -1,4 +1,6 @@
 ﻿
+@model EBS.viewModels.payVM
+
 @{
     Layout = "~/Views/Shared/_Layout2.cshtml";
 }
@@ -8,81 +10,100 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <title>Update Payment Record | SEC</title>
+    <title>Update Payment | SEC</title>
     <link href="~/Content/Registeration.css" rel="stylesheet" />
 
 </head>
 <body>
+    @using (Html.BeginForm("Edit", "Payment", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
 
-    <section class="vh-100 gradient-custom;" ; style="font-family: Verdana, Geneva, Tahoma, sans-serif; ">
-        <div class="container py-5 h-100">
-            <div class="row justify-content-center align-items-center h-100">
+        @Html.HiddenFor(model => model.payID)
 
-                <div class="col-12 col-lg-9 col-xl-7">
-                    <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">
+        <section class="vh-100 gradient-custom;" ; style="font-family: Verdana, Geneva, Tahoma, sans-serif; ">
+            <div class="container py-5 h-100">
+                <div class="row justify-content-center align-items-center h-100">
 
-                        <div class="card-body p-4 p-md-5">
-                            <h2 class="mb-4 pb-2 pb-md-0 mb-md-5"><strong>Update Payment Record</strong></h2>
-                            <form>
+                    <div class="col-12 col-lg-9 col-xl-7">
+                        <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">
+
+                            <div class="card-body p-4 p-md-5">
+                                <h2 class="mb-4 pb-2 pb-md-0 mb-md-5"><strong>Record New Payment</strong></h2>
+                                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
                                 <div class="row">
                                     <div class="col-md-6 mb-4">
 
-                                        <div class="form-outline">
-                                            <input type="text" id="cusID" class="form-control form-control-lg" />
-                                            <label class="form-label" for="cusID">Customer ID</label>
+                                        <div class="form-outline form-group">
+
+                                            @Html.EditorFor(model => model.cID, new { htmlAttributes = new { @class = "form-control form-control-lg" } })
+                                            @Html.LabelFor(m => m.cID)
+                                            @Html.ValidationMessageFor(model => model.cID, "", new { @class = "text-danger" })
                                         </div>
 
                                     </div>
                                     <div class="col-md-6 mb-4">
 
-                                        <div class="form-outline">
-                                            <input type="text" id="invID" class="form-control form-control-lg" />
-                                            <label class="form-label" for="invID">Invoice ID</label>
+                                        <div class="form-outline form-group">
+                                            @Html.EditorFor(model => model.invoiceID, new { htmlAttributes = new { @class = "form-control form-control-lg", id = "invoiceID" } })
+                                            @Html.LabelFor(model => model.invoiceID)
+                                            @Html.ValidationMessageFor(model => model.invoiceID, "", new { @class = "text-danger" })
                                         </div>
 
                                     </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-md-6 mb-4 d-flex align-items-center">
-
-                                        <div class="form-outline">
-                                            <input type="text" class="form-control form-control-lg" id="payAmount" />
-                                            <label for="payAmount" class="form-label">Payment Amount ($)</label>
-                                        </div>
-
-                                    </div>
-
-                                    <div class="col-md-6 mb-4 d-flex align-items-center">
-
-
-                                        <div class="form-outline">
-                                            <input type="text" class="form-control form-control-lg" id="payMethod" />
-                                            <label for="payMethod" class="form-label">Payment Method</label>
-                                        </div>
-
-                                    </div>
-
-                                </div>
-
-                                <div class="row" , style="align-content:center">
-                                    <div class="col-md-6 mb-4 pb-2">
-
-                                        <div class="form-outline">
-                                            <input type="date" id="payDate" class="form-control form-control-lg" />
-                                            <label class="form-label" for="payDate">Payment Date</label>
-                                        </div>
-
-                                    </div>
-
                                 </div>
 
 
                                 <div class="row">
+                                    <div class="col-md-6 mb-4">
+
+                                        <div class="form-outline form-group">
+
+                                            @Html.EditorFor(model => model.paidAmount, new { htmlAttributes = new { @class = "form-control form-control-lg", id = "paidAmount" } })
+                                            @Html.LabelFor(m => m.paidAmount)
+                                            @Html.ValidationMessageFor(model => model.paidAmount, "", new { @class = "text-danger" })
+                                        </div>
+
+                                    </div>
+                                    <div class="col-md-6 mb-4">
+
+                                        <div class="form-outline form-group">
+                                            @Html.EditorFor(model => model.totalFee, new { htmlAttributes = new { @class = "form-control form-control-lg", id = "totalFee" } })
+                                            @Html.LabelFor(model => model.totalFee)
+                                            @Html.ValidationMessageFor(model => model.totalFee, "", new { @class = "text-danger" })
+                                        </div>
+
+                                    </div>
+                                </div>
+
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-4">
+
+                                        <div class="form-outline form-group">
+
+                                            @Html.EditorFor(model => model.payMethod, new { htmlAttributes = new { @class = "form-control form-control-lg" } })
+                                            @Html.LabelFor(m => m.payMethod)
+                                            @Html.ValidationMessageFor(model => model.payMethod, "", new { @class = "text-danger" })
+                                        </div>
+
+                                    </div>
+                                    <div class="col-md-6 mb-4">
+
+                                        <div class="form-outline form-group">
+                                            <input type="date" class="form-control form-control-lg" id="payDate" name="payDate" value="@Model.payDate.ToString("yyyy-MM-dd")" />
+                                            @Html.LabelFor(m => m.payDate)
+                                            @Html.ValidationMessageFor(model => model.payDate, "", new { @class = "text-danger" })
+                                        </div>
+
+                                    </div>
+                                </div>
+
+
+                                <div class="row">
                                     <div class="col-md-6 mb-4 pb-2">
-                                        <input type="button" value="Update" class="btn btn-primary btn-lg btn-block" />
-                                        @*<input class="btn btn-primary btn-lg btn-block" type="submit" value="Save" />*@
+                                        <button type="submit" value="Create" class="btn btn-primary btn-lg btn-block">Update</button>
                                     </div>
 
 
@@ -92,14 +113,14 @@
 
                                 </div>
 
-                            </form>
+
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-
+    }
 </body>
 </html>
