@@ -35,9 +35,14 @@ namespace EBS.Controllers
         [ValidateAntiForgeryToken]
         [HttpPost]
         [Display(Name = "Create")]
-        public ActionResult CreateConfirm()
+        public ActionResult Create(payVM model)
         {
-            return View();
+            if (ModelState.IsValid)
+            {
+                InsertPayment(model);
+                return RedirectToAction("Index");
+            }
+            return View(model);
         }
 
 
@@ -55,6 +60,8 @@ namespace EBS.Controllers
         //    return View();
         //}
 
+
+        // Logic for retrieving payment data from the database
         public List<payVM> GetAllPayments()
         {
             List<payVM> payments = new List<payVM>();
@@ -88,6 +95,34 @@ namespace EBS.Controllers
 
 
             return payments;
+        }
+
+
+        // Method that holds payment insertion logic
+
+        private void InsertPayment(payVM model)
+        {
+            using (SqlConnection connection = new SqlConnection(SecConn))
+            {
+                connection.Open();
+                string query = "INSERT INTO PaymentTbl (cID, invoiceID, paidAmount,"
+                             + "totalFee, payMethod, payDate ) "
+                             + "VALUES (@cID, @invoiceID, @paidAmount, @totalFee, @payMethod, @payDate)";
+                           
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@cID", model.cID);
+                    command.Parameters.AddWithValue("@invoiceID", model.invoiceID);
+                    command.Parameters.AddWithValue("@paidAmount", model.paidAmount);
+                    command.Parameters.AddWithValue("@totalFee", model.totalFee);
+                    command.Parameters.AddWithValue("@payMethod", model.payMethod);
+                    command.Parameters.AddWithValue("@payDate", model.payDate);
+                   
+
+                    command.ExecuteNonQuery();
+                }
+            }
         }
 
     }
