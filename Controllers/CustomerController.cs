@@ -215,7 +215,7 @@ namespace EBS.Controllers
             {
                 connection.Open();
 
-                string query = "INSERT INTO CustomerTbl (cFirstName, cMidName, cLastName, cAddress, cNumber, cNumberOp) VALUES (@cFirstName, @cMidName, @cLastName, @cAddress, @cNumber, @cNumberOp)";
+                string query = "INSERT INTO CustomerTbl (cFirstName, cMidName, cLastName, cAddress, cNumber, cNumberOp, Balance) VALUES (@cFirstName, @cMidName, @cLastName, @cAddress, @cNumber, @cNumberOp, 0)";
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@cFirstName", model.cFirstName);

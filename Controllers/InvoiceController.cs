@@ -294,10 +294,11 @@ namespace EBS.Controllers
                 connection.Open();
                 string query = "Update InvoiceTbl SET cID = @cID, Rate = @Rate, billingPeriodStarts = @billingPeriodStarts,"
                              + "billingPeriodEnds = @billingPeriodEnds, prev_Reading = @prev_Reading, cur_Reading = @cur_Reading,"
-                             + "reading_Value = @reading_Value, reading_Date = @reading_Date, total_Fee = @total_Fee";
+                             + "reading_Value = @reading_Value, reading_Date = @reading_Date, total_Fee = @total_Fee WHERE invoiceID = @invoiceID";
 
                 using(SqlCommand command = new SqlCommand(query, connection))
                 {
+                    command.Parameters.AddWithValue("@invoiceID", model.invoiceID);
                     command.Parameters.AddWithValue("@cID", model.cID);
                     command.Parameters.AddWithValue("@Rate", model.Rate);
                     command.Parameters.AddWithValue("@billingPeriodStarts", model.billingPeriodStarts);

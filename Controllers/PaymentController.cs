@@ -46,19 +46,26 @@ namespace EBS.Controllers
         }
 
 
-        ////GET: Update Payment
-        //public ActionResult Edit()
-        //{
-        //    return View();
-        //}
+        //GET: Update Payment
+        [HttpGet]
+        public ActionResult Edit(int id)
+        {
+            payVM payment = GetPaymentByID(id);
+            return View(payment);
+        }
 
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //[Display(Name = "Edit")]
-        //public ActionResult EditConfirmConfirm()
-        //{
-        //    return View();
-        //}
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Display(Name = "Edit")]
+        public ActionResult Edit(payVM model)
+        {
+            if (ModelState.IsValid)
+            {
+                UpdatePayment(model);
+                return RedirectToAction("Index");
+            }
+            return View(model);
+        }
 
 
         // Logic for retrieving payment data from the database
@@ -137,5 +144,79 @@ namespace EBS.Controllers
             }
         }
 
+
+        // Retrieving Payments by ID for updating
+        private payVM GetPaymentByID(int payID)
+        {
+            using (SqlConnection connection = new SqlConnection(SecConn))
+            {
+                connection.Open();
+                string query = "SELECT * FROM PaymentTbl WHERE payID = @payID";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@payID", payID);
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            return new payVM
+                            {
+                                payID = Convert.ToInt32(reader["payID"]),
+                                cID = Convert.ToInt32(reader["cID"]),
+                                invoiceID = Convert.ToInt32(reader["invoiceID"]),                       
+                                paidAmount = Convert.ToDecimal(reader["paidAmount"]),
+                                totalFee = Convert.ToDecimal(reader["totalFee"]),
+                                payMethod = Convert.ToString(reader["payMethod"]),
+                                payDate = Convert.ToDateTime(reader["payDate"])
+                                
+                            };
+                        }
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        // Update Payment Logic
+        private void UpdatePayment(payVM model)
+        {
+            using (SqlConnection connection = new SqlConnection(SecConn))
+            {
+                connection.Open();
+                string query = "Update PaymentTbl SET cID = @cID, invoiceID = @invoiceID, paidAmount = @paidAmount,"
+                             + "totalFee = @totalFee, payMethod = @payMethod, payDate = @payDate WHERE payID = @payID";
+                             
+
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@payID", model.payID);
+                    command.Parameters.AddWithValue("@cID", model.cID);
+                    command.Parameters.AddWithValue("@invoiceID", model.invoiceID);
+                    command.Parameters.AddWithValue("@paidAmount", model.paidAmount);
+                    command.Parameters.AddWithValue("@totalFee", model.totalFee);
+                    command.Parameters.AddWithValue("@payMethod", model.payMethod);
+                    command.Parameters.AddWithValue("@payDate", model.payDate);
+
+
+                    command.ExecuteNonQuery();
+
+                    // Calculate the difference between paidAmount and totalFee
+                    decimal balanceDifference = model.totalFee - model.paidAmount;
+
+                    // Update CustomerTbl with the balance difference
+                    string updateBalanceQuery = "UPDATE CustomerTbl SET Balance = Balance + @balanceDifference WHERE cID = @cID";
+                    using (SqlCommand updateBalanceCommand = new SqlCommand(updateBalanceQuery, connection))
+                    {
+
+                        updateBalanceCommand.Parameters.AddWithValue("@balanceDifference", balanceDifference);
+                        updateBalanceCommand.Parameters.AddWithValue("@cID", model.cID);
+                        updateBalanceCommand.ExecuteNonQuery();
+                    }
+                }
+            }
+        }
     }
 }
