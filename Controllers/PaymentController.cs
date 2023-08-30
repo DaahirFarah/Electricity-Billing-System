@@ -67,6 +67,25 @@ namespace EBS.Controllers
             return View(model);
         }
 
+        // GET: Delete
+        [HttpGet]
+        public ActionResult Delete(int id)
+        {
+            payVM payment = GetPaymentByID(id);
+            return View(payment);
+        }
+
+        // POST: Delete
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Display(Name = "Delete")]
+        public ActionResult DeleteConfirmed(int id)
+        {
+                DeletePayment(id);
+                return RedirectToAction("Index");
+            
+        }
+
 
         // Logic for retrieving payment data from the database
         public List<payVM> GetAllPayments()
@@ -215,6 +234,23 @@ namespace EBS.Controllers
                         updateBalanceCommand.Parameters.AddWithValue("@cID", model.cID);
                         updateBalanceCommand.ExecuteNonQuery();
                     }
+                }
+            }
+        }
+
+
+        // Delete Payment Logic
+        private void DeletePayment(int id)
+        {
+            
+            using (SqlConnection connection = new SqlConnection(SecConn))
+            {
+                connection.Open();
+                string query = "DELETE FROM PaymentTbl WHERE payID = @payID";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@payID", id);
+                    command.ExecuteNonQuery();
                 }
             }
         }
