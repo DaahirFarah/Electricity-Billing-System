@@ -69,7 +69,7 @@ namespace EBS.Controllers
                 UpdateInvoice(model);
                 return RedirectToAction("Index");
             }
-            
+
             return View(model);
         }
 
@@ -211,7 +211,7 @@ namespace EBS.Controllers
                                 Rate = Convert.ToDecimal(reader["Rate"]),
                                 reading_Value = Convert.ToDecimal(reader["reading_Value"]),
                                 total_Fee = Convert.ToDecimal(reader["total_Fee"]),
-                                
+
                             });
                         }
                     }
@@ -224,7 +224,7 @@ namespace EBS.Controllers
         // Inserting Invoices Into the Database
         private void InsertInvoice(invoiceVM model)
         {
-            using(SqlConnection connection = new SqlConnection(SecConn))
+            using (SqlConnection connection = new SqlConnection(SecConn))
             {
                 connection.Open();
                 string query = "INSERT INTO InvoiceTbl (cID, Rate, billingPeriodStarts,"
@@ -232,7 +232,7 @@ namespace EBS.Controllers
                              + "VALUES (@cID, @Rate, @billingPeriodStarts, @billingPeriodEnds, @prev_Reading, @cur_Reading,"
                              + "@reading_Value, @reading_Date, @total_Fee)";
 
-                using(SqlCommand command = new SqlCommand(query, connection))
+                using (SqlCommand command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@cID", model.cID);
                     command.Parameters.AddWithValue("@Rate", model.Rate);
@@ -256,7 +256,7 @@ namespace EBS.Controllers
             {
                 connection.Open();
                 string query = "SELECT * FROM InvoiceTbl WHERE invoiceID = @invoiceID";
-                using(SqlCommand command = new SqlCommand(query, connection))
+                using (SqlCommand command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@invoiceID", invoiceID);
 
@@ -289,14 +289,14 @@ namespace EBS.Controllers
         // Update Invoice Logic
         private void UpdateInvoice(invoiceVM model)
         {
-            using(SqlConnection connection = new SqlConnection(SecConn))
+            using (SqlConnection connection = new SqlConnection(SecConn))
             {
                 connection.Open();
                 string query = "Update InvoiceTbl SET cID = @cID, Rate = @Rate, billingPeriodStarts = @billingPeriodStarts,"
                              + "billingPeriodEnds = @billingPeriodEnds, prev_Reading = @prev_Reading, cur_Reading = @cur_Reading,"
                              + "reading_Value = @reading_Value, reading_Date = @reading_Date, total_Fee = @total_Fee WHERE invoiceID = @invoiceID";
 
-                using(SqlCommand command = new SqlCommand(query, connection))
+                using (SqlCommand command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@invoiceID", model.invoiceID);
                     command.Parameters.AddWithValue("@cID", model.cID);
@@ -317,17 +317,43 @@ namespace EBS.Controllers
         // Delete Invoice Logic 
         private void DeleteInvoice(int id)
         {
-            using(SqlConnection connection = new SqlConnection(SecConn))
+            using (SqlConnection connection = new SqlConnection(SecConn))
             {
                 connection.Open();
                 string query = "DELETE FROM InvoiceTbl WHERE invoiceID = @invoiceID";
-                
-                using(SqlCommand command = new SqlCommand(query, connection))
+
+                using (SqlCommand command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@invoiceID", id);
                     command.ExecuteNonQuery();
                 }
             }
+        }
+
+
+        // Method to retrieve Balance from CustomerTbl
+        public ActionResult GetBalance(string cID)
+        {
+            decimal balance = 0;
+
+            using (SqlConnection connection = new SqlConnection(SecConn))
+            {
+                connection.Open();
+
+                string query = "SELECT Balance FROM CustomerTbl WHERE cID = @cID";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@cID", cID);
+
+                    object result = command.ExecuteScalar();
+                    if (result != null && result != DBNull.Value)
+                    {
+                        balance = Convert.ToDecimal(result);
+                    }
+                }
+            }
+
+            return Json(new { balance = balance }, JsonRequestBehavior.AllowGet);
         }
 
     }
