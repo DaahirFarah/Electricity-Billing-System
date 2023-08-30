@@ -346,6 +346,7 @@
     <Content Include="Views\Shared\_LayoutLogin.cshtml" />
     <Content Include="Views\Customer\Delete.cshtml" />
     <Content Include="Views\Invoice\Delete.cshtml" />
+    <Content Include="Views\Payment\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

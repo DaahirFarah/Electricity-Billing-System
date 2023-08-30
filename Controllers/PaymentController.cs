@@ -75,15 +75,14 @@ namespace EBS.Controllers
             return View(payment);
         }
 
-        // POST: Delete
+        //POST: Delete Invoice
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Display(Name = "Delete")]
         public ActionResult DeleteConfirmed(int id)
         {
-                DeletePayment(id);
-                return RedirectToAction("Index");
-            
+            DeletePayment(id);
+            return RedirectToAction("Index");
         }
 
 
@@ -226,7 +225,7 @@ namespace EBS.Controllers
                     decimal balanceDifference = model.totalFee - model.paidAmount;
 
                     // Update CustomerTbl with the balance difference
-                    string updateBalanceQuery = "UPDATE CustomerTbl SET Balance = Balance + @balanceDifference WHERE cID = @cID";
+                    string updateBalanceQuery = "UPDATE CustomerTbl SET Balance = @balanceDifference WHERE cID = @cID";
                     using (SqlCommand updateBalanceCommand = new SqlCommand(updateBalanceQuery, connection))
                     {
 

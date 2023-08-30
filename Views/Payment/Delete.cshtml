@@ -1,0 +1,125 @@
+﻿
+
+@model EBS.viewModels.payVM
+
+@{
+    Layout = "~/Views/Shared/_Layout2.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Delete Payment | SEC</title>
+    <link href="~/Content/Registeration.css" rel="stylesheet" />
+
+</head>
+<body>
+
+    @using (Html.BeginForm("Delete", "Payment", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+
+        @Html.HiddenFor(model => model.payID)
+
+
+        <section class="vh-100 gradient-custom;" style="font-family: Verdana, Geneva, Tahoma, sans-serif; ">
+            <div class="container py-5 h-100">
+                <div class="row justify-content-center align-items-center h-100">
+
+                    <div class="col-12 col-lg-9 col-xl-7">
+                        <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">
+
+                            <div class="card-body p-4 p-md-5">
+                                <h2 class="mb-4 pb-2 pb-md-0 mb-md-5"><strong>Delete Payment Record</strong></h2>
+
+                                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                                <div class="row">
+                                    <div class="col-md-6 mb-4">
+
+                                        <div class="form-outline form-group">
+
+                                            @Html.EditorFor(model => model.cID, new { htmlAttributes = new { @class = "form-control form-control-lg", @disabled = "disabled" } })
+                                            @Html.LabelFor(m => m.cID)
+                                            @Html.ValidationMessageFor(model => model.cID, "", new { @class = "text-danger" })
+                                        </div>
+
+                                    </div>
+                                    <div class="col-md-6 mb-4">
+
+                                        <div class="form-outline form-group">
+                                            @Html.EditorFor(model => model.invoiceID, new { htmlAttributes = new { @class = "form-control form-control-lg", @disabled = "disabled" } })
+                                            @Html.LabelFor(model => model.invoiceID)
+                                            @Html.ValidationMessageFor(model => model.invoiceID, "", new { @class = "text-danger" })
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-4 d-flex align-items-center">
+
+                                        <div class="form-outline form-group">
+                                            @Html.EditorFor(model => model.paidAmount, new { htmlAttributes = new { @class = "form-control form-control-lg", @disabled = "disabled" } })
+                                            @Html.LabelFor(model => model.paidAmount)
+                                            @Html.ValidationMessageFor(model => model.paidAmount, "", new { @class = "text-danger" })
+                                        </div>
+
+                                    </div>
+
+                                    <div class="col-md-6 mb-4 d-flex align-items-center">
+
+
+                                        <div class="form-outline form-group">
+                                            @Html.EditorFor(model => model.totalFee, new { htmlAttributes = new { @class = "form-control form-control-lg", @disabled = "disabled" } })
+                                            @Html.LabelFor(model => model.totalFee)
+                                            @Html.ValidationMessageFor(model => model.totalFee, "", new { @class = "text-danger" })
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-4 pb-2">
+
+                                        <div class="form-outline form-group">
+                                            @Html.EditorFor(model => model.payMethod, new { htmlAttributes = new { @class = "form-control form-control-lg", @disabled = "disabled" } })
+                                            @Html.LabelFor(model => model.payMethod)
+                                            @Html.ValidationMessageFor(model => model.payMethod, "", new { @class = "text-danger" })
+                                        </div>
+
+                                    </div>
+                                    <div class="col-md-6 mb-4 pb-2">
+
+                                        <div class="form-outline form-group">
+                                            <input type="date" disabled class="form-control form-control-lg" id="payDate" name="payDate" value="@Model.payDate.ToString("yyyy-MM-dd")" />                                            @Html.LabelFor(model => model.payDate)
+                                            @Html.ValidationMessageFor(model => model.payDate, "", new { @class = "text-danger" })
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-4 pb-2">
+                                        <button type="submit" value="Delete" class="btn btn-danger btn-lg btn-block">Delete</button>
+                                    </div>
+                                    <div class="col-md-6 mb-4 pb-2">
+                                        @Html.ActionLink("Back", "Index", "Payment", null, new { @class = "btn btn-secondary btn-lg btn-block" })
+                                    </div>
+                                </div>
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    }
+</body>
+</html>
+
