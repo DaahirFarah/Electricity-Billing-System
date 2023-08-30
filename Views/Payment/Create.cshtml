@@ -1,4 +1,6 @@
 ﻿
+@model EBS.viewModels.payVM
+
 @{
     Layout = "~/Views/Shared/_Layout2.cshtml";
 }
@@ -23,76 +25,91 @@
 
                         <div class="card-body p-4 p-md-5">
                             <h2 class="mb-4 pb-2 pb-md-0 mb-md-5"><strong>Record New Payment</strong></h2>
-                            <form>
-
-                                <div class="row">
-                                    <div class="col-md-6 mb-4">
-
-                                        <div class="form-outline">
-                                            <input type="text" id="cusID" class="form-control form-control-lg" />
-                                            <label class="form-label" for="cusID">Customer ID</label>
-                                        </div>
-
-                                    </div>
-                                    <div class="col-md-6 mb-4">
-
-                                        <div class="form-outline">
-                                            <input type="text" id="invID" class="form-control form-control-lg" />
-                                            <label class="form-label" for="invID">Invoice ID</label>
-                                        </div>
-
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-md-6 mb-4 d-flex align-items-center">
-
-                                        <div class="form-outline">
-                                            <input type="text" class="form-control form-control-lg" id="payAmount" />
-                                            <label for="payAmount" class="form-label">Payment Amount ($)</label>
-                                        </div>
-
-                                    </div>
-
-                                    <div class="col-md-6 mb-4 d-flex align-items-center">
 
 
-                                        <div class="form-outline">
-                                            <input type="text" class="form-control form-control-lg" id="payMethod" />
-                                            <label for="payMethod" class="form-label">Payment Method</label>
-                                        </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
 
+                                    <div class="form-outline form-group">
+
+                                        @Html.EditorFor(model => model.cID, new { htmlAttributes = new { @class = "form-control form-control-lg" } })
+                                        @Html.LabelFor(m => m.cID)
+                                        @Html.ValidationMessageFor(model => model.cID, "", new { @class = "text-danger" })
                                     </div>
 
                                 </div>
+                                <div class="col-md-6 mb-4">
 
-                                <div class="row", style="align-content:center">
-                                    <div class="col-md-6 mb-4 pb-2">
-
-                                        <div class="form-outline">
-                                            <input type="date" id="payDate" class="form-control form-control-lg" />
-                                            <label class="form-label" for="payDate">Payment Date</label>
-                                        </div>
-
-                                    </div>
-                                   
-                                </div>
-
-                               
-                                <div class="row">
-                                    <div class="col-md-6 mb-4 pb-2">
-                                        <input type="button" value="Create" class="btn btn-primary btn-lg btn-block" />
-                                        @*<input class="btn btn-primary btn-lg btn-block" type="submit" value="Save" />*@
-                                    </div>
-
-
-                                    <div class="col-md-6 mb-4 pb-2">
-                                        @Html.ActionLink("Back", "Index", "Payment", null, new { @class = "btn btn-secondary btn-lg btn-block" })
+                                    <div class="form-outline form-group">
+                                        @Html.EditorFor(model => model.invoiceID, new { htmlAttributes = new { @class = "form-control form-control-lg", id = "invoiceID" } })
+                                        @Html.LabelFor(model => model.invoiceID)
+                                        @Html.ValidationMessageFor(model => model.invoiceID, "", new { @class = "text-danger" })
                                     </div>
 
                                 </div>
+                            </div>
 
-                            </form>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+
+                                    <div class="form-outline form-group">
+
+                                        @Html.EditorFor(model => model.paidAmount, new { htmlAttributes = new { @class = "form-control form-control-lg", id = "paidAmount" } })
+                                        @Html.LabelFor(m => m.paidAmount)
+                                        @Html.ValidationMessageFor(model => model.paidAmount, "", new { @class = "text-danger" })
+                                    </div>
+
+                                </div>
+                                <div class="col-md-6 mb-4">
+
+                                    <div class="form-outline form-group">
+                                        @Html.EditorFor(model => model.totalFee, new { htmlAttributes = new { @class = "form-control form-control-lg", id = "totalFee" } })
+                                        @Html.LabelFor(model => model.totalFee)
+                                        @Html.ValidationMessageFor(model => model.totalFee, "", new { @class = "text-danger" })
+                                    </div>
+
+                                </div>
+                            </div>
+
+
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+
+                                    <div class="form-outline form-group">
+
+                                        @Html.EditorFor(model => model.payMethod, new { htmlAttributes = new { @class = "form-control form-control-lg" } })
+                                        @Html.LabelFor(m => m.payMethod)
+                                        @Html.ValidationMessageFor(model => model.payMethod, "", new { @class = "text-danger" })
+                                    </div>
+
+                                </div>
+                                <div class="col-md-6 mb-4">
+
+                                    <div class="form-outline form-group">
+                                        @Html.EditorFor(model => model.payDate, new { htmlAttributes = new { @class = "form-control form-control-lg", type = "date" } })
+                                        @Html.LabelFor(m => m.payDate)
+                                        @Html.ValidationMessageFor(model => model.payDate, "", new { @class = "text-danger" })
+                                    </div>
+
+                                </div>
+                            </div>
+
+
+                            <div class="row">
+                                <div class="col-md-6 mb-4 pb-2">
+                                    <input type="submit" value="Create" class="btn btn-primary btn-lg btn-block" />
+                                    @*<input class="btn btn-primary btn-lg btn-block" type="submit" value="Save" />*@
+                                </div>
+
+
+                                <div class="col-md-6 mb-4 pb-2">
+                                    @Html.ActionLink("Back", "Index", "Payment", null, new { @class = "btn btn-secondary btn-lg btn-block" })
+                                </div>
+
+                            </div>
+
+
                         </div>
                     </div>
                 </div>
