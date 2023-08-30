@@ -1,4 +1,6 @@
 ﻿
+@model List<EBS.viewModels.payVM>
+
 @{
     ViewBag.Title = "Invoices | SEC";
     Layout = "~/Views/Shared/_Layout2.cshtml";
@@ -46,6 +48,11 @@
 </head>
 <body>
 
+    @*<div class="mt-4 pt-2" style="padding-left: 40px;">
+        <form action="@Url.Action("GenerateInvoice", "Invoice")" method="get">
+            <input class="btn btn-secondary btn-lg btn-block" type="submit" value="Download Invoices" />
+        </form>
+    </div>*@
 
     <div class="mt-4 pt-2" style="padding-left: 40px;">
         <form action="@Url.Action("Create", "Payment")" method="get">
@@ -56,56 +63,44 @@
         <table id="myTable" class="table table-striped table-bordered" style="width:100%">
             <thead>
                 <tr>
+                    <th>Payment ID</th>
                     <th>Customer ID</th>
                     <th>Invoice ID</th>
                     <th>Payment Amount ($)</th>
+                    <th>Total Fee ($)</th>
                     <th>Payment Method</th>
                     <th>Payment Date</th>
-              
+                    <th>Actions</th>
+
 
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>Tiger Nixon</td>
-                    <td>System Architect</td>
-                    <td>Edinburgh</td>
-                    <td>61</td>
-                    <td>2011-04-25</td>
-       
-                </tr>
-                <tr>
-                    <td>Garrett Winters</td>
-                    <td>Accountant</td>
-                    <td>Tokyo</td>
-                    <td>63</td>
-                    <td>2011-07-25</td>
-                   
-                </tr>
-                <tr>
-                    <td>Ashton Cox</td>
-                    <td>Junior Technical Author</td>
-                    <td>San Francisco</td>
-                    <td>66</td>
-                    <td>2009-01-12</td>
-            
-                </tr>
-                <tr>
-                    <td>Cedric Kelly</td>
-                    <td>Senior Javascript Developer</td>
-                    <td>Edinburgh</td>
-                    <td>22</td>
-                    <td>2012-03-29</td>
-               
-                </tr>
-                <tr>
-                    <td>Airi Satou</td>
-                    <td>Accountant</td>
-                    <td>Tokyo</td>
-                    <td>33</td>
-                    <td>2008-11-28</td>
-         
-                </tr>
+                @foreach (var item in Model)
+                {
+                    <tr>
+
+                        <td>@Html.DisplayFor(model => item.payID)</td>
+                        <td>@Html.DisplayFor(model => item.cID)</td>
+                        <td>@Html.DisplayFor(model => item.invoiceID)</td>
+                        <td>@Html.DisplayFor(model => item.paidAmount)</td>
+                        <td>@Html.DisplayFor(model => item.totalFee)</td>
+                        <td>@Html.DisplayFor(model => item.payMethod)</td>
+                        <td>>@(item.payDate.Date.ToString("d"))</td>
+                        <td>
+                            <a href="@Url.Action("Edit", "Payment", new { id = item.payID })">
+                                <i class="fa-solid fa-square-pen fa-2x" style="color: #1ABC9C; "></i>
+                            </a>
+
+                            <a href="@Url.Action("Delete", "Delete", new { id = item.payID })">
+                                <i class="fas fa-trash fa-2x delete-icon item" style="color: #FF5733"></i>
+                            </a>
+                        </td>
+
+                    </tr>
+                }
+
+
 
             </tbody>
         </table>
