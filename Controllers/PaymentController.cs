@@ -121,6 +121,18 @@ namespace EBS.Controllers
                    
 
                     command.ExecuteNonQuery();
+
+                    // Calculate the difference between paidAmount and totalFee
+                    decimal balanceDifference = model.totalFee - model.paidAmount;
+
+                    // Update CustomerTbl with the balance difference
+                    string updateBalanceQuery = "UPDATE CustomerTbl SET Balance = Balance + @balanceDifference WHERE cID = @cID";
+                    using (SqlCommand updateBalanceCommand = new SqlCommand(updateBalanceQuery, connection))
+                    {
+                        updateBalanceCommand.Parameters.AddWithValue("@balanceDifference", balanceDifference);
+                        updateBalanceCommand.Parameters.AddWithValue("@cID", model.cID);
+                        updateBalanceCommand.ExecuteNonQuery();
+                    }
                 }
             }
         }
