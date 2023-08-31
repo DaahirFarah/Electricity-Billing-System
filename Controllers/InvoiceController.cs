@@ -222,15 +222,63 @@ namespace EBS.Controllers
         }
 
         // Inserting Invoices Into the Database
+        //private void InsertInvoice(invoiceVM model)
+        //{
+        //    using (SqlConnection connection = new SqlConnection(SecConn))
+        //    {
+        //        connection.Open();
+        //        string query = "INSERT INTO InvoiceTbl (cID, Rate, billingPeriodStarts,"
+        //                     + "billingPeriodEnds, prev_Reading, cur_Reading, reading_Value, reading_Date, total_Fee) "
+        //                     + "VALUES (@cID, @Rate, @billingPeriodStarts, @billingPeriodEnds, @prev_Reading, @cur_Reading,"
+        //                     + "@reading_Value, @reading_Date, @total_Fee)";
+
+        //        using (SqlCommand command = new SqlCommand(query, connection))
+        //        {
+        //            command.Parameters.AddWithValue("@cID", model.cID);
+        //            command.Parameters.AddWithValue("@Rate", model.Rate);
+        //            command.Parameters.AddWithValue("@billingPeriodStarts", model.billingPeriodStarts);
+        //            command.Parameters.AddWithValue("@billingPeriodEnds", model.billingPeriodEnds);
+        //            command.Parameters.AddWithValue("@prev_Reading", model.prev_Reading);
+        //            command.Parameters.AddWithValue("@cur_Reading", model.cur_Reading);
+        //            command.Parameters.AddWithValue("@reading_Value", model.reading_Value);
+        //            command.Parameters.AddWithValue("@reading_Date", model.reading_Date);
+        //            command.Parameters.AddWithValue("@total_Fee", model.total_Fee);
+
+        //            command.ExecuteNonQuery();
+
+
+
+
+        //        }
+        //    }
+        //}
+
+        // Retrieving Invoices by ID for updating
+
+
         private void InsertInvoice(invoiceVM model)
         {
             using (SqlConnection connection = new SqlConnection(SecConn))
             {
                 connection.Open();
+
+                string balanceQuery = "SELECT BALANCE FROM CustomerTbl WHERE cID = @cID";
+                decimal balance = 0; // Initialize the balance variable
+
+                using (SqlCommand commandBalance = new SqlCommand(balanceQuery, connection))
+                {
+                    commandBalance.Parameters.AddWithValue("@cID", model.cID);
+                    object balanceResult = commandBalance.ExecuteScalar();
+                    if (balanceResult != null && balanceResult != DBNull.Value)
+                    {
+                        balance = Convert.ToDecimal(balanceResult);
+                    }
+                }
+
                 string query = "INSERT INTO InvoiceTbl (cID, Rate, billingPeriodStarts,"
                              + "billingPeriodEnds, prev_Reading, cur_Reading, reading_Value, reading_Date, total_Fee) "
                              + "VALUES (@cID, @Rate, @billingPeriodStarts, @billingPeriodEnds, @prev_Reading, @cur_Reading,"
-                             + "@reading_Value, @reading_Date, @total_Fee)";
+                             + "@reading_Value, @reading_Date, @total_Fee + @balance)";
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
@@ -243,13 +291,23 @@ namespace EBS.Controllers
                     command.Parameters.AddWithValue("@reading_Value", model.reading_Value);
                     command.Parameters.AddWithValue("@reading_Date", model.reading_Date);
                     command.Parameters.AddWithValue("@total_Fee", model.total_Fee);
+                    command.Parameters.AddWithValue("@balance", balance);
 
                     command.ExecuteNonQuery();
+
+
+                    string updateBalanceQuery = "UPDATE CustomerTbl SET Balance = 0 WHERE cID = @cID";
+                    using (SqlCommand updateBalanceCommand = new SqlCommand(updateBalanceQuery, connection))
+                    {
+                        
+                        updateBalanceCommand.Parameters.AddWithValue("@cID", model.cID);
+                        updateBalanceCommand.ExecuteNonQuery();
+                    }
                 }
             }
+
         }
 
-        // Retrieving Invoices by ID for updating
         private invoiceVM GetInvoiceById(int invoiceID)
         {
             using (SqlConnection connection = new SqlConnection(SecConn))
