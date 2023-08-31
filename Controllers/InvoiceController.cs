@@ -18,6 +18,10 @@ namespace EBS.Controllers
 {
     public class InvoiceController : Controller
     {
+        // This variable holds the balance so that it can be accessed in all methods
+        decimal balance;
+        int cID;
+
         // ConnectionString Instance
         private readonly string SecConn = ConfigurationManager.ConnectionStrings["SecConn"].ConnectionString;
 
@@ -221,40 +225,7 @@ namespace EBS.Controllers
             return invoices;
         }
 
-        // Inserting Invoices Into the Database
-        //private void InsertInvoice(invoiceVM model)
-        //{
-        //    using (SqlConnection connection = new SqlConnection(SecConn))
-        //    {
-        //        connection.Open();
-        //        string query = "INSERT INTO InvoiceTbl (cID, Rate, billingPeriodStarts,"
-        //                     + "billingPeriodEnds, prev_Reading, cur_Reading, reading_Value, reading_Date, total_Fee) "
-        //                     + "VALUES (@cID, @Rate, @billingPeriodStarts, @billingPeriodEnds, @prev_Reading, @cur_Reading,"
-        //                     + "@reading_Value, @reading_Date, @total_Fee)";
-
-        //        using (SqlCommand command = new SqlCommand(query, connection))
-        //        {
-        //            command.Parameters.AddWithValue("@cID", model.cID);
-        //            command.Parameters.AddWithValue("@Rate", model.Rate);
-        //            command.Parameters.AddWithValue("@billingPeriodStarts", model.billingPeriodStarts);
-        //            command.Parameters.AddWithValue("@billingPeriodEnds", model.billingPeriodEnds);
-        //            command.Parameters.AddWithValue("@prev_Reading", model.prev_Reading);
-        //            command.Parameters.AddWithValue("@cur_Reading", model.cur_Reading);
-        //            command.Parameters.AddWithValue("@reading_Value", model.reading_Value);
-        //            command.Parameters.AddWithValue("@reading_Date", model.reading_Date);
-        //            command.Parameters.AddWithValue("@total_Fee", model.total_Fee);
-
-        //            command.ExecuteNonQuery();
-
-
-
-
-        //        }
-        //    }
-        //}
-
-        // Retrieving Invoices by ID for updating
-
+      
 
         private void InsertInvoice(invoiceVM model)
         {
@@ -263,7 +234,8 @@ namespace EBS.Controllers
                 connection.Open();
 
                 string balanceQuery = "SELECT BALANCE FROM CustomerTbl WHERE cID = @cID";
-                decimal balance = 0; // Initialize the balance variable
+
+                cID = model.cID;
 
                 using (SqlCommand commandBalance = new SqlCommand(balanceQuery, connection))
                 {
@@ -272,6 +244,7 @@ namespace EBS.Controllers
                     if (balanceResult != null && balanceResult != DBNull.Value)
                     {
                         balance = Convert.ToDecimal(balanceResult);
+                        
                     }
                 }
 
@@ -302,6 +275,14 @@ namespace EBS.Controllers
                         
                         updateBalanceCommand.Parameters.AddWithValue("@cID", model.cID);
                         updateBalanceCommand.ExecuteNonQuery();
+                    }
+
+                    string balancehisq = "INSERT INTO BalanceHistory (cID, Balance) VALUES(@cID, @balance)";
+                    using (SqlCommand comm = new SqlCommand(balancehisq, connection))
+                    {
+                        comm.Parameters.AddWithValue("@cID", model.cID);
+                        comm.Parameters.AddWithValue("@Balance", balance);
+                        comm.ExecuteNonQuery();
                     }
                 }
             }
@@ -345,14 +326,89 @@ namespace EBS.Controllers
         }
 
         // Update Invoice Logic
+        //private void UpdateInvoice(invoiceVM model)
+        //{
+        //    using (SqlConnection connection = new SqlConnection(SecConn))
+        //    {
+        //        connection.Open();
+        //        string query = "Update InvoiceTbl SET cID = @cID, Rate = @Rate, billingPeriodStarts = @billingPeriodStarts,"
+        //                     + "billingPeriodEnds = @billingPeriodEnds, prev_Reading = @prev_Reading, cur_Reading = @cur_Reading,"
+        //                     + "reading_Value = @reading_Value, reading_Date = @reading_Date, total_Fee = @total_Fee WHERE invoiceID = @invoiceID";
+
+        //        using (SqlCommand command = new SqlCommand(query, connection))
+        //        {
+        //            command.Parameters.AddWithValue("@invoiceID", model.invoiceID);
+        //            command.Parameters.AddWithValue("@cID", model.cID);
+        //            command.Parameters.AddWithValue("@Rate", model.Rate);
+        //            command.Parameters.AddWithValue("@billingPeriodStarts", model.billingPeriodStarts);
+        //            command.Parameters.AddWithValue("@billingPeriodEnds", model.billingPeriodEnds);
+        //            command.Parameters.AddWithValue("@prev_Reading", model.prev_Reading);
+        //            command.Parameters.AddWithValue("@cur_Reading", model.cur_Reading);
+        //            command.Parameters.AddWithValue("@reading_Value", model.reading_Value);
+        //            command.Parameters.AddWithValue("@reading_Date", model.reading_Date);
+        //            command.Parameters.AddWithValue("@total_Fee", model.total_Fee);
+
+        //            command.ExecuteNonQuery();
+        //        };
+        //    }
+        //}
+
+        // Delete Invoice Logic 
+
+
         private void UpdateInvoice(invoiceVM model)
         {
             using (SqlConnection connection = new SqlConnection(SecConn))
             {
                 connection.Open();
+
+                string balanceHis = "SELECT BALANCE FROM BalanceHistory WHERE cID = @cID";
+
+                
+
+                using (SqlCommand commandBalance = new SqlCommand(balanceHis, connection))
+                {
+                    commandBalance.Parameters.AddWithValue("@cID", model.cID);
+                    object id = commandBalance.ExecuteScalar();
+                    object balanceResult = commandBalance.ExecuteScalar();
+                    if (balanceResult != null && balanceResult != DBNull.Value && id != null && id != DBNull.Value)
+                    {
+                        cID = Convert.ToInt32(id);
+                        balance = Convert.ToDecimal(balanceResult);
+
+                    }
+                }
+
+                // Sets the balance back to its original state so that balances are handled correctly
+                string ogquery = "UPDATE CustomerTbl SET Balance = @balance WHERE cID = @cID";
+                using (SqlCommand commandog = new SqlCommand(ogquery, connection))
+                {
+                    commandog.Parameters.AddWithValue("@cID", model.cID);
+                    commandog.Parameters.AddWithValue("@Balance", balance);
+                    object balanceResult = commandog.ExecuteScalar();
+                    commandog.ExecuteNonQuery();
+                }
+
+
+                string balanceQuery = "SELECT Balance FROM CustomerTbl WHERE cID = @cID";
+
+                cID = model.cID;
+
+                using (SqlCommand commandBalance = new SqlCommand(balanceQuery, connection))
+                {
+                    commandBalance.Parameters.AddWithValue("@cID", model.cID);
+                    object balanceResult = commandBalance.ExecuteScalar();
+                    if (balanceResult != null && balanceResult != DBNull.Value)
+                    {
+                        balance = Convert.ToDecimal(balanceResult);
+
+                    }
+                }
+
+
                 string query = "Update InvoiceTbl SET cID = @cID, Rate = @Rate, billingPeriodStarts = @billingPeriodStarts,"
                              + "billingPeriodEnds = @billingPeriodEnds, prev_Reading = @prev_Reading, cur_Reading = @cur_Reading,"
-                             + "reading_Value = @reading_Value, reading_Date = @reading_Date, total_Fee = @total_Fee WHERE invoiceID = @invoiceID";
+                             + "reading_Value = @reading_Value, reading_Date = @reading_Date, total_Fee = @total_Fee + @balance WHERE invoiceID = @invoiceID";
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
@@ -366,13 +422,23 @@ namespace EBS.Controllers
                     command.Parameters.AddWithValue("@reading_Value", model.reading_Value);
                     command.Parameters.AddWithValue("@reading_Date", model.reading_Date);
                     command.Parameters.AddWithValue("@total_Fee", model.total_Fee);
+                    command.Parameters.AddWithValue("@balance", balance);
 
                     command.ExecuteNonQuery();
-                };
+
+                    string updateBalanceQuery = "UPDATE CustomerTbl SET Balance = 0 WHERE cID = @cID";
+                    using (SqlCommand updateBalanceCommand = new SqlCommand(updateBalanceQuery, connection))
+                    {
+
+                        updateBalanceCommand.Parameters.AddWithValue("@cID", model.cID);
+                        updateBalanceCommand.ExecuteNonQuery();
+                    }
+
+                }
             }
         }
 
-        // Delete Invoice Logic 
+
         private void DeleteInvoice(int id)
         {
             using (SqlConnection connection = new SqlConnection(SecConn))
