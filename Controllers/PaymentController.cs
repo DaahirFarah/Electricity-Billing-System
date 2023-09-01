@@ -68,7 +68,6 @@ namespace EBS.Controllers
         }
 
         // GET: Delete
-        [HttpGet]
         public ActionResult Delete(int id)
         {
             payVM payment = GetPaymentByID(id);
@@ -77,8 +76,7 @@ namespace EBS.Controllers
 
         //POST: Delete Invoice
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Display(Name = "Delete")]
+        [ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)
         {
             DeletePayment(id);
@@ -249,6 +247,7 @@ namespace EBS.Controllers
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@payID", id);
+
                     command.ExecuteNonQuery();
                 }
             }

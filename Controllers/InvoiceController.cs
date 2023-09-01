@@ -78,18 +78,14 @@ namespace EBS.Controllers
             return View(model);
         }
 
-        // GET: Delete Invoice
-        [HttpGet]
         public ActionResult Delete(int id)
         {
             invoiceVM invoice = GetInvoiceById(id);
             return View(invoice);
         }
 
-        //POST: Delete Invoice
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Display(Name = "Delete")]
+        [ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)
         {
             DeleteInvoice(id);
