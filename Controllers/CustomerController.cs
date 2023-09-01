@@ -18,10 +18,13 @@ using System.Xml.Linq;
 
 namespace EBS.Controllers
 {
+    [Authorize]
     public class CustomerController : Controller
     {
+       
         private readonly string SecConn = ConfigurationManager.ConnectionStrings["SecConn"].ConnectionString;
 
+        [Authorize]
         // GET: Customer
         public ActionResult Index()
         {
@@ -31,6 +34,7 @@ namespace EBS.Controllers
 
         //GET: Register Customer
 
+        [Authorize]
         [HttpGet]
         public ActionResult Create()
         {
@@ -40,6 +44,7 @@ namespace EBS.Controllers
         //SET: Register Customer
         [ValidateAntiForgeryToken]
         [HttpPost]
+        [Authorize]
         public ActionResult Create(customerVM model)
         {
             if (ModelState.IsValid)
@@ -50,7 +55,7 @@ namespace EBS.Controllers
             return View(model);
         }
 
-
+        [Authorize]
         ////GET: Update Customer
         public ActionResult Edit(int id)
         {

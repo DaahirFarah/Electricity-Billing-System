@@ -12,6 +12,7 @@ using System.Xml.Linq;
 
 namespace EBS.Controllers
 {
+    [Authorize]
     public class PaymentController : Controller
     {
         // ConnectionString Instance

@@ -133,7 +133,6 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\CustomerController.cs" />
-    <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\InvoiceController.cs" />
     <Compile Include="Controllers\PaymentController.cs" />
@@ -142,10 +141,12 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\UserAuth.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="viewModels\customerVM.cs" />
     <Compile Include="viewModels\invoiceVM.cs" />
     <Compile Include="viewModels\payVM.cs" />
+    <Compile Include="viewModels\UserVm.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\_e407f44c-5341-4a3d-b20e-e7ae5a10e34e.jpg" />
@@ -350,7 +351,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Models\" />
     <Folder Include="NewLayoutMybe\06\.vs\06\FileContentIndex\merges\" />
   </ItemGroup>
   <ItemGroup>
