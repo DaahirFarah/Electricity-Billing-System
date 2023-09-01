@@ -90,6 +90,7 @@ namespace EBS.Controllers
             return RedirectToAction("Index");
         }
 
+
         // This action handles exporting customers data from the database using a library called iTextSharp. 
         // This actionResult allows the user to easily download the list of customers in a pdf format 
         public ActionResult GenerateCustomerList()
@@ -175,6 +176,90 @@ namespace EBS.Controllers
             table.AddCell(cell);
         }
 
+        // Generating Individual Invoices 
+        public ActionResult CustomerInfo(int id)
+        {
+            // Simulate retrieving invoice data from your database based on invoiceId
+            var customer = GetCustomerById(id);
+
+
+
+            // Create a new document with a smaller page size
+            Document document = new Document(PageSize.A5, 30, 30, 30, 30);
+
+            // Specify the memory stream as the output
+            MemoryStream memoryStream = new MemoryStream();
+            PdfWriter writer = PdfWriter.GetInstance(document, memoryStream);
+
+            // Open the document for writing
+            document.Open();
+
+            // Add image as a logo at the top of the page
+            string imagePath = Server.MapPath("~/Assets/_e407f44c-5341-4a3d-b20e-e7ae5a10e34e.jpg");
+            Image image = Image.GetInstance(imagePath);
+            image.ScaleToFit(100, 100); // Set the width and height of the logo
+            image.Alignment = Element.ALIGN_CENTER;
+            image.SpacingAfter = 20; // Add spacing after the image
+            document.Add(image);
+
+            // Add the title "Somali Electric Company"
+            Font titleFont = FontFactory.GetFont("Times-Roman", 18);
+            Paragraph title = new Paragraph("Somali Electric Company", titleFont);
+            title.Alignment = Element.ALIGN_CENTER;
+            document.Add(title);
+
+            // Add the "Electricity Bill or Invoice" text
+            Font subtitleFont = FontFactory.GetFont("Times-Roman", 14);
+            Paragraph subtitle = new Paragraph("Customer Information", subtitleFont);
+            subtitle.Alignment = Element.ALIGN_CENTER;
+            document.Add(subtitle);
+
+            // Add current date (top right side)
+            DateTime currentDate = DateTime.Now;
+            string formattedDate = currentDate.ToString("yyyy-MM-dd");
+            Paragraph dateParagraph = new Paragraph("Date: " + formattedDate);
+            dateParagraph.Alignment = Element.ALIGN_RIGHT;
+            dateParagraph.SpacingAfter = 5;
+            document.Add(dateParagraph);
+
+            // Add the invoice details
+            Font contentFont = FontFactory.GetFont("Times-Roman", 12);
+            contentFont.Color = BaseColor.BLACK;
+
+            // Define line spacing
+            float lineSpacing = 20f;
+
+            // Add the invoice data to the document
+            AddInvoiceLine(document, $"Customer ID: {customer.cID.ToString()}", contentFont, lineSpacing);
+            AddInvoiceLine(document, $"First Name: {customer.cFirstName}", contentFont, lineSpacing);
+            AddInvoiceLine(document, $"Middle Name: {customer.cMidName}", contentFont, lineSpacing);
+            AddInvoiceLine(document, $"Last Name: {customer.cLastName}", contentFont, lineSpacing);
+            AddInvoiceLine(document, $"Address: {customer.cAddress}", contentFont, lineSpacing);
+            AddInvoiceLine(document, $"Phone Number: {customer.cNumber.ToString()}", contentFont, lineSpacing);
+            AddInvoiceLine(document, $"Phone Number (Optional): {customer.cNumberOp.ToString()}", contentFont, lineSpacing);
+            AddInvoiceLine(document, $"Balance ($): {customer.Balance.ToString()}", contentFont, lineSpacing);
+            
+
+            // Close the document
+            document.Close();
+
+            // Set the response content type and headers
+            Response.ContentType = "application/pdf";
+            Response.AddHeader("content-disposition", $"attachment;filename=Customer Info.pdf");
+
+            // Write the PDF to the response stream
+            Response.BinaryWrite(memoryStream.ToArray());
+            Response.End();
+
+            return View();
+        }
+
+        private void AddInvoiceLine(Document document, string line, Font font, float lineSpacing)
+        {
+            Paragraph paragraph = new Paragraph(line, font);
+            paragraph.SpacingAfter = lineSpacing;
+            document.Add(paragraph);
+        }
 
 
         // Fetching Customers From the Database
@@ -201,7 +286,8 @@ namespace EBS.Controllers
                                 cLastName = reader["cLastName"].ToString(),
                                 cAddress = reader["cAddress"].ToString(),
                                 cNumber = Convert.ToInt32(reader["cNumber"]),
-                                cNumberOp = reader["cNumberOp"] != DBNull.Value ? reader["cNumberOp"].ToString() : "N/A"
+                                cNumberOp = reader["cNumberOp"] != DBNull.Value ? reader["cNumberOp"].ToString() : "N/A",
+                                Balance = Convert.ToDecimal(reader["Balance"])
 
                             });
                         }
@@ -268,7 +354,8 @@ namespace EBS.Controllers
                                 cLastName = reader["cLastName"].ToString(),
                                 cAddress = reader["cAddress"].ToString(),
                                 cNumber = Convert.ToInt32(reader["cNumber"]),
-                                cNumberOp = reader["cNumberOp"].ToString()
+                                cNumberOp = reader["cNumberOp"].ToString(),
+                                Balance = Convert.ToDecimal(reader["Balance"])
 
                             };
                         }
