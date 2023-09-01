@@ -100,12 +100,17 @@
                         <td>@Html.DisplayFor(model => item.total_Fee)</td>
                         <td>
                             <a href="@Url.Action("Edit", "Invoice", new { id = item.invoiceID })">
-                                <i class="fa-solid fa-square-pen fa-2x" style="color: #1ABC9C; "></i>
+                                <i class="fa-solid fa-square-pen fa-1x" style="color: #1ABC9C; "></i>
                             </a>
 
                             <a href="@Url.Action("Delete", "Invoice", new { id = item.invoiceID })">
-                                <i class="fas fa-trash fa-2x delete-icon item" style="color: #FF5733"></i>
+                                <i class="fas fa-trash fa-1x delete-icon item" style="color: #FF5733"></i>
                             </a>
+
+                            <a href="@Url.Action("CustomerBill", "Invoice", new { id = item.invoiceID })">
+                                <i class="fa-solid fa-file-pdf fa-1x" style="color: navy"></i>
+                            </a>
+
                         </td>
 
                     </tr>

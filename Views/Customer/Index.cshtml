@@ -137,11 +137,15 @@
                         <td>@Html.DisplayFor(modelItem => item.cNumberOp)</td>
                         <td>
                             <a href="@Url.Action("Edit", "Customer", new { id = item.cID })">
-                                <i class="fa-solid fa-square-pen fa-2x" style="color: #1ABC9C; "></i>
+                                <i class="fa-solid fa-square-pen fa-1x" style="color: #1ABC9C; "></i>
                             </a>
 
                             <a href="@Url.Action("Delete", "Customer", new { id = item.cID })">
-                                <i class="fas fa-trash fa-2x delete-icon item" style="color: #FF5733"></i>
+                                <i class="fas fa-trash fa-1x delete-icon item" style="color: #FF5733"></i>
+                            </a>
+
+                            <a href="@Url.Action("CustomerInfo", "Customer", new { id = item.cID })">
+                                <i class="fa-solid fa-file-pdf fa-1x" style="color: navy"></i>
                             </a>
 
                         </td>
