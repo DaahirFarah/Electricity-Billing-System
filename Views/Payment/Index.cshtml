@@ -50,11 +50,11 @@
 </head>
 <body>
 
-    @*<div class="mt-4 pt-2" style="padding-left: 40px;">
-            <form action="@Url.Action("GenerateInvoice", "Invoice")" method="get">
-                <input class="btn btn-secondary btn-lg btn-block" type="submit" value="Download Invoices" />
+    <div class="mt-4 pt-2" style="padding-left: 40px;">
+            <form action="@Url.Action("GeneratePaymentHistory", "Payment")" method="get">
+                <input class="btn btn-secondary btn-lg btn-block" type="submit" value="Download Payments" />
             </form>
-        </div>*@
+        </div>
 
     <div class="mt-4 pt-2" style="padding-left: 40px;">
         <form action="@Url.Action("Create", "Payment")" method="get">
@@ -91,11 +91,15 @@
                         <td>@(item.payDate.Date.ToString("d"))</td>
                         <td>
                             <a href="@Url.Action("Edit", "Payment", new { id = item.payID })">
-                                <i class="fa-solid fa-square-pen fa-2x" style="color: #1ABC9C; "></i>
+                                <i class="fa-solid fa-square-pen fa-1x" style="color: #1ABC9C; "></i>
                             </a>
 
                             <a href="@Url.Action("Delete", "Payment", new { id = item.payID })">
-                                <i class="fas fa-trash fa-2x delete-icon item" style="color: #FF5733"></i>
+                                <i class="fas fa-trash fa-1x delete-icon item" style="color: #FF5733"></i>
+                            </a>
+
+                            <a href="@Url.Action("Receipt", "Payment", new { id = item.cID })">
+                                <i class="fa-solid fa-file-pdf fa-1x" style="color: navy"></i>
                             </a>
 
                         </td>

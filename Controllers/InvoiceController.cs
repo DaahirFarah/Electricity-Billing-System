@@ -120,7 +120,7 @@ namespace EBS.Controllers
             document.Add(image);
 
             // Create title
-            Paragraph title = new Paragraph("SEC Invoices Data", new Font(baseFont, 18, Font.BOLD));
+            Paragraph title = new Paragraph("SEC Invoices History", new Font(baseFont, 18, Font.BOLD));
             title.Alignment = Element.ALIGN_CENTER;
             title.SpacingAfter = 10; // Add spacing after the title
             document.Add(title);
@@ -173,7 +173,7 @@ namespace EBS.Controllers
             document.Close();
 
             // Return the PDF file to the client
-            return File(memoryStream.ToArray(), "application/pdf", "Invoices Data List.pdf");
+            return File(memoryStream.ToArray(), "application/pdf", "Invoices History.pdf");
         }
 
         // Helper method to add cell to table with specified content and font
@@ -255,7 +255,7 @@ namespace EBS.Controllers
 
             // Set the response content type and headers
             Response.ContentType = "application/pdf";
-            Response.AddHeader("content-disposition", $"attachment;filename=invoice.pdf");
+            Response.AddHeader("content-disposition", $"attachment;filename=Invoice.pdf");
 
             // Write the PDF to the response stream
             Response.BinaryWrite(memoryStream.ToArray());

@@ -164,7 +164,7 @@ namespace EBS.Controllers
             document.Close();
 
             // Return the PDF file to the client
-            return File(memoryStream.ToArray(), "application/pdf", "Customers Data.pdf");
+            return File(memoryStream.ToArray(), "application/pdf", "Customers List.pdf");
         }
 
         // Helper method to add cell to table with specified content and font
