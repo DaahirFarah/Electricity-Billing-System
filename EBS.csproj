@@ -144,6 +144,7 @@
     <Compile Include="Models\UserAuth.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="viewModels\customerVM.cs" />
+    <Compile Include="viewModels\DashboardVM.cs" />
     <Compile Include="viewModels\invoiceVM.cs" />
     <Compile Include="viewModels\payVM.cs" />
     <Compile Include="viewModels\UserVm.cs" />

@@ -1,4 +1,7 @@
 ﻿
+
+@model EBS.viewModels.DashboardVM
+
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout2.cshtml";
@@ -37,7 +40,7 @@
                                 <i class="fas fa-user"></i>
                             </div>
                             <div class="stats-data">
-                                <div class="stats-number">114</div>
+                                <div class="stats-number">@Model.Customers</div>
                                 <div class="stats-change">
 
                                 </div>
@@ -53,7 +56,7 @@
                                 <i class="wrap-icon icon-money mr-3"></i>
                             </div>
                             <div class="stats-data">
-                                <div class="stats-number">$25,541</div>
+                                <div class="stats-number">$ @Model.Revenue</div>
                                 <div class="stats-change">
 
                                 </div>
@@ -69,7 +72,7 @@
                                 <i class="wrap-icon icon-receipt mr-3"></i>
                             </div>
                             <div class="stats-data">
-                                <div class="stats-number">5</div>
+                                <div class="stats-number">@Model.Invoices</div>
                             </div>
                         </div>
                     </div>
@@ -85,14 +88,14 @@
         <div class="container-fluid">
             <div class="row dash-row">
                 <div class="col-xl-4">
-                    <div class="stats stats-primary" >
+                    <div class="stats stats-primary">
                         <h3 class="stats-title"> No. of Payments </h3>
                         <div class="stats-content">
                             <div class="stats-icon">
                                 <i class="wrap-icon icon-money mr-3"></i>
                             </div>
                             <div class="stats-data">
-                                <div class="stats-number">114</div>
+                                <div class="stats-number">@Model.Payments</div>
                                 <div class="stats-change">
 
                                 </div>
@@ -108,7 +111,7 @@
                                 <i class="wrap-icon icon-money mr-3"></i>
                             </div>
                             <div class="stats-data">
-                                <div class="stats-number">$25,541</div>
+                                <div class="stats-number">$ @Model.Balances</div>
                                 <div class="stats-change">
 
                                 </div>
@@ -124,7 +127,7 @@
                                 <i class="fas fa-user"></i>
                             </div>
                             <div class="stats-data">
-                                <div class="stats-number">5</div>
+                                <div class="stats-number">@Model.Users</div>
                             </div>
                         </div>
                     </div>
