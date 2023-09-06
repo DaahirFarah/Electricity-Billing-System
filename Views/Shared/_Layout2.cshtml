@@ -56,13 +56,14 @@
 
             <div class="nav-menu">
                 <ul>
-                    <li class="active"><a href="/Dashboard/Index" class="d-flex align-items-center"><span class="wrap-icon icon-dashboard mr-3"></span><span class="menu-text">Dashboard</span></a></li>
-                    <li><a href="/Customer/Index" class="d-flex align-items-center"><span class="wrap-icon icon-person mr-3"></span><span class="menu-text">Customers</span></a></li>
-                    <li><a href="/Invoice/Index" class="d-flex align-items-center"><span class="wrap-icon icon-receipt mr-3"></span><span class="menu-text">Invoices</span></a></li>
-                    <li><a href="/Payment/Index" class="d-flex align-items-center"><span class="wrap-icon icon-money mr-3"></span><span class="menu-text">Payments</span></a></li>
-                    <li><a href="/Login/Logout" class="d-flex align-items-center"><span class="wrap-icon icon-sign-out mr-3"></span><span class="menu-text">Logout</span></a></li>
+                    <li class="menu-item" id="dashboard"><a href="/Dashboard/Index" class="d-flex align-items-center"><span class="wrap-icon icon-dashboard mr-3"></span><span class="menu-text">Dashboard</span></a></li>
+                    <li class="menu-item" id="customers"><a href="/Customer/Index" class="d-flex align-items-center"><span class="wrap-icon icon-person mr-3"></span><span class="menu-text">Customers</span></a></li>
+                    <li class="menu-item" id="invoices"><a href="/Invoice/Index" class="d-flex align-items-center"><span class="wrap-icon icon-receipt mr-3"></span><span class="menu-text">Invoices</span></a></li>
+                    <li class="menu-item" id="payments"><a href="/Payment/Index" class="d-flex align-items-center"><span class="wrap-icon icon-money mr-3"></span><span class="menu-text">Payments</span></a></li>
+                    <li class="menu-item" id="logout"><a href="/Login/Logout" class="d-flex align-items-center"><span class="wrap-icon icon-sign-out mr-3"></span><span class="menu-text">Logout</span></a></li>
                 </ul>
             </div>
+
         </div>
 
     </aside>
@@ -84,17 +85,20 @@
     </div>
 
     <script>
-        const menuItems = document.querySelectorAll('.nav-menu li');
+        const menuItems = document.querySelectorAll('.menu-item');
 
         menuItems.forEach(item => {
             item.addEventListener('click', () => {
+                // Remove "active" class from all menu items
                 menuItems.forEach(otherItem => {
                     otherItem.classList.remove('active');
                 });
 
+                // Add "active" class to the clicked menu item
                 item.classList.add('active');
             });
         });
+
     </script>
 
     @Scripts.Render("~/bundles/jqueryval")

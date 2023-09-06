@@ -31,7 +31,7 @@ namespace EBS.Controllers
                 }
                 else
                 {
-                    return RedirectToAction("Index", "Customer"); 
+                    return RedirectToAction("Index", "Dashboard");
                 }
             }
 
