@@ -133,6 +133,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\CustomerController.cs" />
+    <Compile Include="Controllers\DashboardController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\InvoiceController.cs" />
     <Compile Include="Controllers\PaymentController.cs" />
@@ -169,6 +170,12 @@
     <Content Include="Content\dataTables.bootstrap4.min.css" />
     <Content Include="Content\Layout2.css" />
     <Content Include="Content\Registeration.css" />
+    <Content Include="Dashboard\css\demo.css" />
+    <Content Include="Dashboard\css\demo.min.css" />
+    <Content Include="Dashboard\css\easion.css" />
+    <Content Include="Dashboard\css\easion.min.css" />
+    <Content Include="Dashboard\js\chart-js-config.js" />
+    <Content Include="Dashboard\js\easion.js" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
@@ -343,6 +350,7 @@
     <Content Include="Views\Customer\Delete.cshtml" />
     <Content Include="Views\Invoice\Delete.cshtml" />
     <Content Include="Views\Payment\Delete.cshtml" />
+    <Content Include="Views\Dashboard\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
