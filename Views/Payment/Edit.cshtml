@@ -36,9 +36,8 @@
                                     <div class="col-md-6 mb-4">
 
                                         <div class="form-outline form-group">
-
-                                            @Html.EditorFor(model => model.cID, new { htmlAttributes = new { @class = "form-control form-control-lg" } })
                                             @Html.LabelFor(m => m.cID)
+                                            @Html.EditorFor(model => model.cID, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "cID" } })
                                             @Html.ValidationMessageFor(model => model.cID, "", new { @class = "text-danger" })
                                         </div>
 
@@ -46,8 +45,8 @@
                                     <div class="col-md-6 mb-4">
 
                                         <div class="form-outline form-group">
-                                            @Html.EditorFor(model => model.invoiceID, new { htmlAttributes = new { @class = "form-control form-control-lg", id = "invoiceID" } })
                                             @Html.LabelFor(model => model.invoiceID)
+                                            @Html.EditorFor(model => model.invoiceID, new { htmlAttributes = new { @class = "form-control form-control-lg", id = "invoiceID" } })
                                             @Html.ValidationMessageFor(model => model.invoiceID, "", new { @class = "text-danger" })
                                         </div>
 
@@ -59,9 +58,8 @@
                                     <div class="col-md-6 mb-4">
 
                                         <div class="form-outline form-group">
-
-                                            @Html.EditorFor(model => model.paidAmount, new { htmlAttributes = new { @class = "form-control form-control-lg", id = "paidAmount" } })
                                             @Html.LabelFor(m => m.paidAmount)
+                                            @Html.EditorFor(model => model.paidAmount, new { htmlAttributes = new { @class = "form-control form-control-lg", id = "paidAmount" } })
                                             @Html.ValidationMessageFor(model => model.paidAmount, "", new { @class = "text-danger" })
                                         </div>
 
@@ -69,8 +67,8 @@
                                     <div class="col-md-6 mb-4">
 
                                         <div class="form-outline form-group">
-                                            @Html.EditorFor(model => model.totalFee, new { htmlAttributes = new { @class = "form-control form-control-lg", id = "totalFee" } })
                                             @Html.LabelFor(model => model.totalFee)
+                                            @Html.EditorFor(model => model.totalFee, new { htmlAttributes = new { @class = "form-control form-control-lg", id = "totalFee" } })
                                             @Html.ValidationMessageFor(model => model.totalFee, "", new { @class = "text-danger" })
                                         </div>
 
@@ -82,9 +80,8 @@
                                     <div class="col-md-6 mb-4">
 
                                         <div class="form-outline form-group">
-
-                                            @Html.EditorFor(model => model.payMethod, new { htmlAttributes = new { @class = "form-control form-control-lg" } })
                                             @Html.LabelFor(m => m.payMethod)
+                                            @Html.EditorFor(model => model.payMethod, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "payMethod" } })
                                             @Html.ValidationMessageFor(model => model.payMethod, "", new { @class = "text-danger" })
                                         </div>
 
@@ -92,8 +89,8 @@
                                     <div class="col-md-6 mb-4">
 
                                         <div class="form-outline form-group">
-                                            <input type="date" class="form-control form-control-lg" id="payDate" name="payDate" value="@Model.payDate.ToString("yyyy-MM-dd")" />
                                             @Html.LabelFor(m => m.payDate)
+                                            <input type="date" class="form-control form-control-lg" id="payDate" name="payDate" value="@Model.payDate.ToString("yyyy-MM-dd")" />
                                             @Html.ValidationMessageFor(model => model.payDate, "", new { @class = "text-danger" })
                                         </div>
 
@@ -122,5 +119,54 @@
         </section>
 
     }
+
+    <script>
+    // Text validation function
+    function validateText(input) {
+        if (!isNaN(Number(input.value))) {
+            alert('Please enter text');
+            input.value = '';
+        }
+    }
+
+    // Number validation function
+    function validateNumber(input) {
+        if (isNaN(Number(input.value))) {
+            alert('Please enter a number');
+            input.value = '';
+        }
+    }
+
+    // Get elements
+    const cID = document.querySelector('#cID');
+    const invoiceID = document.querySelector('#invoiceID');
+    const paidAmount = document.querySelector('#paidAmount');
+    const totalFee = document.querySelector('#totalFee');
+    const payMethod = document.querySelector('#payMethod');
+
+    // Attach listeners
+    cID.addEventListener('input', () => {
+        validateNumber(cID);
+    });
+
+    invoiceID.addEventListener('input', () => {
+        validateNumber(invoiceID);
+    });
+
+    paidAmount.addEventListener('input', () => {
+        validateNumber(paidAmount);
+    });
+
+    totalFee.addEventListener('input', () => {
+        validateNumber(totalFee);
+    });
+
+    payMethod.addEventListener('input', () => {
+        validateText(payMethod);
+    });
+
+
+    </script>
+
 </body>
 </html>

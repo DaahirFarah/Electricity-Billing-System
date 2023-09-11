@@ -38,9 +38,8 @@
                                     <div class="col-md-6 mb-4">
 
                                         <div class="form-outline form-group">
-
-                                            @Html.EditorFor(model => model.cFirstName, new { htmlAttributes = new { @class = "form-control form-control-lg" } })
                                             @Html.LabelFor(m => m.cFirstName)
+                                            @Html.EditorFor(model => model.cFirstName, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "firstName" } })
                                             @Html.ValidationMessageFor(model => model.cFirstName, "", new { @class = "text-danger" })
                                         </div>
 
@@ -48,8 +47,8 @@
                                     <div class="col-md-6 mb-4">
 
                                         <div class="form-outline form-group">
-                                            @Html.EditorFor(model => model.cMidName, new { htmlAttributes = new { @class = "form-control form-control-lg" } })
                                             @Html.LabelFor(model => model.cMidName)
+                                            @Html.EditorFor(model => model.cMidName, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "midName" } })
                                             @Html.ValidationMessageFor(model => model.cMidName, "", new { @class = "text-danger" })
                                         </div>
 
@@ -60,8 +59,8 @@
                                     <div class="col-md-6 mb-4 d-flex align-items-center">
 
                                         <div class="form-outline form-group">
-                                            @Html.EditorFor(model => model.cLastName, new { htmlAttributes = new { @class = "form-control form-control-lg" } })
                                             @Html.LabelFor(model => model.cLastName)
+                                            @Html.EditorFor(model => model.cLastName, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "lastName" } })
                                             @Html.ValidationMessageFor(model => model.cLastName, "", new { @class = "text-danger" })
                                         </div>
 
@@ -71,8 +70,8 @@
 
 
                                         <div class="form-outline form-group">
-                                            @Html.EditorFor(model => model.cAddress, new { htmlAttributes = new { @class = "form-control form-control-lg" } })
                                             @Html.LabelFor(model => model.cAddress)
+                                            @Html.EditorFor(model => model.cAddress, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "address" } })
                                             @Html.ValidationMessageFor(model => model.cAddress, "", new { @class = "text-danger" })
                                         </div>
 
@@ -86,8 +85,8 @@
                                     <div class="col-md-6 mb-4 pb-2">
 
                                         <div class="form-outline form-group">
-                                            @Html.EditorFor(model => model.cNumber, new { htmlAttributes = new { @class = "form-control form-control-lg" } })
                                             @Html.LabelFor(model => model.cNumber)
+                                            @Html.EditorFor(model => model.cNumber, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "number" } })
                                             @Html.ValidationMessageFor(model => model.cNumber, "", new { @class = "text-danger" })
                                         </div>
 
@@ -95,8 +94,8 @@
                                     <div class="col-md-6 mb-4 pb-2">
 
                                         <div class="form-outline form-group">
-                                            @Html.EditorFor(model => model.cNumberOp, new { htmlAttributes = new { @class = "form-control form-control-lg" } })
                                             @Html.LabelFor(model => model.cNumberOp)
+                                            @Html.EditorFor(model => model.cNumberOp, new { htmlAttributes = new { @class = "form-control form-control-lg", @id  = "number2" } })
                                             @Html.ValidationMessageFor(model => model.cNumberOp, "", new { @class = "text-danger" })
                                         </div>
 
@@ -122,5 +121,57 @@
         </section>
 
     }
+
+    <script>
+    // Text validation function
+    function validateText(input) {
+        if (!isNaN(Number(input.value))) {
+            alert('Please enter text');
+            input.value = '';
+        }
+    }
+
+    // Number validation function
+    function validateNumber(input) {
+        if (isNaN(Number(input.value))) {
+            alert('Please enter a number');
+            input.value = '';
+        }
+    }
+
+    // Get elements
+    const firstNameInput = document.querySelector('#firstName');
+    const midNameInput = document.querySelector('#midName');
+    const lastNameInput = document.querySelector('#lastName');
+    const addressInput = document.querySelector('#address');
+    const phone1Input = document.querySelector('#number');
+    const phone2Input = document.querySelector('#number2');
+
+    // Attach listeners
+    firstNameInput.addEventListener('input', () => {
+        validateText(firstNameInput);
+    });
+
+    midNameInput.addEventListener('input', () => {
+        validateText(midNameInput);
+    });
+
+    lastNameInput.addEventListener('input', () => {
+        validateText(lastNameInput);
+    });
+
+    addressInput.addEventListener('input', () => {
+        validateText(addressInput);
+    });
+
+    phone1Input.addEventListener('input', () => {
+        validateNumber(phone1Input);
+    });
+
+    phone2Input.addEventListener('input', () => {
+        validateNumber(phone2Input);
+    });
+
+    </script>
 </body>
 </html>
