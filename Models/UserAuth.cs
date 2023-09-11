@@ -5,6 +5,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using System.Web.Security;
+using BCrypt.Net;
 
 namespace EBS.Models
 {
@@ -20,9 +21,9 @@ namespace EBS.Models
                 using (var command = new SqlCommand("SELECT Password FROM Users WHERE Username = @Username", connection))
                 {
                     command.Parameters.AddWithValue("@Username", username);
-                    var storedPassword = (string)command.ExecuteScalar();
+                    var storedPasswordHash = (string)command.ExecuteScalar();
 
-                    if (storedPassword != null && storedPassword == password)
+                    if (storedPasswordHash != null && BCrypt.Net.BCrypt.Verify(password, storedPasswordHash))
                     {
                         FormsAuthentication.SetAuthCookie(username, false);
                         return true;
@@ -35,6 +36,12 @@ namespace EBS.Models
         public void SignOut()
         {
             FormsAuthentication.SignOut();
+        }
+
+        public string HashPassword(string password)
+        {
+            // Hash a password using BCrypt
+            return BCrypt.Net.BCrypt.HashPassword(password, BCrypt.Net.BCrypt.GenerateSalt());
         }
     }
 }

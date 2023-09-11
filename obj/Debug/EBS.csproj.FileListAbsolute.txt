@@ -51,6 +51,7 @@ C:\Users\Firxi\source\repos\EBS\bin\roslyn\vbc.rsp
 C:\Users\Firxi\source\repos\EBS\bin\roslyn\VBCSCompiler.exe
 C:\Users\Firxi\source\repos\EBS\bin\roslyn\VBCSCompiler.exe.config
 C:\Users\Firxi\source\repos\EBS\bin\Antlr3.Runtime.dll
+C:\Users\Firxi\source\repos\EBS\bin\BCrypt.Net.dll
 C:\Users\Firxi\source\repos\EBS\bin\BouncyCastle.Crypto.dll
 C:\Users\Firxi\source\repos\EBS\bin\itextsharp.dll
 C:\Users\Firxi\source\repos\EBS\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll
@@ -66,6 +67,7 @@ C:\Users\Firxi\source\repos\EBS\bin\System.Web.WebPages.Deployment.dll
 C:\Users\Firxi\source\repos\EBS\bin\System.Web.WebPages.dll
 C:\Users\Firxi\source\repos\EBS\bin\System.Web.WebPages.Razor.dll
 C:\Users\Firxi\source\repos\EBS\bin\WebGrease.dll
+C:\Users\Firxi\source\repos\EBS\bin\BCrypt.Net.xml
 C:\Users\Firxi\source\repos\EBS\bin\itextsharp.xml
 C:\Users\Firxi\source\repos\EBS\bin\PdfSharp.xml
 C:\Users\Firxi\source\repos\EBS\bin\PdfSharp.Charting.xml

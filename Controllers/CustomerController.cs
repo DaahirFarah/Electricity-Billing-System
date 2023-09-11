@@ -330,7 +330,7 @@ namespace EBS.Controllers
         }
 
 
-        // Method that retrieves the ID of the Customer to be updated
+        // This method retrieves the data of a customer based on their ID and then it can be used to update customer data or even delete that customer
         private customerVM GetCustomerById(int cID)
         {
             using (SqlConnection connection = new SqlConnection(SecConn))
