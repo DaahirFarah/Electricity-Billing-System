@@ -37,9 +37,9 @@
                                         <div class="col-md-6 mb-4">
 
                                             <div class="form-outline form-group">
+                                                @Html.LabelFor(m => m.cFirstName)
+                                                @Html.EditorFor(model => model.cFirstName, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "firstName" } })
 
-                                                @Html.EditorFor(model => model.cFirstName, new { htmlAttributes = new { @class = "form-control form-control-lg" } })
-                                                @Html.LabelFor(m => m.cFirstName )
                                                 @Html.ValidationMessageFor(model => model.cFirstName, "", new { @class = "text-danger" })
                                             </div>
 
@@ -47,8 +47,9 @@
                                         <div class="col-md-6 mb-4">
 
                                             <div class="form-outline form-group">
-                                                @Html.EditorFor(model => model.cMidName, new { htmlAttributes = new { @class = "form-control form-control-lg" } })
                                                 @Html.LabelFor(model => model.cMidName)
+                                                @Html.EditorFor(model => model.cMidName, new { htmlAttributes = new { @class = "form-control form-control-lg" } })
+
                                                 @Html.ValidationMessageFor(model => model.cMidName, "", new { @class = "text-danger" })
                                             </div>
 
@@ -59,8 +60,9 @@
                                         <div class="col-md-6 mb-4 d-flex align-items-center">
 
                                             <div class="form-outline form-group">
-                                                @Html.EditorFor(model => model.cLastName, new { htmlAttributes = new { @class = "form-control form-control-lg" } })
                                                 @Html.LabelFor(model => model.cLastName)
+                                                @Html.EditorFor(model => model.cLastName, new { htmlAttributes = new { @class = "form-control form-control-lg" } })
+
                                                 @Html.ValidationMessageFor(model => model.cLastName, "", new { @class = "text-danger" })
                                             </div>
 
@@ -70,8 +72,9 @@
 
 
                                             <div class="form-outline form-group">
-                                                @Html.EditorFor(model => model.cAddress, new { htmlAttributes = new { @class = "form-control form-control-lg" } })
                                                 @Html.LabelFor(model => model.cAddress)
+                                                @Html.EditorFor(model => model.cAddress, new { htmlAttributes = new { @class = "form-control form-control-lg" } })
+
                                                 @Html.ValidationMessageFor(model => model.cAddress, "", new { @class = "text-danger" })
                                             </div>
 
@@ -85,8 +88,9 @@
                                         <div class="col-md-6 mb-4 pb-2">
 
                                             <div class="form-outline form-group">
-                                                @Html.EditorFor(model => model.cNumber, new { htmlAttributes = new { @class = "form-control form-control-lg" } })
                                                 @Html.LabelFor(model => model.cNumber)
+                                                @Html.EditorFor(model => model.cNumber, new { htmlAttributes = new { @class = "form-control form-control-lg" } })
+
                                                 @Html.ValidationMessageFor(model => model.cNumber, "", new { @class = "text-danger" })
                                             </div>
 
@@ -94,8 +98,9 @@
                                         <div class="col-md-6 mb-4 pb-2">
 
                                             <div class="form-outline form-group">
-                                                @Html.EditorFor(model => model.cNumberOp, new { htmlAttributes = new { @class = "form-control form-control-lg" } })
                                                 @Html.LabelFor(model => model.cNumberOp)
+                                                @Html.EditorFor(model => model.cNumberOp, new { htmlAttributes = new { @class = "form-control form-control-lg" } })
+
                                                 @Html.ValidationMessageFor(model => model.cNumberOp, "", new { @class = "text-danger" })
                                             </div>
 
@@ -121,5 +126,10 @@
         </section>
 
     }
+
+<script>
+
+</script>
+
     </body>
 </html>
