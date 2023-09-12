@@ -81,6 +81,7 @@
                     <th>Address</th>
                     <th>Phone number</th>
                     <th>Phone number (Optional)</th>
+                    <th>Branch</th>
                     <th>Balance</th>
                     <th>Actions</th>
 
@@ -97,6 +98,7 @@
                         <td>@Html.DisplayFor(modelItem => item.cAddress)</td>
                         <td>@Html.DisplayFor(modelItem => item.cNumber)</td>
                         <td>@Html.DisplayFor(modelItem => item.cNumberOp)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Branch)</td>
                         <td>@Html.DisplayFor(modelItem => item.Balance)</td>
                         <td>
                             <a href="@Url.Action("Edit", "Customer", new { id = item.cID })">

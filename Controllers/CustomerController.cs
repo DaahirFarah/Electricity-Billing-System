@@ -287,6 +287,7 @@ namespace EBS.Controllers
                                 cAddress = reader["cAddress"].ToString(),
                                 cNumber = Convert.ToInt32(reader["cNumber"]),
                                 cNumberOp = reader["cNumberOp"] != DBNull.Value ? reader["cNumberOp"].ToString() : "N/A",
+                                Branch = reader["Branch"].ToString(),
                                 Balance = Convert.ToDecimal(reader["Balance"])
 
                             });
@@ -306,7 +307,7 @@ namespace EBS.Controllers
             {
                 connection.Open();
 
-                string query = "INSERT INTO CustomerTbl (cFirstName, cMidName, cLastName, cAddress, cNumber, cNumberOp, Balance) VALUES (@cFirstName, @cMidName, @cLastName, @cAddress, @cNumber, @cNumberOp, 0)";
+                string query = "INSERT INTO CustomerTbl (cFirstName, cMidName, cLastName, cAddress, cNumber, cNumberOp, Branch, Balance) VALUES (@cFirstName, @cMidName, @cLastName, @cAddress, @cNumber, @cNumberOp, @Branch, 0)";
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@cFirstName", model.cFirstName);
@@ -322,6 +323,8 @@ namespace EBS.Controllers
                     {
                         command.Parameters.AddWithValue("@cNumberOp", model.cNumberOp);
                     }
+
+                    command.Parameters.AddWithValue("@Branch", model.Branch);
 
                     command.ExecuteNonQuery();
 
@@ -355,6 +358,7 @@ namespace EBS.Controllers
                                 cAddress = reader["cAddress"].ToString(),
                                 cNumber = Convert.ToInt32(reader["cNumber"]),
                                 cNumberOp = reader["cNumberOp"].ToString(),
+                                Branch = reader["Branch"].ToString(),
                                 Balance = Convert.ToDecimal(reader["Balance"])
 
                             };
@@ -374,7 +378,7 @@ namespace EBS.Controllers
             {
                 connection.Open();
 
-                string query = "UPDATE CustomerTbl SET cFirstName = @cFirstName, cMidName = @cMidName, cLastName = @cLastName, cAddress = @cAddress, cNumber = @cNumber, cNumberOp = @cNumberOp WHERE cID = @cID";
+                string query = "UPDATE CustomerTbl SET cFirstName = @cFirstName, cMidName = @cMidName, cLastName = @cLastName, cAddress = @cAddress, cNumber = @cNumber, cNumberOp = @cNumberOp, Branch = @Branch WHERE cID = @cID";
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@cID", model.cID);
@@ -391,6 +395,8 @@ namespace EBS.Controllers
                     {
                         command.Parameters.AddWithValue("@cNumberOp", model.cNumberOp);
                     }
+
+                    command.Parameters.AddWithValue("@Branch", model.Branch);
 
                     command.ExecuteNonQuery();
                 }

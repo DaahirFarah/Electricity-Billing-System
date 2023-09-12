@@ -39,6 +39,11 @@ namespace EBS.viewModels
         //[RegularExpression(@"^\d{10}$", ErrorMessage = "Phone Number Should be 10 digits starting 061.")]
         public string cNumberOp { get; set; }
 
+        [Required(ErrorMessage = "Please Provide Customer Branch")]
+        [Display(Name = "Branch")]
+        public string Branch { get; set; }
+
+
         [Display(Name = "Balance")]
         public decimal Balance { get; set; }
 
