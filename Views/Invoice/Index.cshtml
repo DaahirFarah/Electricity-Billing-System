@@ -71,8 +71,6 @@
                 <tr>
                     <th>Invoice ID</th>
                     <th>Customer ID</th>
-                    <th>Billing Period Starts</th>
-                    <th>Billing Period Ends</th>
                     <th>Previous Reading</th>
                     <th>Current Reading</th>
                     <th>Reading Date</th>
@@ -90,8 +88,6 @@
 
                         <td>@Html.DisplayFor(model => item.invoiceID)</td>
                         <td>@Html.DisplayFor(model => item.cID)</td>
-                        <td>@(item.billingPeriodStarts.Date.ToString("d"))</td>
-                        <td>@(item.billingPeriodEnds.Date.ToString("d"))</td>
                         <td>@Html.DisplayFor(model => item.prev_Reading)</td>
                         <td>@Html.DisplayFor(model => item.cur_Reading)</td>
                         <td>@(item.reading_Date.Date.ToString("d"))</td>

@@ -142,8 +142,6 @@ namespace EBS.Controllers
             // Add column headers with borders
             AddCellWithBorders(table, "Inv.ID", headerFont);
             AddCellWithBorders(table, "cID", headerFont);
-            AddCellWithBorders(table, "B.P.Start", headerFont);
-            AddCellWithBorders(table, "B.P.End", headerFont);
             AddCellWithBorders(table, "Prev.Reading", headerFont);
             AddCellWithBorders(table, "Cur.Reading", headerFont);
             AddCellWithBorders(table, "R.Date", headerFont);
@@ -157,8 +155,6 @@ namespace EBS.Controllers
             {
                 AddCellWithBorders(table, item.invoiceID.ToString(), contentFont);
                 AddCellWithBorders(table, item.cID.ToString(), contentFont);
-                AddCellWithBorders(table, item.billingPeriodStarts.ToString("yyyy-MM-dd"), contentFont);
-                AddCellWithBorders(table, item.billingPeriodEnds.ToString("yyyy-MM-dd"), contentFont);
                 AddCellWithBorders(table, item.prev_Reading.ToString(), contentFont);
                 AddCellWithBorders(table, item.cur_Reading.ToString(), contentFont);
                 AddCellWithBorders(table, item.reading_Date.ToString("yyyy-MM-dd"), contentFont);
@@ -245,8 +241,6 @@ namespace EBS.Controllers
             AddInvoiceLine(document, $"Previous Reading: {invoice.prev_Reading} (KwH)", contentFont, lineSpacing);
             AddInvoiceLine(document, $"Current Reading: {invoice.cur_Reading} (KwH)", contentFont, lineSpacing);
             AddInvoiceLine(document, $"Usage in (KwH): {invoice.reading_Value}", contentFont, lineSpacing);
-            AddInvoiceLine(document, $"Billing Period Start: {invoice.billingPeriodStarts.ToString("dd/MM/yyyy")}", contentFont, lineSpacing);
-            AddInvoiceLine(document, $"Billing Period End: {invoice.billingPeriodEnds.ToString("dd/MM/yyyy")}", contentFont, lineSpacing);
             AddInvoiceLine(document, $"Rate: {invoice.Rate:C}", contentFont, lineSpacing);
             AddInvoiceLine(document, $"Total Amount: {invoice.total_Fee:C}", contentFont, lineSpacing);
 
@@ -290,8 +284,6 @@ namespace EBS.Controllers
                             {
                                 invoiceID = Convert.ToInt32(reader["invoiceID"]),
                                 cID = Convert.ToInt32(reader["cID"]),
-                                billingPeriodStarts = Convert.ToDateTime(reader["billingPeriodStarts"]),
-                                billingPeriodEnds = Convert.ToDateTime(reader["billingPeriodEnds"]),
                                 prev_Reading = Convert.ToDecimal(reader["prev_Reading"]),
                                 cur_Reading = Convert.ToDecimal(reader["cur_Reading"]),
                                 reading_Date = Convert.ToDateTime(reader["reading_Date"]),
@@ -331,17 +323,15 @@ namespace EBS.Controllers
                     }
                 }
 
-                string query = "INSERT INTO InvoiceTbl (cID, Rate, billingPeriodStarts,"
-                             + "billingPeriodEnds, prev_Reading, cur_Reading, reading_Value, reading_Date, total_Fee) "
-                             + "VALUES (@cID, @Rate, @billingPeriodStarts, @billingPeriodEnds, @prev_Reading, @cur_Reading,"
+                string query = "INSERT INTO InvoiceTbl (cID, Rate, "
+                             + "prev_Reading, cur_Reading, reading_Value, reading_Date, total_Fee) "
+                             + "VALUES (@cID, @Rate, @prev_Reading, @cur_Reading,"
                              + "@reading_Value, @reading_Date, @total_Fee + @balance)";
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@cID", model.cID);
                     command.Parameters.AddWithValue("@Rate", model.Rate);
-                    command.Parameters.AddWithValue("@billingPeriodStarts", model.billingPeriodStarts);
-                    command.Parameters.AddWithValue("@billingPeriodEnds", model.billingPeriodEnds);
                     command.Parameters.AddWithValue("@prev_Reading", model.prev_Reading);
                     command.Parameters.AddWithValue("@cur_Reading", model.cur_Reading);
                     command.Parameters.AddWithValue("@reading_Value", model.reading_Value);
@@ -390,8 +380,6 @@ namespace EBS.Controllers
                             {
                                 invoiceID = Convert.ToInt32(reader["invoiceID"]),
                                 cID = Convert.ToInt32(reader["cID"]),
-                                billingPeriodStarts = Convert.ToDateTime(reader["billingPeriodStarts"]),
-                                billingPeriodEnds = Convert.ToDateTime(reader["billingPeriodEnds"]),
                                 prev_Reading = Convert.ToDecimal(reader["prev_Reading"]),
                                 cur_Reading = Convert.ToDecimal(reader["cur_Reading"]),
                                 reading_Date = Convert.ToDateTime(reader["reading_Date"]),
@@ -414,8 +402,8 @@ namespace EBS.Controllers
             using (SqlConnection connection = new SqlConnection(SecConn))
             {
                 connection.Open();
-                string query = "Update InvoiceTbl SET cID = @cID, Rate = @Rate, billingPeriodStarts = @billingPeriodStarts,"
-                             + "billingPeriodEnds = @billingPeriodEnds, prev_Reading = @prev_Reading, cur_Reading = @cur_Reading,"
+                string query = "Update InvoiceTbl SET cID = @cID, Rate = @Rate,"
+                             + "prev_Reading = @prev_Reading, cur_Reading = @cur_Reading,"
                              + "reading_Value = @reading_Value, reading_Date = @reading_Date, total_Fee = @total_Fee WHERE invoiceID = @invoiceID";
 
                 using (SqlCommand command = new SqlCommand(query, connection))
@@ -423,8 +411,6 @@ namespace EBS.Controllers
                     command.Parameters.AddWithValue("@invoiceID", model.invoiceID);
                     command.Parameters.AddWithValue("@cID", model.cID);
                     command.Parameters.AddWithValue("@Rate", model.Rate);
-                    command.Parameters.AddWithValue("@billingPeriodStarts", model.billingPeriodStarts);
-                    command.Parameters.AddWithValue("@billingPeriodEnds", model.billingPeriodEnds);
                     command.Parameters.AddWithValue("@prev_Reading", model.prev_Reading);
                     command.Parameters.AddWithValue("@cur_Reading", model.cur_Reading);
                     command.Parameters.AddWithValue("@reading_Value", model.reading_Value);

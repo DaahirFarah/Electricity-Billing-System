@@ -16,14 +16,6 @@ namespace EBS.viewModels
         [Required(ErrorMessage = "Customer ID is required.")]
         public int cID { get; set; }
 
-        [Display(Name = "Billing Period Started")]
-        [Required(ErrorMessage = "Period Start Date is required")]
-        public DateTime billingPeriodStarts { get; set; }
-
-        [Display(Name = "Billing Period Ended")]
-        [Required(ErrorMessage = "Period End Date is required")]
-        public DateTime billingPeriodEnds { get; set; }
-
         [Display(Name = "Previous Reading")]
         [Required(ErrorMessage = "Previous Reading is required")]
         public decimal prev_Reading { get; set; }
