@@ -51,26 +51,7 @@
                                     </div>
 
                                 </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-6 mb-4">
-                                    <div class="form-outline form-group">
-                                        @Html.LabelFor(m => m.billingPeriodStarts)
-                                        <input type="date" class="form-control form-control-lg" id="billingPeriodStarts" name="billingPeriodStarts" value="@Model.billingPeriodStarts.ToString("yyyy-MM-dd")" />
-                                        @Html.ValidationMessageFor(model => model.billingPeriodStarts, "", new { @class = "text-danger" })
-                                    </div>
-                                </div>
-                                <div class="col-md-6 mb-4">
-                                    <div class="form-outline form-group">
-                                        @Html.LabelFor(model => model.billingPeriodEnds)
-                                        <input type="date" class="form-control form-control-lg" id="billingPeriodEnds" name="billingPeriodEnds" value="@Model.billingPeriodEnds.ToString("yyyy-MM-dd")" />
-                                        @Html.ValidationMessageFor(model => model.billingPeriodEnds, "", new { @class = "text-danger" })
-                                    </div>
-                                </div>
-                            </div>
-
-
+                            </div>                                                     
 
                             <div class="row">
                                 <div class="col-md-6 mb-4">
