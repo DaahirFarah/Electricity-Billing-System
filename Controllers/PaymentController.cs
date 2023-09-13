@@ -12,6 +12,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Xml.Linq;
+using System.Data;
 
 namespace EBS.Controllers
 {
@@ -315,8 +316,9 @@ namespace EBS.Controllers
                     command.Parameters.AddWithValue("@paidAmount", model.paidAmount);
                     command.Parameters.AddWithValue("@totalFee", model.totalFee);
                     command.Parameters.AddWithValue("@payMethod", model.payMethod);
-                    command.Parameters.AddWithValue("@payDate", model.payDate);
-                   
+                    command.Parameters.AddWithValue("@payDate", SqlDbType.DateTime2).Value = model.payDate;
+
+
 
                     command.ExecuteNonQuery();
 
@@ -389,7 +391,7 @@ namespace EBS.Controllers
                     command.Parameters.AddWithValue("@paidAmount", model.paidAmount);
                     command.Parameters.AddWithValue("@totalFee", model.totalFee);
                     command.Parameters.AddWithValue("@payMethod", model.payMethod);
-                    command.Parameters.AddWithValue("@payDate", model.payDate);
+                    command.Parameters.AddWithValue("@payDate", SqlDbType.DateTime2).Value = model.payDate;
 
 
                     command.ExecuteNonQuery();
