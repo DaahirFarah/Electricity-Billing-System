@@ -71,16 +71,11 @@
     </div>
 
     <div class="mt-4 pt-2" style="padding-left: 40px; margin-left: 100px;">
-        <form action="@Url.Action("Create", "Invoice")" method="get">
-            <input class="btn btn-primary btn-lg btn-block" type="submit" value="Create Invoice" />
-        </form>
+
+        <input data-toggle="modal" data-target="#createInvoiceModal" class="btn btn-primary btn-lg btn-block" type="submit" value="Create Invoice" />
+
     </div>
 
-    <div class="mt-4 pt-2" style="padding-left: 40px; margin-left: 100px;">
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createInvoiceModal">
-            Create Invoice
-        </button>
-    </div>
 
     <!--Create Invoice Modal-->
     <div class="modal fade" id="createInvoiceModal" tabindex="-1" aria-labelledby="createInvoiceModalLabel" aria-hidden="true" style="color:black">
@@ -99,9 +94,126 @@
                             @using (Html.BeginForm("Create", "Invoice", FormMethod.Post))
                             {
                                 @Html.AntiForgeryToken()
-                                 
-                                                    <div class="card-bodyy p-4 p-md-5">
-                                                        <h2 class="mb-4 pb-2 pb-md-0 mb-md-5"><strong>Create Invoice</strong></h2>
+
+                                <div class="card-body p-4 p-md-5">
+                                    <h2 class="mb-4 pb-2 pb-md-0 mb-md-5"><strong>Create Invoice</strong></h2>
+                                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                                    <div class="row">
+                                        <div class="col-md-6 mb-4">
+
+                                            <div class="form-outline form-group">
+                                                @Html.LabelFor(m => m.invoice.cID)
+                                                @Html.EditorFor(model => model.invoice.cID, new { htmlAttributes = new { @class = "form-control form-control-lg", id = "cID" } })
+                                                @Html.ValidationMessageFor(model => model.invoice.cID, "", new { @class = "text-danger" })
+                                            </div>
+
+                                        </div>
+                                        <div class="col-md-6 mb-4">
+
+                                            <div class="form-outline form-group">
+                                                @Html.LabelFor(model => model.invoice.Rate)
+                                                @Html.EditorFor(model => model.invoice.Rate, new { htmlAttributes = new { @class = "form-control form-control-lg", id = "Rate", @readonly = "readonly" } })
+                                                @Html.ValidationMessageFor(model => model.invoice.Rate, "", new { @class = "text-danger" })
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-6 mb-4">
+
+                                            <div class="form-outline form-group">
+                                                @Html.LabelFor(m => m.invoice.prev_Reading)
+                                                @Html.EditorFor(model => model.invoice.prev_Reading, new { htmlAttributes = new { @class = "form-control form-control-lg", id = "prev_Reading" } })
+                                                @Html.ValidationMessageFor(model => model.invoice.prev_Reading, "", new { @class = "text-danger" })
+                                            </div>
+
+                                        </div>
+                                        <div class="col-md-6 mb-4">
+
+                                            <div class="form-outline form-group">
+                                                @Html.LabelFor(model => model.invoice.cur_Reading)
+                                                @Html.EditorFor(model => model.invoice.cur_Reading, new { htmlAttributes = new { @class = "form-control form-control-lg", id = "cur_Reading" } })
+                                                @Html.ValidationMessageFor(model => model.invoice.cur_Reading, "", new { @class = "text-danger" })
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+
+                                    <div class="row">
+                                        <div class="col-md-6 mb-4">
+
+                                            <div class="form-outline form-group">
+                                                @Html.LabelFor(m => m.invoice.reading_Value)
+                                                @Html.EditorFor(model => model.invoice.reading_Value, new { htmlAttributes = new { @class = "form-control form-control-lg", id = "reading_Value", @readonly = "readonly" } })
+                                                @Html.ValidationMessageFor(model => model.invoice.reading_Value, "", new { @class = "text-danger" })
+                                            </div>
+
+                                        </div>
+                                        <div class="col-md-6 mb-4">
+
+                                            <div class="form-outline form-group">
+                                                @Html.LabelFor(model => model.invoice.reading_Date)
+                                                @Html.EditorFor(model => model.invoice.reading_Date, new { htmlAttributes = new { @class = "form-control form-control-lg", Type = "date" } })
+                                                @Html.ValidationMessageFor(model => model.invoice.reading_Date, "", new { @class = "text-danger" })
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-6 mb-4">
+
+                                            <div class="form-outline form-group">
+                                                @Html.LabelFor(m => m.invoice.total_Fee)
+                                                @Html.EditorFor(model => model.invoice.total_Fee, new { htmlAttributes = new { @class = "form-control form-control-lg", @readonly = "readonly", id = "result" } })
+                                                @Html.ValidationMessageFor(model => model.invoice.total_Fee, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+
+
+                                        <!--Below div element holds some buttons. Leave it alone-->
+                                        <div class="row">
+                                            <div class="col-md-6 mb-4 pb-2">
+                                                <input type="submit" value="Create" class="btn btn-success btn-lg btn-block" />
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            }
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Update Invoice Modal-->
+    <div class="modal fade" id="updateInvoiceModal" tabindex="-1" aria-labelledby="updateInvoiceModalLabel" aria-hidden="true" style="color:black">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createInvoiceModalLabel">Create Invoice</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="card rounded shadow">
+                        <div class="card-body">
+
+                            @using (Html.BeginForm("Edit", "Invoice", FormMethod.Post))
+                            {
+                                @Html.AntiForgeryToken()
+                                @Html.HiddenFor(model => model.invoice.invoiceID)
+                                                               
+                                                    <div class="card-body p-4 p-md-5">
+                                                        <h2 class="mb-4 pb-2 pb-md-0 mb-md-5"><strong>Update Invoice</strong></h2>
                                                         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
                                                         <div class="row">
@@ -109,7 +221,7 @@
 
                                                                 <div class="form-outline form-group">
                                                                     @Html.LabelFor(m => m.invoice.cID)
-                                                                    @Html.EditorFor(model => model.invoice.cID, new { htmlAttributes = new { @class = "form-control form-control-lg", id = "cID" } })
+                                                                    @Html.EditorFor(model => model.invoice.cID, new { htmlAttributes = new { @class = "form-control form-control-lg" } })
                                                                     @Html.ValidationMessageFor(model => model.invoice.cID, "", new { @class = "text-danger" })
                                                                 </div>
 
@@ -159,11 +271,11 @@
                                                             </div>
                                                             <div class="col-md-6 mb-4">
 
-                                                                <div class="form-outline form-group">
+                                                                @*<div class="form-outline form-group">
                                                                     @Html.LabelFor(model => model.invoice.reading_Date)
-                                                                    @Html.EditorFor(model => model.invoice.reading_Date, new { htmlAttributes = new { @class = "form-control form-control-lg", Type = "date" } })
+                                                                    <input type="date" class="form-control form-control-lg" id="reading_Date" name="reading_Date" value="@Model.invoice.reading_Date.ToString("yyyy-MM-dd")" />
                                                                     @Html.ValidationMessageFor(model => model.invoice.reading_Date, "", new { @class = "text-danger" })
-                                                                </div>
+                                                                </div>*@
 
                                                             </div>
                                                         </div>
@@ -178,54 +290,22 @@
                                                                 </div>
                                                             </div>
 
-
-                                                            <!--Below div element holds some buttons. Leave it alone-->
                                                             <div class="row">
                                                                 <div class="col-md-6 mb-4 pb-2">
-                                                                    <input type="submit" value="Create" class="btn btn-primary btn-lg btn-block" />
-
+                                                                    <button type="submit" value="Create" class="btn btn-primary btn-lg btn-block">Update</button>
                                                                 </div>
-
-
                                                             </div>
-
-
                                                         </div>
-                                                    </div>
-                                                
-                                           
-
+                                                    </div>                                           
                             }
 
-                            @*<form>
-            <div class="row mb-3">
-                <div class="col-md-6">
-                    @Html.LabelFor(modelItem => Model.invoice.cID)
-                    @Html.EditorFor(model => model.invoice.cID, new { htmlAttributes = new { @class = "form-control form-control-lg", id = "cID" } })
-                    @Html.ValidationMessageFor(model => model.invoice.cID, "", new { @class = "text-danger" })
-
-                </div>
-                <div class="col-md-6">
-                    <label for="input2">Customer ID</label>
-                    <input type="number" class="form-control" id="input2">
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-6">
-                    <button type="button" class="btn btn-primary btn-block" id="createBtn">Create</button>
-                </div>
-                <div class="col-md-6">
-                    <button type="button" class="btn btn-secondary btn-block" data-dismiss="modal">Back</button>
-                </div>
-            </div>
-        </form>*@
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
 
     <!--Index: DataTable-->
     <div class="container">
@@ -258,8 +338,8 @@
                         <td>@Html.DisplayFor(model => item.reading_Value)</td>
                         <td>@Html.DisplayFor(model => item.total_Fee)</td>
                         <td>
-                            <a href="@Url.Action("Edit", "Invoice", new { id = item.invoiceID })">
-                                <i class="fa-solid fa-square-pen fa-1x" style="color: #1ABC9C; "></i>
+                            <a href="#" data-toggle="modal" data-target="#updateInvoiceModal">
+                                <i class="fa-solid fa-square-pen fa-1x" style="color: #1ABC9C;"></i>
                             </a>
 
                             <a href="@Url.Action("Delete", "Invoice", new { id = item.invoiceID })">

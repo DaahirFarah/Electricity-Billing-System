@@ -72,7 +72,7 @@ namespace EBS.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Display(Name = "Edit")]
-        public ActionResult Edit(invoiceVM model)
+        public ActionResult Edit(invWrapper model)
         {
             if (ModelState.IsValid)
             {
@@ -366,6 +366,7 @@ namespace EBS.Controllers
 
         }
 
+       
         private invoiceVM GetInvoiceById(int invoiceID)
         {
             using (SqlConnection connection = new SqlConnection(SecConn))
@@ -377,7 +378,7 @@ namespace EBS.Controllers
                     command.Parameters.AddWithValue("@invoiceID", invoiceID);
 
                     using (SqlDataReader reader = command.ExecuteReader())
-                    {
+                    {         
                         while (reader.Read())
                         {
                             return new invoiceVM
@@ -401,7 +402,7 @@ namespace EBS.Controllers
         }
 
         // Update Invoice Logic
-        private void UpdateInvoice(invoiceVM model)
+        private void UpdateInvoice(invWrapper model)
         {
             using (SqlConnection connection = new SqlConnection(SecConn))
             {
@@ -412,14 +413,14 @@ namespace EBS.Controllers
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@invoiceID", model.invoiceID);
-                    command.Parameters.AddWithValue("@cID", model.cID);
-                    command.Parameters.AddWithValue("@Rate", model.Rate);
-                    command.Parameters.AddWithValue("@prev_Reading", model.prev_Reading);
-                    command.Parameters.AddWithValue("@cur_Reading", model.cur_Reading);
-                    command.Parameters.AddWithValue("@reading_Value", model.reading_Value);
-                    command.Parameters.AddWithValue("@reading_Date", SqlDbType.DateTime2).Value = model.reading_Date;
-                    command.Parameters.AddWithValue("@total_Fee", model.total_Fee);
+                    command.Parameters.AddWithValue("@invoiceID", model.invoice.invoiceID);
+                    command.Parameters.AddWithValue("@cID", model.invoice.cID);
+                    command.Parameters.AddWithValue("@Rate", model.invoice.Rate);
+                    command.Parameters.AddWithValue("@prev_Reading", model.invoice.prev_Reading);
+                    command.Parameters.AddWithValue("@cur_Reading", model.invoice.cur_Reading);
+                    command.Parameters.AddWithValue("@reading_Value", model.invoice.reading_Value);
+                    command.Parameters.AddWithValue("@reading_Date", SqlDbType.DateTime2).Value = model.invoice.reading_Date;
+                    command.Parameters.AddWithValue("@total_Fee", model.invoice.total_Fee);
 
                     command.ExecuteNonQuery();
                 };
