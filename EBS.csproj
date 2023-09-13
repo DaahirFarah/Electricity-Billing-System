@@ -149,10 +149,12 @@
     <Compile Include="viewModels\customerVM.cs" />
     <Compile Include="viewModels\DashboardVM.cs" />
     <Compile Include="viewModels\invoiceVM.cs" />
+    <Compile Include="viewModels\invVMwrapper.cs" />
     <Compile Include="viewModels\payVM.cs" />
     <Compile Include="viewModels\UserVm.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\modal.css" />
     <Content Include="Assets\_e407f44c-5341-4a3d-b20e-e7ae5a10e34e.jpg" />
     <Content Include="Content\bootstrap-grid.css" />
     <Content Include="Content\bootstrap-grid.min.css" />

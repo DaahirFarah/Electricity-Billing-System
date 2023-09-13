@@ -46,7 +46,7 @@ namespace EBS.Controllers
         [ValidateAntiForgeryToken]
         [HttpPost]
         [Display(Name = "Create")]
-        public ActionResult Create(invoiceVM model)
+        public ActionResult Create(invVMwrapper model)
         {
             if (ModelState.IsValid)
             {
@@ -60,7 +60,7 @@ namespace EBS.Controllers
         //GET: Update Invoice
         public ActionResult Edit(int id)
         {
-            invoiceVM invoice = GetInvoiceById(id);
+            invVMwrapper invoice = GetInvoiceById(id);
             return View(invoice);
         }
 
@@ -68,7 +68,7 @@ namespace EBS.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Display(Name = "Edit")]
-        public ActionResult Edit(invoiceVM model)
+        public ActionResult Edit(invVMwrapper model)
         {
             if (ModelState.IsValid)
             {
@@ -81,7 +81,7 @@ namespace EBS.Controllers
 
         public ActionResult Delete(int id)
         {
-            invoiceVM invoice = GetInvoiceById(id);
+            invVMwrapper invoice = GetInvoiceById(id);
             return View(invoice);
         }
 
@@ -302,7 +302,7 @@ namespace EBS.Controllers
 
       
 
-        private void InsertInvoice(invoiceVM model)
+        private void InsertInvoice(invVMwrapper model)
         {
             using (SqlConnection connection = new SqlConnection(SecConn))
             {
@@ -362,7 +362,7 @@ namespace EBS.Controllers
 
         }
 
-        private invoiceVM GetInvoiceById(int invoiceID)
+        private invVMwrapper GetInvoiceById(int invoiceID)
         {
             using (SqlConnection connection = new SqlConnection(SecConn))
             {
@@ -376,7 +376,7 @@ namespace EBS.Controllers
                     {
                         while (reader.Read())
                         {
-                            return new invoiceVM
+                            return new invVMwrapper
                             {
                                 invoiceID = Convert.ToInt32(reader["invoiceID"]),
                                 cID = Convert.ToInt32(reader["cID"]),
@@ -397,7 +397,7 @@ namespace EBS.Controllers
         }
 
         // Update Invoice Logic
-        private void UpdateInvoice(invoiceVM model)
+        private void UpdateInvoice(invVMwrapper model)
         {
             using (SqlConnection connection = new SqlConnection(SecConn))
             {

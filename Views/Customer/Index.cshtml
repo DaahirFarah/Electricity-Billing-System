@@ -45,6 +45,7 @@
         }
 
         .container {
+            margin-left:100px;
             padding-top: 30px;
             padding-left: 45px;
             padding-bottom: 20px;
@@ -59,13 +60,13 @@
 <body>
 
 
-    <div class="mt-4 pt-2" style="padding-left: 40px;">
+    <div class="mt-4 pt-2" style="padding-left: 40px; margin-left:100px">
         <form action="@Url.Action("GenerateCustomerList", "Customer")" method="get">
             <input class="btn btn-secondary btn-lg btn-block" type="submit" value="Download Customers" />
         </form>
     </div>
 
-    <div id="export" class="mt-4 pt-2" style="padding-left: 40px;">
+    <div id="export" class="mt-4 pt-2" style="padding-left: 40px; margin-left: 100px">
         <form action="@Url.Action("Create", "Customer")" method="get">
             <input class="btn btn-primary btn-lg btn-block" type="submit" value="Register" />
         </form>
