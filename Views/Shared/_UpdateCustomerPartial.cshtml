@@ -1,0 +1,179 @@
+﻿
+@model EBS.viewModels.customerVM
+
+
+<!--Update Invoice Modal-->
+<div class="modal fade" id="cusUpdateModal" tabindex="-1" aria-labelledby="cusUpdateModal" aria-hidden="true" style="color:black">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createInvoiceModalLabel">Update Customer Info</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="card rounded shadow">
+                    <div class="card-body">
+
+                        @using (Html.BeginForm("Edit", "Customer", FormMethod.Post))
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.HiddenFor(model => model.cID)
+
+                            <div class="card-body p-4 p-md-5">
+                                <h2 class="mb-4 pb-2 pb-md-0 mb-md-5"><strong>Update Invoice</strong></h2>
+                                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                                <div class="row">
+                                    <div class="col-md-4 mb-4">
+
+                                        <div class="form-outline form-group">
+                                            @Html.LabelFor(m => m.cFirstName)
+                                            @Html.EditorFor(model => model.cFirstName, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "firstName" } })
+                                            @Html.ValidationMessageFor(model => model.cFirstName, "", new { @class = "text-danger" })
+                                        </div>
+
+                                    </div>
+                                    <div class="col-md-4 mb-4">
+
+                                        <div class="form-outline form-group">
+                                            @Html.LabelFor(model => model.cMidName)
+                                            @Html.EditorFor(model => model.cMidName, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "midName" } })
+                                            @Html.ValidationMessageFor(model => model.cMidName, "", new { @class = "text-danger" })
+                                        </div>
+
+                                    </div>
+
+                                    <div class="col-md-4 mb-4">
+
+                                        <div class="form-outline form-group">
+                                            @Html.LabelFor(model => model.cLastName)
+                                            @Html.EditorFor(model => model.cLastName, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "lastName" } })
+                                            @Html.ValidationMessageFor(model => model.cLastName, "", new { @class = "text-danger" })
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="row">
+
+                                    <div class="col-md-6 mb-4 d-flex align-items-center">
+
+
+                                        <div class="form-outline form-group">
+                                            @Html.LabelFor(model => model.cAddress)
+                                            @Html.EditorFor(model => model.cAddress, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "address" } })
+                                            @Html.ValidationMessageFor(model => model.cAddress, "", new { @class = "text-danger" })
+                                        </div>
+
+                                    </div>
+
+                                    <div class="col-md-6 mb-4 d-flex align-items-center">
+
+                                        <div class="form-outline form-group">
+                                            @Html.LabelFor(model => model.Branch)
+                                            @Html.EditorFor(model => model.Branch, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "Branch" } })
+                                            @Html.ValidationMessageFor(model => model.Branch, "", new { @class = "text-danger" })
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-4 pb-2">
+
+                                        <div class="form-outline form-group">
+                                            @Html.LabelFor(model => model.cNumber)
+                                            @Html.EditorFor(model => model.cNumber, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "number" } })
+                                            @Html.ValidationMessageFor(model => model.cNumber, "", new { @class = "text-danger" })
+                                        </div>
+
+                                    </div>
+                                    <div class="col-md-6 mb-4 pb-2">
+
+                                        <div class="form-outline form-group">
+                                            @Html.LabelFor(model => model.cNumberOp)
+                                            @Html.EditorFor(model => model.cNumberOp, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "number2" } })
+                                            @Html.ValidationMessageFor(model => model.cNumberOp, "", new { @class = "text-danger" })
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-4 pb-2">
+                                        <button type="submit" value="Create" class="btn btn-primary btn-lg btn-block">Update</button>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        }
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    // Text validation function
+    function validateText(input) {
+        if (!isNaN(Number(input.value))) {
+            alert('Please enter text');
+            input.value = '';
+        }
+    }
+
+    // Number validation function
+    function validateNumber(input) {
+        if (isNaN(Number(input.value))) {
+            alert('Please enter a number');
+            input.value = '';
+        }
+    }
+
+    // Get elements
+    const firstNameInput = document.querySelector('#firstName');
+    const midNameInput = document.querySelector('#midName');
+    const lastNameInput = document.querySelector('#lastName');
+    const addressInput = document.querySelector('#address');
+    const Branch = document.querySelector('#Branch');
+    const phone1Input = document.querySelector('#number');
+    const phone2Input = document.querySelector('#number2');
+
+    // Attach listeners
+    firstNameInput.addEventListener('input', () => {
+        validateText(firstNameInput);
+    });
+
+    midNameInput.addEventListener('input', () => {
+        validateText(midNameInput);
+    });
+
+    lastNameInput.addEventListener('input', () => {
+        validateText(lastNameInput);
+    });
+
+    addressInput.addEventListener('input', () => {
+        validateText(addressInput);
+    });
+
+    Branch.addEventListener('input', () => {
+        validateText(Branch);
+    });
+
+    phone1Input.addEventListener('input', () => {
+        validateNumber(phone1Input);
+    });
+
+    phone2Input.addEventListener('input', () => {
+        validateNumber(phone2Input);
+    });
+
+</script>

@@ -44,7 +44,6 @@ namespace EBS.Controllers
         //SET: Register Customer
         [ValidateAntiForgeryToken]
         [HttpPost]
-        [Authorize]
         public ActionResult Create(customerVM model)
         {
             if (ModelState.IsValid)
@@ -55,13 +54,23 @@ namespace EBS.Controllers
             return View(model);
         }
 
-        [Authorize]
         ////GET: Update Customer
+        //public ActionResult Edit(int id)
+        //{
+        //    customerVM customer = GetCustomerById(id);
+        //    return View(customer);
+        //}
+
+        [HttpGet]
         public ActionResult Edit(int id)
         {
             customerVM customer = GetCustomerById(id);
-            return View(customer);
+            //return View(customer);
+            return Json(customer, JsonRequestBehavior.AllowGet);
         }
+
+
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]

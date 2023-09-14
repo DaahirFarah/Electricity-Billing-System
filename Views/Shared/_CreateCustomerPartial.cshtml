@@ -1,38 +1,29 @@
 ﻿
-
 @model EBS.viewModels.customerVM
 
-@{
-    Layout = "~/Views/Shared/_Layout2.cshtml";
-}
 
-<!DOCTYPE html>
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Customer Registeration | SEC</title>
-    <link href="~/Content/Registeration.css" rel="stylesheet" />
+<!--Update Invoice Modal-->
+<div class="modal fade" id="cusCreateModal" tabindex="-1" aria-labelledby="cusCreateModal" aria-hidden="true" style="color:black">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createInvoiceModalLabel">Register Customer</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="card rounded shadow">
+                    <div class="card-body">
 
-</head>
-<body>
+                        @using (Html.BeginForm("Create", "Customer", FormMethod.Post))
+                        {
+                            @Html.AntiForgeryToken()
 
-    @using (Html.BeginForm("Create", "Customer", FormMethod.Post))
-    {
-        @Html.AntiForgeryToken()
-        
-
-        <section class="vh-100 gradient-custom;" style="font-family: Verdana, Geneva, Tahoma, sans-serif; ">
-            <div class="container py-5 h-100">
-                <div class="row justify-content-center align-items-center h-100">
-
-                    <div class="col-12 col-lg-9 col-xl-7">
-                        <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">
-
-                            <div class="card-body p-4 p-md-5">
-                                <h2 class="mb-4 pb-2 pb-md-0 mb-md-5"><strong>Customer Registeration</strong></h2>
-                               
-                                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                        <div class="card-body p-4 p-md-5">
+                            <h2 class="mb-4 pb-2 pb-md-0 mb-md-5"><strong>Update Invoice</strong></h2>
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
                             <div class="row">
                                 <div class="col-md-4 mb-4">
@@ -92,45 +83,43 @@
                             </div>
 
                             <div class="row">
-                                        <div class="col-md-6 mb-4 pb-2">
+                                <div class="col-md-6 mb-4 pb-2">
 
-                                            <div class="form-outline form-group">
-                                                @Html.LabelFor(model => model.cNumber)
-                                                @Html.EditorFor(model => model.cNumber, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "number" } })
-                                                @Html.ValidationMessageFor(model => model.cNumber, "", new { @class = "text-danger" })
-                                            </div>
-
-                                        </div>
-                                        <div class="col-md-6 mb-4 pb-2">
-
-                                            <div class="form-outline form-group">
-                                                @Html.LabelFor(model => model.cNumberOp)
-                                                @Html.EditorFor(model => model.cNumberOp, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "number2" } })
-                                                @Html.ValidationMessageFor(model => model.cNumberOp, "", new { @class = "text-danger" })
-                                            </div>
-
-                                        </div>
+                                    <div class="form-outline form-group">
+                                        @Html.LabelFor(model => model.cNumber)
+                                        @Html.EditorFor(model => model.cNumber, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "number" } })
+                                        @Html.ValidationMessageFor(model => model.cNumber, "", new { @class = "text-danger" })
                                     </div>
+
+                                </div>
+                                <div class="col-md-6 mb-4 pb-2">
+
+                                    <div class="form-outline form-group">
+                                        @Html.LabelFor(model => model.cNumberOp)
+                                        @Html.EditorFor(model => model.cNumberOp, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "number2" } })
+                                        @Html.ValidationMessageFor(model => model.cNumberOp, "", new { @class = "text-danger" })
+                                    </div>
+
+                                </div>
+                            </div>
 
                             <div class="row">
-                                        <div class="col-md-6 mb-4 pb-2">
-                                            <button type="submit" value="Create" class="btn btn-primary btn-lg btn-block">Register</button>
-                                        </div>
-                                        <div class="col-md-6 mb-4 pb-2">
-                                            @Html.ActionLink("Back", "Index", "Customer", null, new { @class = "btn btn-secondary btn-lg btn-block" })
-                                        </div>
-                                    </div>
-
-                                    
-                                
+                                <div class="col-md-6 mb-4 pb-2">
+                                    <button type="submit" value="Create" class="btn btn-success btn-lg btn-block">Register</button>
+                                </div>
+                               
                             </div>
+
                         </div>
+                        }
+
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
+    </div>
+</div>
 
-    }
 
 <script>
     // Text validation function
@@ -158,7 +147,7 @@
     const phone1Input = document.querySelector('#number');
     const phone2Input = document.querySelector('#number2');
 
-    // Attach listeners 
+    // Attach listeners
     firstNameInput.addEventListener('input', () => {
         validateText(firstNameInput);
     });
@@ -188,6 +177,3 @@
     });
 
 </script>
-
-    </body>
-</html>

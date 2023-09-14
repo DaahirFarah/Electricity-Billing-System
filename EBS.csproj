@@ -358,6 +358,8 @@
     <Content Include="Views\Invoice\Delete.cshtml" />
     <Content Include="Views\Payment\Delete.cshtml" />
     <Content Include="Views\Dashboard\Index.cshtml" />
+    <Content Include="Views\Shared\_CreateCustomerPartial.cshtml" />
+    <Content Include="Views\Shared\_UpdateCustomerPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
