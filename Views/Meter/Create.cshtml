@@ -1,0 +1,146 @@
+﻿
+@model EBS.viewModels.MeterVM
+
+@{
+    Layout = "~/Views/Shared/_Layout2.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Create Meter | SEC</title>
+    <link href="~/Content/Registeration.css" rel="stylesheet" />
+
+</head>
+<body>
+
+    @using (Html.BeginForm("Create", "Meter", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+
+        <section class="vh-100 gradient-custom;" ; style="font-family: Verdana, Geneva, Tahoma, sans-serif; ">
+            <div class="container py-5 h-100">
+                <div class="row justify-content-center align-items-center h-100">
+
+                    <div class="col-12 col-lg-9 col-xl-7">
+                        <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">
+
+                            <div class="card-body p-4 p-md-5">
+                                <h2 class="mb-4 pb-2 pb-md-0 mb-md-5"><strong>Create Meter</strong></h2>
+                                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-4">
+
+                                        <div class="form-outline form-group">
+                                            @Html.LabelFor(m => m.SerialNumber)
+                                            @Html.EditorFor(model => model.SerialNumber, new { htmlAttributes = new { @class = "form-control form-control-lg", id = "serialN" } })
+                                            @Html.ValidationMessageFor(model => model.SerialNumber, "", new { @class = "text-danger" })
+                                        </div>
+
+                                    </div>
+                                    <div class="col-md-6 mb-4">
+
+                                        <div class="form-outline form-group">
+                                            @Html.LabelFor(model => model.Type)
+                                            @Html.EditorFor(model => model.Type, new { htmlAttributes = new { @class = "form-control form-control-lg", id = "type" } })
+                                            @Html.ValidationMessageFor(model => model.Type, "", new { @class = "text-danger" })
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                
+                                    <div class="col-md-12 mb-4">
+
+                                        <div class="form-outline form-group">
+                                            @Html.LabelFor(model => model.Status)
+                                            @Html.EditorFor(model => model.Status, new { htmlAttributes = new { @class = "form-control form-control-lg", id = "status" } })
+                                            @Html.ValidationMessageFor(model => model.Status, "", new { @class = "text-danger" })
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                        <div class="col-md-6 mb-4 pb-2">
+                                            <input type="submit" value="Create" class="btn btn-success btn-lg btn-block" />
+
+                                        </div>
+
+
+                                        <div class="col-md-6 mb-4 pb-2">
+                                            @Html.ActionLink("Back", "Index", "Meter", null, new { @class = "btn btn-secondary btn-lg btn-block" })
+                                        </div>
+
+                                </div>
+
+
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!--The script below performs dynamic calculation to produce the product and sub of the current reading, previous reading, usage and rate-->
+
+            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+            <script>
+
+                // Text Input Validation
+                function validateText(input) {
+                    if (!isNaN(Number(input.value))) {
+                        alert('Please enter text');
+                        input.value = '';
+                    }
+                }
+
+                // Number validation function
+                function validateNumber(input) {
+                if (isNaN(Number(input.value))) {
+                    alert('Please enter a number');
+                input.value = '';
+                }
+            }
+
+                // Get elements
+                const serialN = document.querySelector('#serialN');
+                const type = document.querySelector('#type');
+                const iDate = document.querySelector('#iDate');
+                const statuss = document.querySelector('#status');
+
+            // Attach listeners
+
+
+                serialN.addEventListener('input', () => {
+                    validateNumber(serialN);
+            });
+
+                type.addEventListener('input', () => {
+                    validateText(type);
+            });
+
+                statuss.addEventListener('input', () => {
+                    validateText(statuss);
+            });
+
+
+          
+            </script>
+
+        </section>
+        
+
+    }
+</body>
+</html>
+
+
+

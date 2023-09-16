@@ -368,11 +368,14 @@
     <Content Include="Views\Rates\Create.cshtml" />
     <Content Include="Views\Rates\Edit.cshtml" />
     <Content Include="Views\Rates\Delete.cshtml" />
+    <Content Include="Views\Meter\Index.cshtml" />
+    <Content Include="Views\Meter\Create.cshtml" />
+    <Content Include="Views\Meter\Edit.cshtml" />
+    <Content Include="Views\Meter\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="NewLayoutMybe\06\.vs\06\FileContentIndex\merges\" />
-    <Folder Include="Views\Meter\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />

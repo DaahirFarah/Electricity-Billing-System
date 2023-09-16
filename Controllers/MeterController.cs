@@ -2,9 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace EBS.Controllers
@@ -100,7 +99,6 @@ namespace EBS.Controllers
                                 MeterID = Convert.ToInt32(reader["MeterID"]),
                                 SerialNumber = Convert.ToInt32(reader["SerialNumber"]),
                                 Type = reader["Type"].ToString(),
-                                InstallationDate = Convert.ToDateTime(reader["InstallationDate"]),
                                 Status = reader["Status"].ToString()
 
                             });
@@ -121,7 +119,7 @@ namespace EBS.Controllers
                 string query = "SELECT * FROM Meters WHERE MeterID = @MeterID";
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@Id", Id);
+                    command.Parameters.AddWithValue("@MeterID", Id);
 
                     using (SqlDataReader reader = command.ExecuteReader())
                     {
@@ -132,7 +130,6 @@ namespace EBS.Controllers
                                 MeterID = Convert.ToInt32(reader["MeterID"]),
                                 SerialNumber = Convert.ToInt32(reader["SerialNumber"]),
                                 Type = reader["Type"].ToString(),
-                                InstallationDate = Convert.ToDateTime(reader["InstallationDate"]),
                                 Status = reader["Status"].ToString()
                             };
                         }
@@ -149,13 +146,12 @@ namespace EBS.Controllers
             using (SqlConnection connection = new SqlConnection(SecConn))
             {
                 connection.Open();
-                string Insertquery = "INSERT INTO Meters VALUES(@SerialNumber, @Type, @InstallationDate, @Status)";
+                string Insertquery = "INSERT INTO Meters (SerialNumber, Type, Status) VALUES (@SerialNumber, @Type, @Status)";
 
                 using (SqlCommand command = new SqlCommand(Insertquery, connection))
                 {
                     command.Parameters.AddWithValue("@SerialNumber", model.SerialNumber);
                     command.Parameters.AddWithValue("@Type", model.Type);
-                    command.Parameters.AddWithValue("@InstallationDate", model.InstallationDate);
                     command.Parameters.AddWithValue("@Status", model.Status);
 
                     command.ExecuteNonQuery();
@@ -169,18 +165,17 @@ namespace EBS.Controllers
             using (SqlConnection connection = new SqlConnection(SecConn))
             {
                 connection.Open();
-                string UpdateQuery = "UPDATE Meters SET SerialNumber = @SerialNumber, Type = @Type, InstallationDate = @InstallationDate"
-                                   + "Status = @Status";
+                string query = "UPDATE Meters SET SerialNumber = @SerialNumber, Type = @Type, Status = @Status WHERE MeterID = @MeterID";
 
-                using (SqlCommand command = new SqlCommand(UpdateQuery, connection))
+                using (SqlCommand command = new SqlCommand(query, connection))
                 {
+                    command.Parameters.AddWithValue("@MeterID", model.MeterID);
                     command.Parameters.AddWithValue("@SerialNumber", model.SerialNumber);
                     command.Parameters.AddWithValue("@Type", model.Type);
-                    command.Parameters.AddWithValue("@InstallationDate", model.InstallationDate);
                     command.Parameters.AddWithValue("@Status", model.Status);
 
                     command.ExecuteNonQuery();
-                }
+                };
             }
         }
 
@@ -190,7 +185,7 @@ namespace EBS.Controllers
             using (SqlConnection connection = new SqlConnection(SecConn))
             {
                 connection.Open();
-                string DeleteQuery = "DELETE FROM Meter WHERE MeterID = @MeterID";
+                string DeleteQuery = "DELETE FROM Meters WHERE MeterID = @MeterID";
 
                 using (SqlCommand command = new SqlCommand(DeleteQuery, connection))
                 {
