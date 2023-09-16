@@ -45,7 +45,6 @@ namespace EBS.Controllers
         //SET: Register Invoice
         [ValidateAntiForgeryToken]
         [HttpPost]
-        [Display(Name = "Create")]
         public ActionResult Create(invoiceVM model)
         {
             if (ModelState.IsValid)

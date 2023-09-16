@@ -1,0 +1,129 @@
+﻿
+
+@model EBS.viewModels.RateVM
+
+@{
+    Layout = "~/Views/Shared/_Layout2.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Create Tarrif | SEC</title>
+    <link href="~/Content/Registeration.css" rel="stylesheet" />
+
+</head>
+<body>
+
+    @using (Html.BeginForm("Create", "Rates", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+
+
+        <section class="vh-100 gradient-custom;" style="font-family: Verdana, Geneva, Tahoma, sans-serif; ">
+            <div class="container py-5 h-100">
+                <div class="row justify-content-center align-items-center h-100">
+
+                    <div class="col-12 col-lg-9 col-xl-7">
+                        <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">
+
+                            <div class="card-body p-4 p-md-5">
+                                <h2 class="mb-4 pb-2 pb-md-0 mb-md-5"><strong>Create Tarrif</strong></h2>
+
+                                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                                <div class="row">
+                                    <div class="col-md-4 mb-4">
+
+                                        <div class="form-outline form-group">
+                                            @Html.LabelFor(m => m.UsageLevelName)
+                                            @Html.EditorFor(model => model.UsageLevelName, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "ulName" } })
+                                            @Html.ValidationMessageFor(model => model.UsageLevelName, "", new { @class = "text-danger" })
+                                        </div>
+
+                                    </div>
+                                    <div class="col-md-4 mb-4">
+
+                                        <div class="form-outline form-group">
+                                            @Html.LabelFor(model => model.UsageLevelNumber)
+                                            @Html.EditorFor(model => model.UsageLevelNumber, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "ulNumber" } })
+                                            @Html.ValidationMessageFor(model => model.UsageLevelNumber, "", new { @class = "text-danger" })
+                                        </div>
+
+                                    </div>
+
+                                    <div class="col-md-4 mb-4">
+
+                                        <div class="form-outline form-group">
+                                            @Html.LabelFor(model => model.Rate)
+                                            @Html.EditorFor(model => model.Rate, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "rate" } })
+                                            @Html.ValidationMessageFor(model => model.Rate, "", new { @class = "text-danger" })
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-4 pb-2">
+                                        <button type="submit" value="Create" class="btn btn-success btn-lg btn-block">Create</button>
+                                    </div>
+                                    <div class="col-md-6 mb-4 pb-2">
+                                        @Html.ActionLink("Back", "Index", "Rates", null, new { @class = "btn btn-secondary btn-lg btn-block" })
+                                    </div>
+                                </div>
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    }
+
+    <script>
+    // Text validation function
+    function validateText(input) {
+        if (!isNaN(Number(input.value))) {
+            alert('Please enter text');
+            input.value = '';
+        }
+    }
+
+    // Number validation function
+    function validateNumber(input) {
+        if (isNaN(Number(input.value))) {
+            alert('Please enter a number');
+            input.value = '';
+        }
+    }
+
+    // Get elements
+    const ulName = document.querySelector('#ulName');
+    const ulNumber = document.querySelector('#ulNumber');
+    const Rate = document.querySelector('#rate');
+   
+
+        // Attach listeners
+        ulName.addEventListener('input', () => {
+            validateText(ulName);
+    });
+
+        ulNumber.addEventListener('input', () => {
+            validateNumber(ulNumber);
+    });
+
+        Rate.addEventListener('input', () => {
+            validateNumber(Rate);
+    });
+
+    </script>
+
+</body>
+</html>

@@ -140,6 +140,7 @@
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\InvoiceController.cs" />
     <Compile Include="Controllers\PaymentController.cs" />
+    <Compile Include="Controllers\RatesController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -152,6 +153,7 @@
     <Compile Include="viewModels\invoiceVM.cs" />
     <Compile Include="viewModels\payVM.cs" />
     <Compile Include="viewModels\invWrapper.cs" />
+    <Compile Include="viewModels\RateVM.cs" />
     <Compile Include="viewModels\UserVm.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -360,6 +362,8 @@
     <Content Include="Views\Dashboard\Index.cshtml" />
     <Content Include="Views\Shared\_CreateCustomerPartial.cshtml" />
     <Content Include="Views\Shared\_UpdateCustomerPartial.cshtml" />
+    <Content Include="Views\Rates\Index.cshtml" />
+    <Content Include="Views\Rates\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
