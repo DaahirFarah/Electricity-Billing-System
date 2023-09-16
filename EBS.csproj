@@ -139,6 +139,7 @@
     <Compile Include="Controllers\DashboardController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\InvoiceController.cs" />
+    <Compile Include="Controllers\MeterController.cs" />
     <Compile Include="Controllers\PaymentController.cs" />
     <Compile Include="Controllers\RatesController.cs" />
     <Compile Include="Controllers\UserController.cs" />
@@ -151,6 +152,7 @@
     <Compile Include="viewModels\DashboardVM.cs" />
     <Compile Include="viewModels\invoicevmList.cs" />
     <Compile Include="viewModels\invoiceVM.cs" />
+    <Compile Include="viewModels\MeterVM.cs" />
     <Compile Include="viewModels\payVM.cs" />
     <Compile Include="viewModels\invWrapper.cs" />
     <Compile Include="viewModels\RateVM.cs" />
@@ -370,6 +372,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="NewLayoutMybe\06\.vs\06\FileContentIndex\merges\" />
+    <Folder Include="Views\Meter\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />
