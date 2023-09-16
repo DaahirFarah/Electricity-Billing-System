@@ -66,22 +66,22 @@
         </form>
     </div>
 
-    @*<div id="export" class="mt-4 pt-2" style="padding-left: 40px; margin-left: 100px">
+    <div id="export" class="mt-4 pt-2" style="padding-left: 40px; margin-left: 100px">
             <form action="@Url.Action("Create", "Customer")" method="get">
                 <input class="btn btn-primary btn-lg btn-block" type="submit" value="Register" />
             </form>
-        </div>*@
+        </div>
 
 
 
-    <div class="mt-4 pt-2" style="padding-left: 40px; margin-left: 100px;">
+    @*<div class="mt-4 pt-2" style="padding-left: 40px; margin-left: 100px;">
 
         <input data-toggle="modal" data-target="#cusCreateModal" class="btn btn-primary btn-lg btn-block" type="submit" value="Create Invoice" />
         @Html.Partial("_CreateCustomerPartial", new EBS.viewModels.customerVM())
         @Html.Partial("_UpdateCustomerPartial", new EBS.viewModels.customerVM())
 
     </div>
-    <br />
+    <br />*@
 
     <div class="container">
         <table id="myTable" class="table table-striped table-bordered" style="width:100%">
@@ -114,13 +114,13 @@
                         <td>@Html.DisplayFor(modelItem => item.Branch)</td>
                         <td>@Html.DisplayFor(modelItem => item.Balance)</td>
                         <td>
-                            @*<a href="@Url.Action("Edit", "Customer", new { id = item.cID })">
-                                    <i class="fa-solid fa-square-pen fa-1x" style="color: #1ABC9C; "></i>
-                                </a>*@
-
-                            <a href="#" data-id="@item.cID" class="edit-customer" @*data-toggle="modal" data-target="#cusCreateModal"*@>
-                                <i class="fa-solid fa-square-pen fa-1x" style="color: #1ABC9C;"></i>
+                            <a href="@Url.Action("Edit", "Customer", new { id = item.cID })">
+                                <i class="fa-solid fa-square-pen fa-1x" style="color: #1ABC9C; "></i>
                             </a>
+
+                            @*<a href="#" data-id="@item.cID" class="edit-customer">
+                                <i class="fa-solid fa-square-pen fa-1x" style="color: #1ABC9C;"></i>
+                            </a>*@
 
                             <a href="@Url.Action("Delete", "Customer", new { id = item.cID })">
                                 <i class="fas fa-trash fa-1x delete-icon item" style="color: #FF5733"></i>
@@ -137,50 +137,50 @@
 
             </tbody>
         </table>
-    </div>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        @*<script>
+            $(document).ready(function () {
+                // Click event for the edit icon
+                $(".edit-customer").click(function (e) {
+                    e.preventDefault(); // Prevent the default link behavior
+                    console.log('Icon pressed')
+                    var customerId = $(this).data("id"); // Get the customer ID from data-id attribute
 
-    <script>
-        new DataTable('#myTable');
-    </script>
+                    $.ajax({
+                        url: "/Customer/Edit",
+                        data: { id: customerId },
+                        method: "GET",
+                        success: function (data) {
 
-    <script>
-        $(document).ready(function () {
-            // Click event for the edit icon
-            $(".edit-customer").click(function (e) {
-                e.preventDefault(); // Prevent the default link behavior
-                var customerId = $(this).data("id"); // Get the customer ID from data-id attribute
+                            $("#firstName").val(data.cFirstName);
+                            $("#midName").val(data.cMidName);
+                            $("#lastName").val(data.cLastName);
+                            $("#address").val(data.cAddress);
+                            $("#Branch").val(data.Branch);
+                            $("#number").val(data.cNumber);
+                            $("#number2").val(data.cNumberOp);
 
-                $.ajax({
-                    url: "/Customer/Edit",
-                    data: { id: customerId },
-                    method: "GET",
-                    success: function (data) {
-
-                        $("#firstName").val(data.cFirstName);
-                        $("#midName").val(data.cMidName);
-                        $("#lastName").val(data.cLastName);
-                        $("#address").val(data.cAddress);
-                        $("#Branch").val(data.Branch);
-                        $("#number").val(data.cNumber);
-                        $("#number2").val(data.cNumberOp);
-
-                        // Show the modal
-                        $("#cusUpdateModal").modal("show");
-                    },
-                    error: function () {
-                        // Handle errors
-                        @{
-                            <h2> An Error Occured. Please Try Again.</h2>
+                            // Show the modal
+                            $("#cusUpdateModal").modal("show");
+                        },
+                        error: function () {
+                            // Handle errors
+                            @{
+                                <h2> An Error Occured. Please Try Again.</h2>
+                            }
                         }
-                    }
+                    });
                 });
             });
-        });
-    </script>
+
+        </script>*@
 
 
+        <script>
+            new DataTable('#myTable');
+        </script>
 
+    </div>
+       
 </body>
 </html>

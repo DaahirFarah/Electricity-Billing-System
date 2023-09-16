@@ -55,26 +55,16 @@ namespace EBS.Controllers
         }
 
         ////GET: Update Customer
-        //public ActionResult Edit(int id)
-        //{
-        //    customerVM customer = GetCustomerById(id);
-        //    return View(customer);
-        //}
-
         [HttpGet]
         public ActionResult Edit(int id)
         {
             customerVM customer = GetCustomerById(id);
-            //return View(customer);
-            return Json(customer, JsonRequestBehavior.AllowGet);
+            return View(customer);
         }
-
-
-
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Display(Name = "Edit")]
+        [ActionName("Edit")]
         public ActionResult Edit(customerVM model)
         {
             if (ModelState.IsValid)

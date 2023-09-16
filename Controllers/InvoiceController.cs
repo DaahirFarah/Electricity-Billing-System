@@ -31,12 +31,8 @@ namespace EBS.Controllers
         // GET: Invoice
         public ActionResult Index()
         {
-            invWrapper wrapper = new invWrapper();
-
-            wrapper.invoiceList = GetAllInvoices();
-            return View(wrapper);
-            //List<invoicevmList> invoices = GetAllInvoices();
-            //return View(invoices);
+            List<invoiceVM> invoices = GetAllInvoices();
+            return View(invoices);
         }
 
         //GET: Register Invoice
@@ -50,7 +46,7 @@ namespace EBS.Controllers
         [ValidateAntiForgeryToken]
         [HttpPost]
         [Display(Name = "Create")]
-        public ActionResult Create(invWrapper model)
+        public ActionResult Create(invoiceVM model)
         {
             if (ModelState.IsValid)
             {
@@ -72,7 +68,7 @@ namespace EBS.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Display(Name = "Edit")]
-        public ActionResult Edit(invWrapper model)
+        public ActionResult Edit(invoiceVM model)
         {
             if (ModelState.IsValid)
             {
@@ -270,9 +266,9 @@ namespace EBS.Controllers
         }
 
         // Fetching Invoices From the Database
-        private List<invoicevmList> GetAllInvoices()
+        private List<invoiceVM> GetAllInvoices()
         {
-            List<invoicevmList> invoices = new List<invoicevmList>();
+            List<invoiceVM> invoices = new List<invoiceVM>();
 
             using (SqlConnection Connection = new SqlConnection(SecConn))
             {
@@ -284,7 +280,7 @@ namespace EBS.Controllers
                     {
                         while (reader.Read())
                         {
-                            invoices.Add(new invoicevmList
+                            invoices.Add(new invoiceVM
                             {
                                 invoiceID = Convert.ToInt32(reader["invoiceID"]),
                                 cID = Convert.ToInt32(reader["cID"]),
@@ -306,19 +302,19 @@ namespace EBS.Controllers
 
       
 
-        private void InsertInvoice(invWrapper model)
-        {         
+        private void InsertInvoice(invoiceVM model)
+        {
             using (SqlConnection connection = new SqlConnection(SecConn))
             {
                 connection.Open();
 
                 string balanceQuery = "SELECT BALANCE FROM CustomerTbl WHERE cID = @cID";
 
-                cID = model.invoice.cID;
+                cID = model.cID;
 
                 using (SqlCommand commandBalance = new SqlCommand(balanceQuery, connection))
                 {
-                    commandBalance.Parameters.AddWithValue("@cID", model.invoice.cID);
+                    commandBalance.Parameters.AddWithValue("@cID", model.cID);
                     object balanceResult = commandBalance.ExecuteScalar();
                     if (balanceResult != null && balanceResult != DBNull.Value)
                     {
@@ -334,13 +330,13 @@ namespace EBS.Controllers
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@cID", model.invoice.cID);
-                    command.Parameters.AddWithValue("@Rate", model.invoice.Rate);
-                    command.Parameters.AddWithValue("@prev_Reading", model.invoice.prev_Reading);
-                    command.Parameters.AddWithValue("@cur_Reading", model.invoice.cur_Reading);
-                    command.Parameters.AddWithValue("@reading_Value", model.invoice.reading_Value);
-                    command.Parameters.AddWithValue("@reading_Date", SqlDbType.DateTime2).Value = model.invoice.reading_Date;
-                    command.Parameters.AddWithValue("@total_Fee", model.invoice.total_Fee);
+                    command.Parameters.AddWithValue("@cID", model.cID);
+                    command.Parameters.AddWithValue("@Rate", model.Rate);
+                    command.Parameters.AddWithValue("@prev_Reading", model.prev_Reading);
+                    command.Parameters.AddWithValue("@cur_Reading", model.cur_Reading);
+                    command.Parameters.AddWithValue("@reading_Value", model.reading_Value);
+                    command.Parameters.AddWithValue("@reading_Date", SqlDbType.DateTime2).Value = model.reading_Date;
+                    command.Parameters.AddWithValue("@total_Fee", model.total_Fee);
                     command.Parameters.AddWithValue("@balance", balance);
 
                     command.ExecuteNonQuery();
@@ -350,17 +346,11 @@ namespace EBS.Controllers
                     using (SqlCommand updateBalanceCommand = new SqlCommand(updateBalanceQuery, connection))
                     {
                         
-                        updateBalanceCommand.Parameters.AddWithValue("@cID", model.invoice.cID);
+                        updateBalanceCommand.Parameters.AddWithValue("@cID", model.cID);
                         updateBalanceCommand.ExecuteNonQuery();
                     }
 
-                    string balancehisq = "INSERT INTO BalanceHistory (cID, Balance) VALUES(@cID, @balance)";
-                    using (SqlCommand comm = new SqlCommand(balancehisq, connection))
-                    {
-                        comm.Parameters.AddWithValue("@cID", model.invoice.cID);
-                        comm.Parameters.AddWithValue("@Balance", balance);
-                        comm.ExecuteNonQuery();
-                    }
+                    
                 }
             }
 
@@ -402,7 +392,7 @@ namespace EBS.Controllers
         }
 
         // Update Invoice Logic
-        private void UpdateInvoice(invWrapper model)
+        private void UpdateInvoice(invoiceVM model)
         {
             using (SqlConnection connection = new SqlConnection(SecConn))
             {
@@ -413,14 +403,14 @@ namespace EBS.Controllers
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@invoiceID", model.invoice.invoiceID);
-                    command.Parameters.AddWithValue("@cID", model.invoice.cID);
-                    command.Parameters.AddWithValue("@Rate", model.invoice.Rate);
-                    command.Parameters.AddWithValue("@prev_Reading", model.invoice.prev_Reading);
-                    command.Parameters.AddWithValue("@cur_Reading", model.invoice.cur_Reading);
-                    command.Parameters.AddWithValue("@reading_Value", model.invoice.reading_Value);
-                    command.Parameters.AddWithValue("@reading_Date", SqlDbType.DateTime2).Value = model.invoice.reading_Date;
-                    command.Parameters.AddWithValue("@total_Fee", model.invoice.total_Fee);
+                    command.Parameters.AddWithValue("@invoiceID", model.invoiceID);
+                    command.Parameters.AddWithValue("@cID", model.cID);
+                    command.Parameters.AddWithValue("@Rate", model.Rate);
+                    command.Parameters.AddWithValue("@prev_Reading", model.prev_Reading);
+                    command.Parameters.AddWithValue("@cur_Reading", model.cur_Reading);
+                    command.Parameters.AddWithValue("@reading_Value", model.reading_Value);
+                    command.Parameters.AddWithValue("@reading_Date", SqlDbType.DateTime2).Value = model.reading_Date;
+                    command.Parameters.AddWithValue("@total_Fee", model.total_Fee);
 
                     command.ExecuteNonQuery();
                 };
