@@ -3,8 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace EBS.Controllers
@@ -17,7 +15,7 @@ namespace EBS.Controllers
         // GET: Rates
         public ActionResult Index()
         {
-            List<RateVM> rate = GetRates();
+            List<RateVM> rate = GetAllRates();
             return View(rate);
         }
 
@@ -44,37 +42,46 @@ namespace EBS.Controllers
 
         // GET: Rates/Edit
         [HttpGet]
-        public ActionResult Edit()
+        public ActionResult Edit(int id)
         {
-            return View();
+            RateVM rate = GetRate(id);
+            return View(rate);
         }
 
         // GET: /Rates/Edit
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [ActionName("Edit")]
-        public ActionResult EditConfirmed()
+        public ActionResult Edit(RateVM model)
         {
-            return View();
+            if (ModelState.IsValid)
+            {
+                UpdateTarrif(model);
+                return RedirectToAction("Index");
+            }
+            return View(model);
         }
 
         // GET: /Rates/Delete
-        public ActionResult Delete()
+        [HttpGet]
+        public ActionResult Delete(int id)
         {
-            return View();
+            RateVM rate = GetRate(id);
+            return View(rate);
         }
 
         // POST: /Rates/Delete
         [HttpPost]
         [ActionName("Delete")]
-        public ActionResult DeleteConfirmed()
+        public ActionResult DeleteConfirmed(int id)
         {
-            return View();
+            DeleteTarrif(id);
+            return RedirectToAction("Index");
+
         }
 
 
         // Fetching Rate Information From the Database
-        private List<RateVM> GetRates()
+        private List<RateVM> GetAllRates()
         {
             List<RateVM> rates = new List<RateVM>();
 
@@ -90,9 +97,8 @@ namespace EBS.Controllers
                         {
                             rates.Add(new RateVM
                             {
-                               Id = Convert.ToInt32(reader["Id"]),
-                               UsageLevelName = reader["UsageLevelName"].ToString(),
-                                //UsageLevelNumber = Convert.ToInt32(reader["UsageLevelAmount"]),
+                                Id = Convert.ToInt32(reader["Id"]),
+                                UsageLevelName = reader["UsageLevelName"].ToString(),
                                 UsageLevelNumber = Convert.ToInt32(reader["UsageLevelNumber"]),
                                 Rate = Convert.ToDecimal(reader["Rate"])
 
@@ -139,13 +145,13 @@ namespace EBS.Controllers
         // Insert Tarrif
         private void InsertTarrif(RateVM model)
         {
-            using(SqlConnection connection = new SqlConnection(SecConn))
+            using (SqlConnection connection = new SqlConnection(SecConn))
             {
                 connection.Open();
                 string Insertquery = "INSERT INTO Rates (UsageLevelName, UsageLevelNumber, Rate) VALUES"
                                    + "(@UsageLevelName, @UsageLevelNumber, @Rate)";
 
-                using(SqlCommand command = new SqlCommand(Insertquery, connection))
+                using (SqlCommand command = new SqlCommand(Insertquery, connection))
                 {
                     command.Parameters.AddWithValue("@usageLevelName", model.UsageLevelName);
                     command.Parameters.AddWithValue("@UsageLevelNumber", model.UsageLevelNumber);
@@ -156,6 +162,41 @@ namespace EBS.Controllers
             }
         }
 
+        // Update Tarrif Info
+        private void UpdateTarrif(RateVM model)
+        {
+            using (SqlConnection connection = new SqlConnection(SecConn))
+            {
+                connection.Open();
+                string UpdateQuery = "UPDATE Rates SET UsageLevelName = @UsageLevelName, UsageLevelNumber = @UsageLevelNumber, "
+                                   + " Rate = @Rate WHERE Id = @Id";
 
+                using (SqlCommand command = new SqlCommand(UpdateQuery, connection))
+                {
+                    command.Parameters.AddWithValue("@Id", model.Id);
+                    command.Parameters.AddWithValue("@UsageLevelName", model.UsageLevelName);
+                    command.Parameters.AddWithValue("@UsageLevelNumber", model.UsageLevelNumber);
+                    command.Parameters.AddWithValue("@Rate", model.Rate);
+
+                    command.ExecuteNonQuery();
+                };
+            }
+        }
+
+        // Delete Tarrif
+        private void DeleteTarrif(int Id)
+        {
+            using(SqlConnection connection = new SqlConnection(SecConn))
+            {
+                connection.Open();
+                string DeleteQuery = "DELETE FROM Rates WHERE Id = @Id";
+
+                using(SqlCommand command = new SqlCommand(DeleteQuery, connection))
+                {
+                    command.Parameters.AddWithValue("Id", Id);
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
     }
 }

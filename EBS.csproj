@@ -364,6 +364,8 @@
     <Content Include="Views\Shared\_UpdateCustomerPartial.cshtml" />
     <Content Include="Views\Rates\Index.cshtml" />
     <Content Include="Views\Rates\Create.cshtml" />
+    <Content Include="Views\Rates\Edit.cshtml" />
+    <Content Include="Views\Rates\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
