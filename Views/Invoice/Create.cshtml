@@ -31,26 +31,28 @@
                             <h2 class="mb-4 pb-2 pb-md-0 mb-md-5"><strong>Create Invoice</strong></h2>
                             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-                            <div class="row">
-                                <div class="col-md-6 mb-4">
+                        <div class="row">
+                            <div class="col-md-6 mb-4">
 
-                                    <div class="form-outline form-group">
-                                        @Html.LabelFor(m => m.cID)
-                                        @Html.EditorFor(model => model.cID, new { htmlAttributes = new { @class = "form-control form-control-lg", id = "cID" } })
-                                        @Html.ValidationMessageFor(model => model.cID, "", new { @class = "text-danger" })
-                                    </div>
-
+                                <div class="form-outline form-group">
+                                    @Html.LabelFor(m => m.cID)
+                                    @Html.EditorFor(model => model.cID, new { htmlAttributes = new { @class = "form-control form-control-lg", id = "cID" } })
+                                    @Html.ValidationMessageFor(model => model.cID, "", new { @class = "text-danger" })
                                 </div>
-                                <div class="col-md-6 mb-4">
 
-                                    <div class="form-outline form-group">
-                                        @Html.LabelFor(model => model.Rate)
-                                        @Html.EditorFor(model => model.Rate, new { htmlAttributes = new { @class = "form-control form-control-lg", id = "Rate", @readonly = "readonly" } })
-                                        @Html.ValidationMessageFor(model => model.Rate, "", new { @class = "text-danger" })
-                                    </div>
-
-                                </div>
                             </div>
+
+                            <div class="col-md-6 mb-4">
+
+                                <div class="form-outline form-group">
+                                    @Html.LabelFor(model => model.reading_Date)
+                                    @Html.EditorFor(model => model.reading_Date, new { htmlAttributes = new { @class = "form-control form-control-lg", Type = "date", id = "rDate" } })
+                                    @Html.ValidationMessageFor(model => model.reading_Date, "", new { @class = "text-danger" })
+                                </div>
+
+                            </div>
+
+                        </div>
                                               
                             <div class="row">
                                 <div class="col-md-6 mb-4">
@@ -84,32 +86,13 @@
                                     </div>
 
                                 </div>
-                                <div class="col-md-6 mb-4">
-
-                                    <div class="form-outline form-group">
-                                        @Html.LabelFor(model => model.reading_Date)
-                                        @Html.EditorFor(model => model.reading_Date, new { htmlAttributes = new { @class = "form-control form-control-lg", Type = "date" } })
-                                        @Html.ValidationMessageFor(model => model.reading_Date, "", new { @class = "text-danger" })
-                                    </div>
-
-                                </div>
+                                
                             </div>
-
-                            <div class="row">
-                                <div class="col-md-6 mb-4">
-
-                                    <div class="form-outline form-group">
-                                        @Html.LabelFor(m => m.total_Fee)
-                                        @Html.EditorFor(model => model.total_Fee, new { htmlAttributes = new { @class = "form-control form-control-lg", @readonly = "readonly", id = "result" } })
-                                        @Html.ValidationMessageFor(model => model.total_Fee, "", new { @class = "text-danger" })
-                                    </div>
-                                </div>
-
-
+                                                       
                                 <!--Below div element holds some buttons. Leave it alone-->
                                 <div class="row">
                                     <div class="col-md-6 mb-4 pb-2">
-                                        <input type="submit" value="Create" class="btn btn-primary btn-lg btn-block" />
+                                        <input type="submit" value="Create" class="btn btn-success btn-lg btn-block" />
 
                                     </div>
 
@@ -121,7 +104,7 @@
                                 </div>
 
 
-                            </div>
+                            
                         </div>
                     </div>
                 </div>
@@ -131,11 +114,29 @@
 
         <!--The script below performs dynamic calculation to produce the product and sub of the current reading, previous reading, usage and rate-->
 
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        @*<script>
+             $(document).ready(function () {
+                // send request to fetch the rates automatically
+                    $.ajax({
+                        url: '/Invoice/Rates',
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function (data) {
 
+                            var Rate = data.Rate;
+                            console.log(Rate)
+                       
+                        },
+                        error: function (error) {
+                            // Handle errors here
+                            console.error(error);
+                        }
+                    });
+                });
+        </script>*@
 
         <script>
-                   
+
                 // Number validation function
                 function validateNumber(input) {
                 if (isNaN(Number(input.value))) {
@@ -170,25 +171,30 @@
                     var Rate = parseFloat($('#Rate').val());
                     var cur_Reading = parseFloat($('#cur_Reading').val());
                     var prev_Reading = parseFloat($('#prev_Reading').val());
+                    var rDate = ($('#rDate').val());
 
                     var calculatedReading = isNaN(cur_Reading) || isNaN(prev_Reading) ? '' : (cur_Reading - prev_Reading).toFixed(2);
                     $('#reading_Value').val(calculatedReading); // Update the readonly reading_Value field
 
-                    // Calculate Rate based on reading_Value
-                    var readingValue = parseFloat(calculatedReading);
-                    if (!isNaN(readingValue)) {
-                        if (readingValue < 100) {
-                            Rate = 0.5;
-                        } else if (readingValue < 300) {
-                            Rate = 0.4;
-                        } else {
-                            Rate = 0.3;
-                        }
+                    if (cur_Reading < prev_Reading) {
+                        window.alert('Current Reading Must be Greater Than Previous Reading')
                     }
-                    $('#Rate').val(Rate.toFixed(2)); // Update the readonly Rate field
 
-                    var result = isNaN(Rate) || isNaN(calculatedReading) ? '' : (Rate * calculatedReading).toFixed(2);
-                    $('#result').val(result); // Update the readonly result field
+                    //// Calculate Rate based on reading_Value
+                    //var readingValue = parseFloat(calculatedReading);
+                    //if (!isNaN(readingValue)) {
+                    //    if (readingValue < 100) {
+                    //        Rate = 0.5;
+                    //    } else if (readingValue < 300) {
+                    //        Rate = 0.4;
+                    //    } else {
+                    //        Rate = 0.3;
+                    //    }
+                    //}
+                    //$('#Rate').val(Rate.toFixed(2)); // Update the readonly Rate field
+
+                    //var result = isNaN(Rate) || isNaN(calculatedReading) ? '' : (Rate * calculatedReading).toFixed(2);
+                    //$('#result').val(result); // Update the readonly result field
                 });
             });
         </script>

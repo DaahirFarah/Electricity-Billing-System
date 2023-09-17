@@ -92,6 +92,9 @@ namespace EBS.Controllers
             return RedirectToAction("Index");
         }
 
+        
+
+
         // This action handles exporting Invoices data from the database using a library called iTextSharp. 
         // This actionResult allows the user to easily download the list of Invoices in a pdf format 
         public ActionResult GenerateInvoice()
@@ -307,6 +310,29 @@ namespace EBS.Controllers
             {
                 connection.Open();
 
+                // This code will retrieve all the different rates from the Rate table and every client's rate will be based on their usage
+                string rateQuery = "SELECT UsageLevelNumber, Rate FROM Rates";
+                List<int> usageLevel = new List<int>();            // This list will hold the usage level number retrieved from the database
+                List<decimal> rate = new List<decimal>();         // This list will hold the rate fetched from the database
+
+                using (SqlCommand commandRate = new SqlCommand(rateQuery, connection))
+                {
+                    using (SqlDataReader reader = commandRate.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            // Retrieve values from the database and add them to the lists
+                            int intFromDatabase = reader.GetInt32(0);
+                            decimal decimalFromDatabase = reader.GetDecimal(1);
+
+                            usageLevel.Add(intFromDatabase);
+                            rate.Add(decimalFromDatabase);
+                        }
+                    }
+                }
+
+
+                // This chunk of code retrieves the standing customer balance so that the total can be the usage fee + the current balance
                 string balanceQuery = "SELECT BALANCE FROM CustomerTbl WHERE cID = @cID";
 
                 cID = model.cID;
@@ -322,6 +348,19 @@ namespace EBS.Controllers
                     }
                 }
 
+                // this piece of code sets the value of the rate and total fee based on the client usage 
+                for (int i = 0; i < usageLevel.Count; i++)
+                {
+                    if (model.reading_Value < usageLevel[i])
+                    {
+                        // Multiply SomePropertyToCompare by the corresponding value in decimalList
+                        model.Rate = rate[i];
+                        model.total_Fee = model.reading_Value * model.Rate;
+                        break;
+                    }
+                }
+
+                // Below this is the code that does the insertion operation and setting the balance to 0 after it is added to the total.
                 string query = "INSERT INTO InvoiceTbl (cID, Rate, "
                              + "prev_Reading, cur_Reading, reading_Value, reading_Date, total_Fee) "
                              + "VALUES (@cID, @Rate, @prev_Reading, @cur_Reading,"
@@ -417,11 +456,6 @@ namespace EBS.Controllers
         }
 
         // Delete Invoice Logic 
-
-
-
-
-
         private void DeleteInvoice(int id)
         {
             using (SqlConnection connection = new SqlConnection(SecConn))
@@ -463,5 +497,7 @@ namespace EBS.Controllers
             return Json(new { balance = balance }, JsonRequestBehavior.AllowGet);
         }
 
+
+       
     }
 }
