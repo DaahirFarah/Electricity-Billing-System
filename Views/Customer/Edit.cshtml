@@ -120,7 +120,7 @@
 
                                         <div class="form-outline form-group">
                                             @Html.LabelFor(model => model.MeterID)
-                                            @Html.EditorFor(model => model.MeterID, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "meterID" } })
+                                            @Html.DropDownListFor(model => model.SelectedMeterID, new SelectList(Model.MeterID), "Select a Meter", new { @class = "form-control" })
                                             @Html.ValidationMessageFor(model => model.MeterID, "", new { @class = "text-danger" })
                                         </div>
 

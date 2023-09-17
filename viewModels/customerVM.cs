@@ -41,7 +41,10 @@ namespace EBS.viewModels
 
         [Display(Name = "Meter ID")]
         [Required(ErrorMessage = "Please Insert Meter ID")]
-        public int MeterID { get; set; }
+        public List<int> MeterID { get; set; }
+
+        [Required]
+        public int SelectedMeterID { get; set; }
 
         [Required(ErrorMessage = "Please Provide Customer Branch")]
         [Display(Name = "Branch")]

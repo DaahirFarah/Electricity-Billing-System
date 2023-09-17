@@ -34,11 +34,33 @@ namespace EBS.Controllers
 
         //GET: Register Customer
 
-        [Authorize]
         [HttpGet]
         public ActionResult Create()
         {
-            return View();
+            // Retrieve data from the database using ADO.NET
+            List<int> meter = new List<int>();
+            
+            string query = "SELECT MeterID FROM Meters WHERE Status = 'Inactive'";
+
+            using (SqlConnection connection = new SqlConnection(SecConn))
+            {
+                connection.Open();
+                SqlCommand command = new SqlCommand(query, connection);
+                SqlDataReader reader = command.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    int meterId = (int)reader["MeterID"];
+                    meter.Add(meterId);
+                }
+            }
+
+            customerVM model = new customerVM
+            {
+                MeterID = meter
+            };
+
+            return View(model);
         }
 
         //SET: Register Customer
@@ -286,7 +308,7 @@ namespace EBS.Controllers
                                 cAddress = reader["cAddress"].ToString(),
                                 cNumber = Convert.ToInt32(reader["cNumber"]),
                                 cNumberOp = reader["cNumberOp"] != DBNull.Value ? reader["cNumberOp"].ToString() : "N/A",
-                                MeterID = Convert.ToInt32(reader["MeterID"]),
+                               // MeterID = Convert.ToInt32(reader["MeterID"]),
                                 Branch = reader["Branch"].ToString(),
                                 Balance = Convert.ToDecimal(reader["Balance"])
 
@@ -302,11 +324,11 @@ namespace EBS.Controllers
 
         // Inserting Customers To the Database
         private void InsertCustomer(customerVM model)
-        {
+        {   
             using (SqlConnection connection = new SqlConnection(SecConn))
             {
                 connection.Open();
-
+                  
                 string query = "INSERT INTO CustomerTbl (cFirstName, cMidName, cLastName, cAddress, cNumber, cNumberOp, MeterID, Branch, Balance) VALUES (@cFirstName, @cMidName, @cLastName, @cAddress, @cNumber, @cNumberOp, @MeterID, @Branch, 0)";
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
@@ -358,7 +380,7 @@ namespace EBS.Controllers
                                 cAddress = reader["cAddress"].ToString(),
                                 cNumber = Convert.ToInt32(reader["cNumber"]),
                                 cNumberOp = reader["cNumberOp"].ToString(),
-                                MeterID = Convert.ToInt32(reader["MeterID"]),
+                             //   MeterID = Convert.ToInt32(reader["MeterID"]),
                                 Branch = reader["Branch"].ToString(),
                                 Balance = Convert.ToDecimal(reader["Balance"])
 
