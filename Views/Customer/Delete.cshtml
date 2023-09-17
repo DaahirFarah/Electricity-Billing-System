@@ -34,63 +34,63 @@
                                 <h2 class="mb-4 pb-2 pb-md-0 mb-md-5"><strong>Delete Customer</strong></h2>
 
                                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                            <div class="row">
-                                <div class="col-md-4 mb-4">
+                                <div class="row">
+                                    <div class="col-md-4 mb-4">
 
-                                    <div class="form-outline form-group">
-                                        @Html.LabelFor(m => m.cFirstName)
-                                        @Html.EditorFor(model => model.cFirstName, new { htmlAttributes = new { @class = "form-control form-control-lg", @disabled = "disabled" } })
-                                        @Html.ValidationMessageFor(model => model.cFirstName, "", new { @class = "text-danger" })
+                                        <div class="form-outline form-group">
+                                            @Html.LabelFor(m => m.cFirstName)
+                                            @Html.EditorFor(model => model.cFirstName, new { htmlAttributes = new { @class = "form-control form-control-lg", @disabled = "disabled" } })
+                                            @Html.ValidationMessageFor(model => model.cFirstName, "", new { @class = "text-danger" })
+                                        </div>
+
+                                    </div>
+                                    <div class="col-md-4 mb-4">
+
+                                        <div class="form-outline form-group">
+                                            @Html.LabelFor(model => model.cMidName)
+                                            @Html.EditorFor(model => model.cMidName, new { htmlAttributes = new { @class = "form-control form-control-lg", @disabled = "disabled" } })
+                                            @Html.ValidationMessageFor(model => model.cMidName, "", new { @class = "text-danger" })
+                                        </div>
+
                                     </div>
 
-                                </div>
-                                <div class="col-md-4 mb-4">
+                                    <div class="col-md-4 mb-4">
 
-                                    <div class="form-outline form-group">
-                                        @Html.LabelFor(model => model.cMidName)
-                                        @Html.EditorFor(model => model.cMidName, new { htmlAttributes = new { @class = "form-control form-control-lg", @disabled = "disabled" } })
-                                        @Html.ValidationMessageFor(model => model.cMidName, "", new { @class = "text-danger" })
-                                    </div>
+                                        <div class="form-outline form-group">
+                                            @Html.LabelFor(model => model.cLastName)
+                                            @Html.EditorFor(model => model.cLastName, new { htmlAttributes = new { @class = "form-control form-control-lg", @disabled = "disabled" } })
+                                            @Html.ValidationMessageFor(model => model.cLastName, "", new { @class = "text-danger" })
+                                        </div>
 
-                                </div>
-
-                                <div class="col-md-4 mb-4">
-
-                                    <div class="form-outline form-group">
-                                        @Html.LabelFor(model => model.cLastName)
-                                        @Html.EditorFor(model => model.cLastName, new { htmlAttributes = new { @class = "form-control form-control-lg", @disabled = "disabled" } })
-                                        @Html.ValidationMessageFor(model => model.cLastName, "", new { @class = "text-danger" })
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-                            <div class="row">
-
-                                <div class="col-md-6 mb-4 d-flex align-items-center">
-
-
-                                    <div class="form-outline form-group">
-                                        @Html.LabelFor(model => model.cAddress)
-                                        @Html.EditorFor(model => model.cAddress, new { htmlAttributes = new { @class = "form-control form-control-lg", @disabled = "disabled" } })
-                                        @Html.ValidationMessageFor(model => model.cAddress, "", new { @class = "text-danger" })
                                     </div>
 
                                 </div>
 
-                                <div class="col-md-6 mb-4 d-flex align-items-center">
+                                <div class="row">
+
+                                    <div class="col-md-6 mb-4 d-flex align-items-center">
 
 
-                                    <div class="form-outline form-group">
-                                        @Html.LabelFor(model => model.Branch)
-                                        @Html.EditorFor(model => model.Branch, new { htmlAttributes = new { @class = "form-control form-control-lg", @disabled = "disabled" } })
-                                        @Html.ValidationMessageFor(model => model.Branch, "", new { @class = "text-danger" })
+                                        <div class="form-outline form-group">
+                                            @Html.LabelFor(model => model.cAddress)
+                                            @Html.EditorFor(model => model.cAddress, new { htmlAttributes = new { @class = "form-control form-control-lg", @disabled = "disabled" } })
+                                            @Html.ValidationMessageFor(model => model.cAddress, "", new { @class = "text-danger" })
+                                        </div>
+
+                                    </div>
+
+                                    <div class="col-md-6 mb-4 d-flex align-items-center">
+
+
+                                        <div class="form-outline form-group">
+                                            @Html.LabelFor(model => model.Branch)
+                                            @Html.EditorFor(model => model.Branch, new { htmlAttributes = new { @class = "form-control form-control-lg", @disabled = "disabled" } })
+                                            @Html.ValidationMessageFor(model => model.Branch, "", new { @class = "text-danger" })
+                                        </div>
+
                                     </div>
 
                                 </div>
-
-                            </div>
 
                                 <div class="row">
                                     <div class="col-md-6 mb-4 pb-2">
@@ -111,6 +111,19 @@
                                         </div>
 
                                     </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-4 pb-2">
+
+                                        <div class="form-outline form-group">
+                                            @Html.LabelFor(model => model.MeterID)
+                                            @Html.EditorFor(model => model.MeterID, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "meterID", @disabled = "disabled" } })
+                                            @Html.ValidationMessageFor(model => model.MeterID, "", new { @class = "text-danger" })
+                                        </div>
+
+                                    </div>
+
                                 </div>
 
                                 <div class="row">

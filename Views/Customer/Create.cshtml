@@ -110,19 +110,32 @@
                                             </div>
 
                                         </div>
-                                    </div>
+                            </div>
 
                             <div class="row">
-                                        <div class="col-md-6 mb-4 pb-2">
-                                            <button type="submit" value="Create" class="btn btn-primary btn-lg btn-block">Register</button>
-                                        </div>
-                                        <div class="col-md-6 mb-4 pb-2">
-                                            @Html.ActionLink("Back", "Index", "Customer", null, new { @class = "btn btn-secondary btn-lg btn-block" })
-                                        </div>
+                                <div class="col-md-6 mb-4 pb-2">
+
+                                    <div class="form-outline form-group">
+                                        @Html.LabelFor(model => model.MeterID)
+                                        @Html.EditorFor(model => model.MeterID, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "meterID" } })
+                                        @Html.ValidationMessageFor(model => model.MeterID, "", new { @class = "text-danger" })
                                     </div>
 
-                                    
-                                
+                                </div>
+
+                            </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-4 pb-2">
+                                        <button type="submit" value="Create" class="btn btn-primary btn-lg btn-block">Register</button>
+                                    </div>
+                                    <div class="col-md-6 mb-4 pb-2">
+                                        @Html.ActionLink("Back", "Index", "Customer", null, new { @class = "btn btn-secondary btn-lg btn-block" })
+                                    </div>
+                                </div>
+
+
+
                             </div>
                         </div>
                     </div>
@@ -157,6 +170,7 @@
     const Branch = document.querySelector('#Branch');
     const phone1Input = document.querySelector('#number');
     const phone2Input = document.querySelector('#number2');
+    const meterID = document.querySelector('#meterID');
 
     // Attach listeners 
     firstNameInput.addEventListener('input', () => {
@@ -185,6 +199,9 @@
 
     phone2Input.addEventListener('input', () => {
         validateNumber(phone2Input);
+    });
+    meterID.addEventListener('input', () => {
+        validateNumber(meterID);
     });
 
 </script>

@@ -286,6 +286,7 @@ namespace EBS.Controllers
                                 cAddress = reader["cAddress"].ToString(),
                                 cNumber = Convert.ToInt32(reader["cNumber"]),
                                 cNumberOp = reader["cNumberOp"] != DBNull.Value ? reader["cNumberOp"].ToString() : "N/A",
+                                MeterID = Convert.ToInt32(reader["MeterID"]),
                                 Branch = reader["Branch"].ToString(),
                                 Balance = Convert.ToDecimal(reader["Balance"])
 
@@ -306,7 +307,7 @@ namespace EBS.Controllers
             {
                 connection.Open();
 
-                string query = "INSERT INTO CustomerTbl (cFirstName, cMidName, cLastName, cAddress, cNumber, cNumberOp, Branch, Balance) VALUES (@cFirstName, @cMidName, @cLastName, @cAddress, @cNumber, @cNumberOp, @Branch, 0)";
+                string query = "INSERT INTO CustomerTbl (cFirstName, cMidName, cLastName, cAddress, cNumber, cNumberOp, MeterID, Branch, Balance) VALUES (@cFirstName, @cMidName, @cLastName, @cAddress, @cNumber, @cNumberOp, @MeterID, @Branch, 0)";
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@cFirstName", model.cFirstName);
@@ -322,7 +323,7 @@ namespace EBS.Controllers
                     {
                         command.Parameters.AddWithValue("@cNumberOp", model.cNumberOp);
                     }
-
+                    command.Parameters.AddWithValue("@MeterID", model.MeterID);
                     command.Parameters.AddWithValue("@Branch", model.Branch);
 
                     command.ExecuteNonQuery();
@@ -357,6 +358,7 @@ namespace EBS.Controllers
                                 cAddress = reader["cAddress"].ToString(),
                                 cNumber = Convert.ToInt32(reader["cNumber"]),
                                 cNumberOp = reader["cNumberOp"].ToString(),
+                                MeterID = Convert.ToInt32(reader["MeterID"]),
                                 Branch = reader["Branch"].ToString(),
                                 Balance = Convert.ToDecimal(reader["Balance"])
 
@@ -377,7 +379,7 @@ namespace EBS.Controllers
             {
                 connection.Open();
 
-                string query = "UPDATE CustomerTbl SET cFirstName = @cFirstName, cMidName = @cMidName, cLastName = @cLastName, cAddress = @cAddress, cNumber = @cNumber, cNumberOp = @cNumberOp, Branch = @Branch WHERE cID = @cID";
+                string query = "UPDATE CustomerTbl SET cFirstName = @cFirstName, cMidName = @cMidName, cLastName = @cLastName, cAddress = @cAddress, cNumber = @cNumber, cNumberOp = @cNumberOp, MeterID = @MeterID, Branch = @Branch WHERE cID = @cID";
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@cID", model.cID);
@@ -394,7 +396,7 @@ namespace EBS.Controllers
                     {
                         command.Parameters.AddWithValue("@cNumberOp", model.cNumberOp);
                     }
-
+                    command.Parameters.AddWithValue("@MeterID", model.MeterID);
                     command.Parameters.AddWithValue("@Branch", model.Branch);
 
                     command.ExecuteNonQuery();

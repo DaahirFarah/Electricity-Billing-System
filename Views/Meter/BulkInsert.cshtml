@@ -1,0 +1,105 @@
+﻿
+@model List<EBS.viewModels.MeterVM>
+
+@{
+    Layout = "~/Views/Shared/_Layout2.cshtml";
+}
+
+<html>
+<head>
+
+    <title>Bulk Insert | Meters</title>
+</head>
+<body>
+
+    @using (Html.BeginForm("BulkInsert", "Meter", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        for (int i = 0; i < Model.Count; i++)
+        {
+            <div class="row">
+                <div class="col-md-6 mb-4">
+
+                    <div class="form-outline form-group">
+                        @Html.LabelFor(model => model[i].SerialNumber)
+                        @Html.EditorFor(model => model[i].SerialNumber, new { htmlAttributes = new { @class = "form-control form-control-lg", id = "serialN" } })
+                        @Html.ValidationMessageFor(model => model[i].SerialNumber, "", new { @class = "text-danger" })
+                    </div>
+
+                </div>
+                <div class="col-md-6 mb-4">
+
+                    <div class="form-outline form-group">
+                        @Html.LabelFor(model => model[i].Type)
+                        @Html.EditorFor(model => model[i].Type, new { htmlAttributes = new { @class = "form-control form-control-lg", id = "type" } })
+                        @Html.ValidationMessageFor(model => model[i].Type, "", new { @class = "text-danger" })
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-4 pb-2">
+                    <input type="submit" value="Create" class="btn btn-success btn-lg btn-block" />
+
+                </div>
+
+
+                <div class="col-md-6 mb-4 pb-2">
+                    @Html.ActionLink("Back", "Index", "Meter", null, new { @class = "btn btn-secondary btn-lg btn-block" })
+                </div>
+
+            </div>
+
+        }
+
+
+    }
+
+    <script>
+
+                // Text Input Validation
+                function validateText(input) {
+                    if (!isNaN(Number(input.value))) {
+                        alert('Please enter text');
+                        input.value = '';
+                    }
+                }
+
+                // Number validation function
+                function validateNumber(input) {
+                if (isNaN(Number(input.value))) {
+                    alert('Please enter a number');
+                input.value = '';
+                }
+            }
+
+                // Get elements
+                const serialN = document.querySelector('#serialN');
+                const type = document.querySelector('#type');
+                const iDate = document.querySelector('#iDate');
+                const statuss = document.querySelector('#status');
+
+            // Attach listeners
+
+
+                serialN.addEventListener('input', () => {
+                    validateNumber(serialN);
+            });
+
+                type.addEventListener('input', () => {
+                    validateText(type);
+            });
+
+                statuss.addEventListener('input', () => {
+                    validateText(statuss);
+            });
+
+
+
+    </script>
+
+</body>
+</html>

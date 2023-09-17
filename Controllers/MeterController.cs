@@ -78,6 +78,23 @@ namespace EBS.Controllers
             return RedirectToAction("Index");
         }
 
+        // GET: /Meter/BulkInsert
+        public ActionResult BulkInsert()
+        {
+            return View();
+        }
+
+        // POST: /Meter/BulkInsert
+        public ActionResult BulkInsert(List<MeterVM> model)
+        {
+            if (ModelState.IsValid)
+            {
+                BulkInserting(model);
+                return RedirectToAction("Index");
+            }
+            return View(model);
+        }
+
 
         // Fetching Meter Information From the Database
         private List<MeterVM> GetMeters()
@@ -193,6 +210,42 @@ namespace EBS.Controllers
                     command.ExecuteNonQuery();
                 }
             }
+        }
+
+        // Meter Bulk Insertion will be Handled by the following function
+        private void BulkInserting(List<MeterVM> model)
+        {
+            List<MeterVM> met = new List<MeterVM>();
+
+            using(SqlConnection connection = new SqlConnection(SecConn))
+            {
+                connection.Open();
+                string bulkInsertion = "INSERT INTO Meters (SerialNumber, Type, Status) VALUES (@SerialNumber, @Type, @Status)";
+
+                using (SqlTransaction transaction = connection.BeginTransaction())
+                {
+                    try
+                    {
+                        foreach(var meter in model)
+                        {
+                            var command = new SqlCommand(bulkInsertion, connection, transaction);
+
+                            command.Parameters.AddWithValue("@SerialNumber", meter.SerialNumber);
+                            command.Parameters.AddWithValue("@Type", meter.Type);
+                            command.Parameters.AddWithValue("@Status", meter.Status);
+
+                            command.ExecuteNonQuery();
+                        }
+                        transaction.Commit();
+                    }
+                    catch (Exception e)
+                    {
+                        transaction.Rollback();
+                        ModelState.AddModelError("", "An Error Occured While Inserting Records, Please Try Again!" + e.Message);
+                    }
+                }
+            }
+
         }
 
     }
