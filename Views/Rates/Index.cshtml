@@ -63,11 +63,16 @@
 </head>
 <body>
 
+    <ol class="breadcrumb" style="margin-left:130px;">
+        <li class="breadcrumb-item">SEC</li>
+        <li class="breadcrumb-item"><a href="#">Rates</a></li>
+    </ol>
+
     @*<div class="mt-4 pt-2" style="padding-left: 40px; margin-left: 100px;">
-        <form action="@Url.Action("GenerateInvoice", "Invoice")" method="get">
-            <input class="btn btn-secondary btn-lg btn-block" type="submit" value="Download Invoices" />
-        </form>
-    </div>*@
+            <form action="@Url.Action("GenerateInvoice", "Invoice")" method="get">
+                <input class="btn btn-secondary btn-lg btn-block" type="submit" value="Download Invoices" />
+            </form>
+        </div>*@
 
     <div class="mt-4 pt-2" style="padding-left: 75px; margin-left: 100px;">
         <form action="@Url.Action("Create", "Rates")" method="get">
@@ -106,7 +111,7 @@
                         <td>@Html.DisplayFor(model => item.Id)</td>
                         <td>@Html.DisplayFor(model => item.UsageLevelName)</td>
                         <td>@Html.DisplayFor(model => item.UsageLevelNumber)</td>
-                        <td>@Html.DisplayFor(model => item.Rate)</td>                        
+                        <td>@Html.DisplayFor(model => item.Rate)</td>
                         <td>
 
                             <a href="@Url.Action("Edit", "Rates", new { id = item.Id })">
@@ -118,9 +123,9 @@
                             </a>
 
                             @*
-                            <a href="@Url.Action("CustomerBill", "Invoice", new { id = item.Id })">
-                                <i class="fa-solid fa-file-pdf fa-1x" style="color: navy"></i>
-                            </a>*@
+                                <a href="@Url.Action("CustomerBill", "Invoice", new { id = item.Id })">
+                                    <i class="fa-solid fa-file-pdf fa-1x" style="color: navy"></i>
+                                </a>*@
 
                         </td>
 

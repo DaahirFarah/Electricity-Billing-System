@@ -17,10 +17,11 @@
 </head>
 <body>
 
+
     @using (Html.BeginForm("Create", "Customer", FormMethod.Post))
     {
         @Html.AntiForgeryToken()
-        
+
 
         <section class="vh-100 gradient-custom;" style="font-family: Verdana, Geneva, Tahoma, sans-serif; ">
             <div class="container py-5 h-100">
@@ -31,104 +32,104 @@
 
                             <div class="card-body p-4 p-md-5">
                                 <h2 class="mb-4 pb-2 pb-md-0 mb-md-5"><strong>Customer Registeration</strong></h2>
-                               
+
                                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-                            <div class="row">
-                                <div class="col-md-4 mb-4">
+                                <div class="row">
+                                    <div class="col-md-4 mb-4">
 
-                                    <div class="form-outline form-group">
-                                        @Html.LabelFor(m => m.cFirstName)
-                                        @Html.EditorFor(model => model.cFirstName, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "firstName" } })
-                                        @Html.ValidationMessageFor(model => model.cFirstName, "", new { @class = "text-danger" })
-                                    </div>
-
-                                </div>
-                                <div class="col-md-4 mb-4">
-
-                                    <div class="form-outline form-group">
-                                        @Html.LabelFor(model => model.cMidName)
-                                        @Html.EditorFor(model => model.cMidName, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "midName" } })
-                                        @Html.ValidationMessageFor(model => model.cMidName, "", new { @class = "text-danger" })
-                                    </div>
-
-                                </div>
-
-                                <div class="col-md-4 mb-4">
-
-                                    <div class="form-outline form-group">
-                                        @Html.LabelFor(model => model.cLastName)
-                                        @Html.EditorFor(model => model.cLastName, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "lastName" } })
-                                        @Html.ValidationMessageFor(model => model.cLastName, "", new { @class = "text-danger" })
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-                            <div class="row">
-
-                                <div class="col-md-6 mb-4 d-flex align-items-center">
-
-
-                                    <div class="form-outline form-group">
-                                        @Html.LabelFor(model => model.cAddress)
-                                        @Html.EditorFor(model => model.cAddress, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "address" } })
-                                        @Html.ValidationMessageFor(model => model.cAddress, "", new { @class = "text-danger" })
-                                    </div>
-
-                                </div>
-
-                                <div class="col-md-6 mb-4 d-flex align-items-center">
-
-                                    <div class="form-outline form-group">
-                                        @Html.LabelFor(model => model.Branch)
-                                        @Html.EditorFor(model => model.Branch, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "Branch" } })
-                                        @Html.ValidationMessageFor(model => model.Branch, "", new { @class = "text-danger" })
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-                            <div class="row">
-                                        <div class="col-md-6 mb-4 pb-2">
-
-                                            <div class="form-outline form-group">
-                                                @Html.LabelFor(model => model.cNumber)
-                                                @Html.EditorFor(model => model.cNumber, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "number" } })
-                                                @Html.ValidationMessageFor(model => model.cNumber, "", new { @class = "text-danger" })
-                                            </div>
-
+                                        <div class="form-outline form-group">
+                                            @Html.LabelFor(m => m.cFirstName)
+                                            @Html.EditorFor(model => model.cFirstName, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "firstName" } })
+                                            @Html.ValidationMessageFor(model => model.cFirstName, "", new { @class = "text-danger" })
                                         </div>
-                                        <div class="col-md-6 mb-4 pb-2">
 
-                                            <div class="form-outline form-group">
-                                                @Html.LabelFor(model => model.cNumberOp)
-                                                @Html.EditorFor(model => model.cNumberOp, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "number2" } })
-                                                @Html.ValidationMessageFor(model => model.cNumberOp, "", new { @class = "text-danger" })
-                                            </div>
-
-                                        </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-6 mb-4 pb-2">
-
-                                    <div class="form-outline form-group">
-                                        @Html.LabelFor(model => model.MeterID)
-                                        @Html.DropDownListFor(model => model.MeterID, new SelectList(Model.SelectedMeterID), "Select a Meter", new { @class = "form-control" })
-                                        @Html.ValidationMessageFor(model => model.MeterID, "", new { @class = "text-danger" })
                                     </div>
-                                    @Html.HiddenFor(model => model.MeterID)
+                                    <div class="col-md-4 mb-4">
+
+                                        <div class="form-outline form-group">
+                                            @Html.LabelFor(model => model.cMidName)
+                                            @Html.EditorFor(model => model.cMidName, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "midName" } })
+                                            @Html.ValidationMessageFor(model => model.cMidName, "", new { @class = "text-danger" })
+                                        </div>
+
+                                    </div>
+
+                                    <div class="col-md-4 mb-4">
+
+                                        <div class="form-outline form-group">
+                                            @Html.LabelFor(model => model.cLastName)
+                                            @Html.EditorFor(model => model.cLastName, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "lastName" } })
+                                            @Html.ValidationMessageFor(model => model.cLastName, "", new { @class = "text-danger" })
+                                        </div>
+
+                                    </div>
 
                                 </div>
 
-                            </div>
+                                <div class="row">
+
+                                    <div class="col-md-6 mb-4 d-flex align-items-center">
+
+
+                                        <div class="form-outline form-group">
+                                            @Html.LabelFor(model => model.cAddress)
+                                            @Html.EditorFor(model => model.cAddress, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "address" } })
+                                            @Html.ValidationMessageFor(model => model.cAddress, "", new { @class = "text-danger" })
+                                        </div>
+
+                                    </div>
+
+                                    <div class="col-md-6 mb-4 d-flex align-items-center">
+
+                                        <div class="form-outline form-group">
+                                            @Html.LabelFor(model => model.Branch)
+                                            @Html.EditorFor(model => model.Branch, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "Branch" } })
+                                            @Html.ValidationMessageFor(model => model.Branch, "", new { @class = "text-danger" })
+                                        </div>
+
+                                    </div>
+
+                                </div>
 
                                 <div class="row">
                                     <div class="col-md-6 mb-4 pb-2">
-                                        <button type="submit" value="Create" class="btn btn-primary btn-lg btn-block">Register</button>
+
+                                        <div class="form-outline form-group">
+                                            @Html.LabelFor(model => model.cNumber)
+                                            @Html.EditorFor(model => model.cNumber, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "number" } })
+                                            @Html.ValidationMessageFor(model => model.cNumber, "", new { @class = "text-danger" })
+                                        </div>
+
+                                    </div>
+                                    <div class="col-md-6 mb-4 pb-2">
+
+                                        <div class="form-outline form-group">
+                                            @Html.LabelFor(model => model.cNumberOp)
+                                            @Html.EditorFor(model => model.cNumberOp, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "number2" } })
+                                            @Html.ValidationMessageFor(model => model.cNumberOp, "", new { @class = "text-danger" })
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-4 pb-2">
+
+                                        <div class="form-outline form-group">
+                                            @Html.LabelFor(model => model.MeterID)
+                                            @Html.DropDownListFor(model => model.MeterID, new SelectList(Model.SelectedMeterID), "Select a Meter", new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.MeterID, "", new { @class = "text-danger" })
+                                        </div>
+                                        @Html.HiddenFor(model => model.MeterID)
+
+                                    </div>
+
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-4 pb-2">
+                                        <button type="submit" value="Create" class="btn btn-success btn-lg btn-block">Register</button>
                                     </div>
                                     <div class="col-md-6 mb-4 pb-2">
                                         @Html.ActionLink("Back", "Index", "Customer", null, new { @class = "btn btn-secondary btn-lg btn-block" })
@@ -146,63 +147,63 @@
 
     }
 
-<script>
-    // Text validation function
-    function validateText(input) {
-        if (!isNaN(Number(input.value))) {
-            alert('Please enter text');
-            input.value = '';
+    <script>
+        // Text validation function
+        function validateText(input) {
+            if (!isNaN(Number(input.value))) {
+                alert('Please enter text');
+                input.value = '';
+            }
         }
-    }
 
-    // Number validation function
-    function validateNumber(input) {
-        if (isNaN(Number(input.value))) {
-            alert('Please enter a number');
-            input.value = '';
+        // Number validation function
+        function validateNumber(input) {
+            if (isNaN(Number(input.value))) {
+                alert('Please enter a number');
+                input.value = '';
+            }
         }
-    }
 
-    // Get elements
-    const firstNameInput = document.querySelector('#firstName');
-    const midNameInput = document.querySelector('#midName');
-    const lastNameInput = document.querySelector('#lastName');
-    const addressInput = document.querySelector('#address');
-    const Branch = document.querySelector('#Branch');
-    const phone1Input = document.querySelector('#number');
-    const phone2Input = document.querySelector('#number2');
+        // Get elements
+        const firstNameInput = document.querySelector('#firstName');
+        const midNameInput = document.querySelector('#midName');
+        const lastNameInput = document.querySelector('#lastName');
+        const addressInput = document.querySelector('#address');
+        const Branch = document.querySelector('#Branch');
+        const phone1Input = document.querySelector('#number');
+        const phone2Input = document.querySelector('#number2');
 
-    // Attach listeners 
-    firstNameInput.addEventListener('input', () => {
-        validateText(firstNameInput);
-    });
+        // Attach listeners
+        firstNameInput.addEventListener('input', () => {
+            validateText(firstNameInput);
+        });
 
-    midNameInput.addEventListener('input', () => {
-        validateText(midNameInput);
-    });
+        midNameInput.addEventListener('input', () => {
+            validateText(midNameInput);
+        });
 
-    lastNameInput.addEventListener('input', () => {
-        validateText(lastNameInput);
-    });
+        lastNameInput.addEventListener('input', () => {
+            validateText(lastNameInput);
+        });
 
-    addressInput.addEventListener('input', () => {
-        validateText(addressInput);
-    });
+        addressInput.addEventListener('input', () => {
+            validateText(addressInput);
+        });
 
-    Branch.addEventListener('input', () => {
-        validateText(Branch);
-    });
+        Branch.addEventListener('input', () => {
+            validateText(Branch);
+        });
 
-    phone1Input.addEventListener('input', () => {
-        validateNumber(phone1Input);
-    });
+        phone1Input.addEventListener('input', () => {
+            validateNumber(phone1Input);
+        });
 
-    phone2Input.addEventListener('input', () => {
-        validateNumber(phone2Input);
-    });
-   
+        phone2Input.addEventListener('input', () => {
+            validateNumber(phone2Input);
+        });
 
-</script>
 
-    </body>
+    </script>
+
+</body>
 </html>

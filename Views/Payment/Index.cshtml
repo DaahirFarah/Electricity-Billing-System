@@ -54,11 +54,16 @@
 </head>
 <body>
 
+    <ol class="breadcrumb" style="margin-left:130px;">
+        <li class="breadcrumb-item">SEC</li>
+        <li class="breadcrumb-item"><a href="#">Payments</a></li>
+    </ol>
+
     <div class="mt-4 pt-2" style="padding-left: 40px; margin-left:100px;">
-            <form action="@Url.Action("GeneratePaymentHistory", "Payment")" method="get">
-                <input class="btn btn-secondary btn-lg btn-block" type="submit" value="Download Payments" />
-            </form>
-        </div>
+        <form action="@Url.Action("GeneratePaymentHistory", "Payment")" method="get">
+            <input class="btn btn-secondary btn-lg btn-block" type="submit" value="Download Payments" />
+        </form>
+    </div>
 
     <div class="mt-4 pt-2" style="padding-left: 40px; margin-left: 100px;">
         <form action="@Url.Action("Create", "Payment")" method="get">

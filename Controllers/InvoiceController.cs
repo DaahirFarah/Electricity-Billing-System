@@ -92,7 +92,47 @@ namespace EBS.Controllers
             return RedirectToAction("Index");
         }
 
-        
+        // Get Related Data From the db based on ID
+
+        [HttpPost]
+        public JsonResult GetRelatedData(int id)
+        {
+            // Create a connection to your SQL Server database
+            using (SqlConnection connection = new SqlConnection(SecConn))
+            {
+                connection.Open();
+
+                // Define your SQL query to retrieve user profile data based on the provided ID
+                string query = "SELECT cur_Reading FROM InvoiceTbl WHERE cID = @cID";
+
+                // Create a SqlCommand
+                using (SqlCommand cmd = new SqlCommand(query, connection))
+                {
+                    // Add the ID parameter
+                    cmd.Parameters.AddWithValue("@cID", id);
+
+                    // Execute the query and read the data
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            // Populate the UserProfile object
+                            invoiceVM invoice = new invoiceVM
+                            {
+                               cur_Reading = Convert.ToDecimal(reader["cur_Reading"]),
+                            };
+
+                            // Return the UserProfile as JSON
+                            return Json(invoice, JsonRequestBehavior.AllowGet);
+                        }
+                    }
+                }
+            }
+
+            // If no data found, return an empty JSON object
+            return Json(new invoiceVM(), JsonRequestBehavior.AllowGet);
+        }
+
 
 
         // This action handles exporting Invoices data from the database using a library called iTextSharp. 
