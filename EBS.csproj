@@ -373,7 +373,6 @@
     <Content Include="Views\Meter\Edit.cshtml" />
     <Content Include="Views\Meter\Delete.cshtml" />
     <Content Include="Views\Meter\BulkInsert.cshtml" />
-    <Content Include="Views\Invoice\Create - Copy.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -89,6 +89,44 @@ namespace EBS.Controllers
         }
 
 
+        // Retrieve the Invoice Data related to the an ID
+        [HttpPost]
+        public JsonResult GetRelatedData(int id)
+        {
+            using (SqlConnection connection = new SqlConnection(SecConn))
+            {
+                connection.Open();
+
+                string invDataQuery = "SELECT cID, total_Fee FROM InvoiceTbl WHERE invoiceID = @invoiceID";
+
+                // Create a SqlCommand
+                using (SqlCommand cmd = new SqlCommand(invDataQuery, connection))
+                {
+                    // Add the ID parameter
+                    cmd.Parameters.AddWithValue("@invoiceID", id);
+
+                    // Execute the query and read the data
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            payVM payment = new payVM
+                            {
+                                cID = Convert.ToInt32(reader["cID"]),
+                                totalFee = Convert.ToDecimal(reader["total_Fee"]),
+                            };
+
+                            return Json(payment, JsonRequestBehavior.AllowGet);
+                        }
+                    }
+                }
+            }
+
+            // If no data found, return an empty JSON object
+            return Json(new payVM(), JsonRequestBehavior.AllowGet);
+        }
+
+
         // Logic for retrieving payment data from the database
         public List<payVM> GetAllPayments()
         {
@@ -379,7 +417,7 @@ namespace EBS.Controllers
             {
                 connection.Open();
                 string query = "Update PaymentTbl SET cID = @cID, invoiceID = @invoiceID, paidAmount = @paidAmount,"
-                             + "totalFee = @totalFee, payMethod = @payMethod, payDate = @payDate WHERE payID = @payID";
+                             + "total_Fee = @total_Fee, payMethod = @payMethod, payDate = @payDate WHERE payID = @payID";
                              
 
 
@@ -389,7 +427,7 @@ namespace EBS.Controllers
                     command.Parameters.AddWithValue("@cID", model.cID);
                     command.Parameters.AddWithValue("@invoiceID", model.invoiceID);
                     command.Parameters.AddWithValue("@paidAmount", model.paidAmount);
-                    command.Parameters.AddWithValue("@totalFee", model.totalFee);
+                    command.Parameters.AddWithValue("@total_Fee", model.totalFee);
                     command.Parameters.AddWithValue("@payMethod", model.payMethod);
                     command.Parameters.AddWithValue("@payDate", SqlDbType.DateTime2).Value = model.payDate;
 

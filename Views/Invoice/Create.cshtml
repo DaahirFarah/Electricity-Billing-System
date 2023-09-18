@@ -111,13 +111,13 @@
             </div>
         </div>
 
-        <script>
+      <script>
 
             console.log('I am being reached');
 
              $(document).ready(function () {
-        $("#cID").blur(function () {
-            var customerID = $(this).val();
+                $("#cID").blur(function () {
+                var customerID = $(this).val();
 
             $.ajax({
                 url: '@Url.Action("GetRelatedData", "Invoice")',
@@ -134,7 +134,7 @@
             });
         });
     });
-        </script>
+        </script>  
 
         <script>
 

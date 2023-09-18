@@ -19,155 +19,186 @@
     {
         @Html.AntiForgeryToken()
 
-        <section class="vh-100 gradient-custom;" ; style="font-family: Verdana, Geneva, Tahoma, sans-serif; ">
-            <div class="container py-5 h-100">
-                <div class="row justify-content-center align-items-center h-100">
+    <section class="vh-100 gradient-custom;" ; style="font-family: Verdana, Geneva, Tahoma, sans-serif; ">
+        <div class="container py-5 h-100">
+            <div class="row justify-content-center align-items-center h-100">
 
-                    <div class="col-12 col-lg-9 col-xl-7">
-                        <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">
+                <div class="col-12 col-lg-9 col-xl-7">
+                    <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">
 
-                            <div class="card-body p-4 p-md-5">
-                                <h2 class="mb-4 pb-2 pb-md-0 mb-md-5"><strong>Record New Payment</strong></h2>
-                                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                        <div class="card-body p-4 p-md-5">
+                            <h2 class="mb-4 pb-2 pb-md-0 mb-md-5"><strong>Record New Payment</strong></h2>
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-                                <div class="row">
-                                    <div class="col-md-6 mb-4">
+                            <div class="row">
 
-                                        <div class="form-outline form-group">
-                                            @Html.LabelFor(m => m.cID)
-                                            @Html.EditorFor(model => model.cID, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "cID" } })
-                                            @Html.ValidationMessageFor(model => model.cID, "", new { @class = "text-danger" })
-                                        </div>
+                                <div class="col-md-6 mb-4">
 
-                                    </div>
-                                    <div class="col-md-6 mb-4">
-
-                                        <div class="form-outline form-group">
-                                            @Html.LabelFor(model => model.invoiceID)
-                                            @Html.EditorFor(model => model.invoiceID, new { htmlAttributes = new { @class = "form-control form-control-lg", id = "invoiceID" } })
-                                            @Html.ValidationMessageFor(model => model.invoiceID, "", new { @class = "text-danger" })
-                                        </div>
-
-                                    </div>
-                                </div>
-
-
-                                <div class="row">
-                                    <div class="col-md-6 mb-4">
-
-                                        <div class="form-outline form-group">
-                                            @Html.LabelFor(m => m.paidAmount)
-                                            @Html.EditorFor(model => model.paidAmount, new { htmlAttributes = new { @class = "form-control form-control-lg", id = "paidAmount" } })
-                                            @Html.ValidationMessageFor(model => model.paidAmount, "", new { @class = "text-danger" })
-                                        </div>
-
-                                    </div>
-                                    <div class="col-md-6 mb-4">
-
-                                        <div class="form-outline form-group">
-                                            @Html.LabelFor(model => model.totalFee)
-                                            @Html.EditorFor(model => model.totalFee, new { htmlAttributes = new { @class = "form-control form-control-lg", id = "totalFee" } })
-                                            @Html.ValidationMessageFor(model => model.totalFee, "", new { @class = "text-danger" })
-                                        </div>
-
-                                    </div>
-                                </div>
-
-
-                                <div class="row">
-                                    <div class="col-md-6 mb-4">
-
-                                        <div class="form-outline form-group">
-                                            @Html.LabelFor(m => m.payMethod)
-                                            @Html.EditorFor(model => model.payMethod, new { htmlAttributes = new { @class = "form-control form-control-lg", id = "payMethod"  } })
-                                            @Html.ValidationMessageFor(model => model.payMethod, "", new { @class = "text-danger" })
-                                        </div>
-
-                                    </div>
-                                    <div class="col-md-6 mb-4">
-
-                                        <div class="form-outline form-group">
-                                            @Html.LabelFor(m => m.payDate)
-                                            @Html.EditorFor(model => model.payDate, new { htmlAttributes = new { @class = "form-control form-control-lg", type = "date" } })
-                                            @Html.ValidationMessageFor(model => model.payDate, "", new { @class = "text-danger" })
-                                        </div>
-
-                                    </div>
-                                </div>
-
-
-                                <div class="row">
-                                    <div class="col-md-6 mb-4 pb-2">
-                                        <input type="submit" value="Create" class="btn btn-primary btn-lg btn-block" />
-                                        @*<input class="btn btn-primary btn-lg btn-block" type="submit" value="Save" />*@
-                                    </div>
-
-
-                                    <div class="col-md-6 mb-4 pb-2">
-                                        @Html.ActionLink("Back", "Index", "Payment", null, new { @class = "btn btn-secondary btn-lg btn-block" })
+                                    <div class="form-outline form-group">
+                                        @Html.LabelFor(model => model.invoiceID)
+                                        @Html.EditorFor(model => model.invoiceID, new { htmlAttributes = new { @class = "form-control form-control-lg", id = "invoiceID" } })
+                                        @Html.ValidationMessageFor(model => model.invoiceID, "", new { @class = "text-danger" })
                                     </div>
 
                                 </div>
+                                <div class="col-md-6 mb-4">
 
+                                    <div class="form-outline form-group">
+                                        @Html.LabelFor(m => m.cID)
+                                        @Html.EditorFor(model => model.cID, new { htmlAttributes = new { @class = "form-control form-control-lg", id = "cID" } })
+                                        @Html.ValidationMessageFor(model => model.cID, "", new { @class = "text-danger" })
+                                    </div>
+
+                                </div>
+                            </div>
+
+
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+
+                                    <div class="form-outline form-group">
+                                        @Html.LabelFor(m => m.paidAmount)
+                                        @Html.EditorFor(model => model.paidAmount, new { htmlAttributes = new { @class = "form-control form-control-lg", id = "paidAmount" } })
+                                        @Html.ValidationMessageFor(model => model.paidAmount, "", new { @class = "text-danger" })
+                                    </div>
+
+                                </div>
+                                <div class="col-md-6 mb-4">
+
+                                    <div class="form-outline form-group">
+                                        @Html.LabelFor(model => model.totalFee)
+                                        @Html.EditorFor(model => model.totalFee, new { htmlAttributes = new { @class = "form-control form-control-lg", id = "totalFee" } })
+                                        @Html.ValidationMessageFor(model => model.totalFee, "", new { @class = "text-danger" })
+                                    </div>
+
+                                </div>
+                            </div>
+
+
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+
+                                    <div class="form-outline form-group">
+                                        @Html.LabelFor(m => m.payMethod)
+                                        @Html.EditorFor(model => model.payMethod, new { htmlAttributes = new { @class = "form-control form-control-lg", id = "payMethod" } })
+                                        @Html.ValidationMessageFor(model => model.payMethod, "", new { @class = "text-danger" })
+                                    </div>
+
+                                </div>
+                                <div class="col-md-6 mb-4">
+
+                                    <div class="form-outline form-group">
+                                        @Html.LabelFor(m => m.payDate)
+                                        @Html.EditorFor(model => model.payDate, new { htmlAttributes = new { @class = "form-control form-control-lg", type = "date" } })
+                                        @Html.ValidationMessageFor(model => model.payDate, "", new { @class = "text-danger" })
+                                    </div>
+
+                                </div>
+                            </div>
+
+
+                            <div class="row">
+                                <div class="col-md-6 mb-4 pb-2">
+                                    <input type="submit" value="Create" class="btn btn-success btn-lg btn-block" />
+                                    @*<input class="btn btn-primary btn-lg btn-block" type="submit" value="Save" />*@
+                                </div>
+
+
+                                <div class="col-md-6 mb-4 pb-2">
+                                    @Html.ActionLink("Back", "Index", "Payment", null, new { @class = "btn btn-secondary btn-lg btn-block" })
+                                </div>
 
                             </div>
+
+
                         </div>
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
+
+        <script>
+
+            console.log('I am being reached');
+
+             $(document).ready(function () {
+                 $("#invoiceID").blur(function () {
+                var invoiceID = $(this).val();
+
+            $.ajax({
+                url: '@Url.Action("GetRelatedData", "Payment")',
+                type: 'POST',
+                data: { id: invoiceID },
+                success: function (data) {
+                    // Populate the form fields with the retrieved data
+                    $("#cID").val(data.cID);
+                    $("#totalFee").val(data.totalFee);
+
+                },
+                error: function () {
+                    alert("Error fetching user profile data.");
+                }
+            });
+        });
+    });
+        </script>
+
+        <script>
+
+            // Text validation function
+            function validateText(input) {
+                if (!isNaN(Number(input.value))) {
+                    alert('Please enter text');
+                    input.value = '';
+                }
+            }
+
+            // Number validation function
+            function validateNumber(input) {
+                if (isNaN(Number(input.value))) {
+                    alert('Please enter a number');
+                    input.value = '';
+                }
+            }
+
+            // Get elements
+            const cID = document.querySelector('#cID');
+            const invoiceID = document.querySelector('#invoiceID');
+            const paidAmount = document.querySelector('#paidAmount');
+            const totalFee = document.querySelector('#totalFee');
+            const payMethod = document.querySelector('#payMethod');
+
+            // Attach listeners
+            cID.addEventListener('input', () => {
+                validateNumber(cID);
+            });
+
+            invoiceID.addEventListener('input', () => {
+                validateNumber(invoiceID);
+            });
+
+            paidAmount.addEventListener('input', () => {
+                validateNumber(paidAmount);
+            });
+
+            totalFee.addEventListener('input', () => {
+                validateNumber(totalFee);
+            });
+
+            payMethod.addEventListener('input', () => {
+                validateText(payMethod);
+            });
+
+
+        </script>
+
+    </section>
 
     }
 
-    <script>
-
-        console.log('working')
-    // Text validation function
-    function validateText(input) {
-        if (!isNaN(Number(input.value))) {
-            alert('Please enter text');
-            input.value = '';
-        }
-    }
-
-    // Number validation function
-    function validateNumber(input) {
-        if (isNaN(Number(input.value))) {
-            alert('Please enter a number');
-            input.value = '';
-        }
-    }
-
-    // Get elements
-    const cID = document.querySelector('#cID');
-    const invoiceID = document.querySelector('#invoiceID');
-    const paidAmount = document.querySelector('#paidAmount');
-    const totalFee = document.querySelector('#totalFee');
-    const payMethod = document.querySelector('#payMethod');
-
-    // Attach listeners
-    cID.addEventListener('input', () => {
-        validateNumber(cID);
-    });
-
-    invoiceID.addEventListener('input', () => {
-        validateNumber(invoiceID);
-    });
-
-    paidAmount.addEventListener('input', () => {
-        validateNumber(paidAmount);
-    });
-
-    totalFee.addEventListener('input', () => {
-        validateNumber(totalFee);
-    });
-
-    payMethod.addEventListener('input', () => {
-        validateText(payMethod);
-    });
 
 
-    </script>
+  
 
 </body>
 </html>
