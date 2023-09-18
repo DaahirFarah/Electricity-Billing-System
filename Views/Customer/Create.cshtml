@@ -117,10 +117,10 @@
 
                                     <div class="form-outline form-group">
                                         @Html.LabelFor(model => model.MeterID)
-                                        @Html.DropDownListFor(model => model.SelectedMeterID, new SelectList(Model.MeterID), "Select a Meter", new { @class = "form-control" })
+                                        @Html.DropDownListFor(model => model.MeterID, new SelectList(Model.SelectedMeterID), "Select a Meter", new { @class = "form-control" })
                                         @Html.ValidationMessageFor(model => model.MeterID, "", new { @class = "text-danger" })
                                     </div>
-
+                                    @Html.HiddenFor(model => model.MeterID)
 
                                 </div>
 
@@ -171,7 +171,6 @@
     const Branch = document.querySelector('#Branch');
     const phone1Input = document.querySelector('#number');
     const phone2Input = document.querySelector('#number2');
-    const meterID = document.querySelector('#meterID');
 
     // Attach listeners 
     firstNameInput.addEventListener('input', () => {
@@ -201,9 +200,7 @@
     phone2Input.addEventListener('input', () => {
         validateNumber(phone2Input);
     });
-    meterID.addEventListener('input', () => {
-        validateNumber(meterID);
-    });
+   
 
 </script>
 

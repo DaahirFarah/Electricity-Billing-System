@@ -9,6 +9,13 @@ namespace EBS.viewModels
 {
     public class customerVM
     {
+        public customerVM()
+        {
+            // Initialize SelectedMeterID with a default value of 0
+            SelectedMeterID = new List<int> { 0 };
+        }
+
+
         [Key]
         [Required]
         [Display(Name = "Customer ID")]
@@ -30,7 +37,7 @@ namespace EBS.viewModels
         [Display(Name = "Address")]
         public string cAddress { get; set; }
 
-        [Required(ErrorMessage = "Phone Number Should be 10 digits starting 061.")]
+        [Required(ErrorMessage = "Please Provide Customer Phone Number")]
         [Display(Name = "Phone Number")]
         //[RegularExpression(@"^\d{10}$", ErrorMessage = "Phone Number Should be 10 digits starting 061.")]
         public int cNumber { get; set; }
@@ -39,12 +46,12 @@ namespace EBS.viewModels
         //[RegularExpression(@"^\d{10}$", ErrorMessage = "Phone Number Should be 10 digits starting 061.")]
         public string cNumberOp { get; set; }
 
-        [Display(Name = "Meter ID")]
-        [Required(ErrorMessage = "Please Insert Meter ID")]
-        public List<int> MeterID { get; set; }
-
         [Required]
-        public int SelectedMeterID { get; set; }
+        public List<int> SelectedMeterID { get; set; }
+
+        [Required(ErrorMessage = "Please Insert Meter ID")]
+        [Display(Name = "Meter ID")]
+        public int MeterID { get; set; }
 
         [Required(ErrorMessage = "Please Provide Customer Branch")]
         [Display(Name = "Branch")]

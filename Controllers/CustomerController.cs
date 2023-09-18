@@ -24,6 +24,8 @@ namespace EBS.Controllers
        
         private readonly string SecConn = ConfigurationManager.ConnectionStrings["SecConn"].ConnectionString;
 
+    
+
         [Authorize]
         // GET: Customer
         public ActionResult Index()
@@ -38,8 +40,8 @@ namespace EBS.Controllers
         public ActionResult Create()
         {
             // Retrieve data from the database using ADO.NET
+
             List<int> meter = new List<int>();
-            
             string query = "SELECT MeterID FROM Meters WHERE Status = 'Inactive'";
 
             using (SqlConnection connection = new SqlConnection(SecConn))
@@ -57,7 +59,7 @@ namespace EBS.Controllers
 
             customerVM model = new customerVM
             {
-                MeterID = meter
+                SelectedMeterID = meter
             };
 
             return View(model);
@@ -308,7 +310,7 @@ namespace EBS.Controllers
                                 cAddress = reader["cAddress"].ToString(),
                                 cNumber = Convert.ToInt32(reader["cNumber"]),
                                 cNumberOp = reader["cNumberOp"] != DBNull.Value ? reader["cNumberOp"].ToString() : "N/A",
-                               // MeterID = Convert.ToInt32(reader["MeterID"]),
+                                MeterID = Convert.ToInt32(reader["MeterID"]),
                                 Branch = reader["Branch"].ToString(),
                                 Balance = Convert.ToDecimal(reader["Balance"])
 
@@ -328,8 +330,11 @@ namespace EBS.Controllers
             using (SqlConnection connection = new SqlConnection(SecConn))
             {
                 connection.Open();
+
+                // This variable captures the selected meterID for the customer and then it will be the one to have the value that will go to the db
+                int meterID = model.MeterID;
                   
-                string query = "INSERT INTO CustomerTbl (cFirstName, cMidName, cLastName, cAddress, cNumber, cNumberOp, MeterID, Branch, Balance) VALUES (@cFirstName, @cMidName, @cLastName, @cAddress, @cNumber, @cNumberOp, @MeterID, @Branch, 0)";
+                string query = "INSERT INTO CustomerTbl (cFirstName, cMidName, cLastName, cAddress, cNumber, cNumberOp, MeterID, Branch, Balance) VALUES (@cFirstName, @cMidName, @cLastName, @cAddress, @cNumber, @cNumberOp, @meterID, @Branch, 0)";
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@cFirstName", model.cFirstName);
@@ -345,10 +350,17 @@ namespace EBS.Controllers
                     {
                         command.Parameters.AddWithValue("@cNumberOp", model.cNumberOp);
                     }
-                    command.Parameters.AddWithValue("@MeterID", model.MeterID);
+                    command.Parameters.AddWithValue("@MeterID", meterID);
                     command.Parameters.AddWithValue("@Branch", model.Branch);
 
                     command.ExecuteNonQuery();
+
+                    string meterStatusUpdate = "Update Meters SET Status = 'Active' WHERE MeterID = @meterID";
+                    using(SqlCommand commandStatus = new SqlCommand(meterStatusUpdate, connection))
+                    {
+                        commandStatus.Parameters.AddWithValue("@MeterID", meterID);
+                        commandStatus.ExecuteNonQuery();
+                    }
 
                 }
             }
@@ -380,7 +392,7 @@ namespace EBS.Controllers
                                 cAddress = reader["cAddress"].ToString(),
                                 cNumber = Convert.ToInt32(reader["cNumber"]),
                                 cNumberOp = reader["cNumberOp"].ToString(),
-                             //   MeterID = Convert.ToInt32(reader["MeterID"]),
+                                MeterID = Convert.ToInt32(reader["MeterID"]),
                                 Branch = reader["Branch"].ToString(),
                                 Balance = Convert.ToDecimal(reader["Balance"])
 
@@ -427,18 +439,71 @@ namespace EBS.Controllers
         }
 
         // Customer Information Deletion Logic for the Delete ActionResult
+        //private void DeleteCustomer(int id)
+        //{
+        //    using (SqlConnection connection = new SqlConnection(SecConn))
+        //    {
+        //        connection.Open();
+
+        //        customerVM model = new customerVM();
+
+        //        string query = "DELETE FROM CustomerTbl WHERE cID = @cID";
+        //        using (SqlCommand command = new SqlCommand(query, connection))
+        //        {
+        //            command.Parameters.AddWithValue("@cID", id);
+
+        //            command.ExecuteNonQuery();
+
+        //            // Setting the meter status to Inactive if a customer is deleted so that the meter can be used again
+        //            string meterStatusUpdate = "Update Meters SET Status = 'Active' WHERE MeterID = @meterID";
+        //            using (SqlCommand commandStatus = new SqlCommand(meterStatusUpdate, connection))
+        //            {
+        //                commandStatus.Parameters.AddWithValue("@MeterID", model.MeterID);
+        //                commandStatus.ExecuteNonQuery();
+        //            }
+
+        //        }
+        //    }
+        //}
+
         private void DeleteCustomer(int id)
         {
             using (SqlConnection connection = new SqlConnection(SecConn))
             {
                 connection.Open();
 
-                string query = "DELETE FROM CustomerTbl WHERE cID = @cID";
-                using (SqlCommand command = new SqlCommand(query, connection))
-                {
-                    command.Parameters.AddWithValue("@cID", id);
+                // Retrieve the MeterID of the customer being deleted
+                string selectMeterQuery = "SELECT MeterID FROM CustomerTbl WHERE cID = @cID";
+                int meterID = -1; 
 
-                    command.ExecuteNonQuery();
+                using (SqlCommand selectMeterCommand = new SqlCommand(selectMeterQuery, connection))
+                {
+                    selectMeterCommand.Parameters.AddWithValue("@cID", id);
+                    object meterIDObj = selectMeterCommand.ExecuteScalar();
+
+                    if (meterIDObj != null && meterIDObj != DBNull.Value)
+                    {
+                        meterID = Convert.ToInt32(meterIDObj);
+                    }
+                }
+
+                // Update the status of the MeterID in the Meters table
+                if (meterID != -1)
+                {
+                    string updateMeterQuery = "UPDATE Meters SET Status = 'Inactive' WHERE MeterID = @meterID";
+                    using (SqlCommand updateMeterCommand = new SqlCommand(updateMeterQuery, connection))
+                    {
+                        updateMeterCommand.Parameters.AddWithValue("@meterID", meterID);
+                        updateMeterCommand.ExecuteNonQuery();
+                    }
+                }
+
+                // Delete the customer
+                string deleteCustomerQuery = "DELETE FROM CustomerTbl WHERE cID = @cID";
+                using (SqlCommand deleteCustomerCommand = new SqlCommand(deleteCustomerQuery, connection))
+                {
+                    deleteCustomerCommand.Parameters.AddWithValue("@cID", id);
+                    deleteCustomerCommand.ExecuteNonQuery();
                 }
             }
         }
