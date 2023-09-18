@@ -395,8 +395,9 @@ namespace EBS.Controllers
                     {
                         // Multiply SomePropertyToCompare by the corresponding value in decimalList
                         model.Rate = rate[i];
-                        model.total_Fee = model.reading_Value * model.Rate;
+                        model.total_Fee = model.reading_Value * model.Rate;                      
                         break;
+
                     }
                 }
 
