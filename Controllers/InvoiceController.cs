@@ -103,7 +103,7 @@ namespace EBS.Controllers
                 connection.Open();
 
                 // Define your SQL query to retrieve user profile data based on the provided ID
-                string query = "SELECT cur_Reading FROM InvoiceTbl WHERE cID = @cID";
+                string query = "SELECT TOP 1 cur_Reading FROM InvoiceTbl WHERE cID = @cID ORDER BY invoiceID DESC";
 
                 // Create a SqlCommand
                 using (SqlCommand cmd = new SqlCommand(query, connection))
