@@ -46,7 +46,7 @@ namespace EBS.Controllers
         //SET: Register Invoice
         [ValidateAntiForgeryToken]
         [HttpPost]
-        public ActionResult Create(invoiceVM model)
+        public ActionResult Create(invWrapper model)
         {
             if (ModelState.IsValid)
             {
@@ -345,7 +345,7 @@ namespace EBS.Controllers
 
       
 
-        private void InsertInvoice(invoiceVM model)
+        private void InsertInvoice(invWrapper model)
         {
             using (SqlConnection connection = new SqlConnection(SecConn))
             {
