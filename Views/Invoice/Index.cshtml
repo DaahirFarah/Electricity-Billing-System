@@ -1,5 +1,5 @@
 ﻿
-@model List<EBS.viewModels.invoiceVM>
+@model EBS.viewModels.invWrapper
 
 @{
     ViewBag.Title = "Invoices | SEC";
@@ -75,18 +75,216 @@
         </form>
     </div>
 
-    <div class="mt-4 pt-2" style="padding-left: 40px; margin-left: 100px;">
-        <form action="@Url.Action("Create", "Invoice")" method="get">
-            <input class="btn btn-primary btn-lg btn-block" type="submit" value="Create Invoice" />
-        </form>
-    </div>
-
     @*<div class="mt-4 pt-2" style="padding-left: 40px; margin-left: 100px;">
-
-            <input data-toggle="modal" data-target="#createInvoiceModal" class="btn btn-primary btn-lg btn-block" type="submit" value="Create Invoice" />
-
+            <form action="@Url.Action("Create", "Invoice")" method="get">
+                <input class="btn btn-primary btn-lg btn-block" type="submit" value="Create Invoice" />
+            </form>
         </div>*@
 
+    <!--Modal Activation Button-->
+    <div class="mt-4 pt-2" style="padding-left: 40px; margin-left: 100px;">
+
+        <input data-toggle="modal" data-target="#createInvoiceModal" class="btn btn-primary btn-lg btn-block" type="submit" value="Create Invoice" />
+
+    </div>
+    <!--Create Invoice Modal-->
+    <div class="modal fade" id="createInvoiceModal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="createInvoiceModalLabel" aria-hidden="true" style="color:black">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="createInvoiceModalLabel"> <strong>Create Invoice</strong></h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="card rounded shadow">
+                        <div class="card-body">
+                            @using (Html.BeginForm("Create", "Invoice", FormMethod.Post))
+                            {
+                                @Html.AntiForgeryToken()
+
+                                <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">
+
+                                    <div class="card-body p-4 p-md-5">
+                                        @*<h2 class="mb-4 pb-2 pb-md-0 mb-md-5"><strong>Create Invoice</strong></h2>*@
+                                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                                        <div class="row">
+                                            <div class="col-md-6 mb-4">
+
+                                                <div class="form-outline form-group">
+                                                    @Html.LabelFor(m => m.cID)
+                                                    @Html.EditorFor(model => model.cID, new { htmlAttributes = new { @class = "form-control form-control-lg", id = "cID" } })
+                                                    @Html.ValidationMessageFor(model => model.cID, "", new { @class = "text-danger" })
+                                                </div>
+
+                                            </div>
+
+                                            <div class="col-md-6 mb-4">
+
+                                                <div class="form-outline form-group">
+                                                    @Html.LabelFor(model => model.reading_Date)
+                                                    @Html.EditorFor(model => model.reading_Date, new { htmlAttributes = new { @class = "form-control form-control-lg", Type = "date", id = "rDate" } })
+                                                    @Html.ValidationMessageFor(model => model.reading_Date, "", new { @class = "text-danger" })
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-6 mb-4">
+
+                                                <div class="form-outline form-group">
+                                                    @Html.LabelFor(m => m.prev_Reading)
+                                                    @Html.EditorFor(model => model.prev_Reading, new { htmlAttributes = new { @class = "form-control form-control-lg", id = "prev_Reading" } })
+                                                    @Html.ValidationMessageFor(model => model.prev_Reading, "", new { @class = "text-danger" })
+                                                </div>
+
+                                            </div>
+                                            <div class="col-md-6 mb-4">
+
+                                                <div class="form-outline form-group">
+                                                    @Html.LabelFor(model => model.cur_Reading)
+                                                    @Html.EditorFor(model => model.cur_Reading, new { htmlAttributes = new { @class = "form-control form-control-lg", id = "cur_Reading" } })
+                                                    @Html.ValidationMessageFor(model => model.cur_Reading, "", new { @class = "text-danger" })
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+
+                                        <div class="row">
+                                            <div class="col-md-6 mb-4">
+
+                                                <div class="form-outline form-group">
+                                                    @Html.LabelFor(m => m.reading_Value)
+                                                    @Html.EditorFor(model => model.reading_Value, new { htmlAttributes = new { @class = "form-control form-control-lg", id = "reading_Value", @readonly = "readonly" } })
+                                                    @Html.ValidationMessageFor(model => model.reading_Value, "", new { @class = "text-danger" })
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                        <!--Below div element holds some buttons. Leave it alone-->
+                                        <div class="row">
+                                            <div class="col-md-6 mb-4 pb-2">
+                                                <input type="submit" value="Create" class="btn btn-success btn-lg btn-block" />
+
+                                            </div>
+
+
+                                            <div class="col-md-6 mb-4 pb-2">
+                                                @Html.ActionLink("Back", "Index", "Invoice", null, new { @class = "btn btn-secondary btn-lg btn-block" })
+                                            </div>
+
+                                        </div>
+
+
+
+                                    </div>
+                                </div>
+
+
+                                <script>
+
+                                        console.log('I am being reached');
+
+                                         $(document).ready(function () {
+                                            $("#cID").blur(function () {
+                                            var customerID = $(this).val();
+
+                                        $.ajax({
+                                            url: '@Url.Action("GetRelatedData", "Invoice")',
+                                            type: 'POST',
+                                            data: { id: customerID },
+                                            success: function (data) {
+                                                // Populate the form fields with the retrieved data
+                                                $("#prev_Reading").val(data.cur_Reading);
+
+                                            },
+                                            error: function () {
+                                                alert("Error fetching user profile data.");
+                                            }
+                                        });
+                                    });
+                                });
+                                </script>
+
+                                <script>
+                                    $(document).ready(function () {
+                                        $("#rDate").blur(function () {
+                                            var enteredDate = new Date($(this).val());
+                                            var currentDate = new Date();
+                                            var lastDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+                                            var minDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 25);
+
+                                            if (enteredDate < minDate || enteredDate > lastDayOfMonth) {
+                                                alert("Enter a date between the 25th and the last day of the month.");
+                                                // Clear the input field
+                                                $(this).val('');
+                                            }
+                                        });
+                                    });
+                                </script>
+
+                                <script>
+
+                                    // Number validation function
+                                    function validateNumber(input) {
+                                        if (isNaN(Number(input.value))) {
+                                            alert('Please enter a number');
+                                            input.value = '';
+                                        }
+                                    }
+
+                                    // Get elements
+                                    const cID = document.querySelector('#cID');
+                                    const prev_Reading = document.querySelector('#prev_Reading');
+                                    const cur_Reading = document.querySelector('#cur_Reading');
+
+                                    // Attach listeners
+
+
+                                    cID.addEventListener('blur', () => {
+                                        validateNumber(cID);
+                                    });
+
+                                    prev_Reading.addEventListener('input', () => {
+                                        validateNumber(prev_Reading);
+                                    });
+
+                                    cur_Reading.addEventListener('blur', () => {
+                                        validateNumber(cur_Reading);
+                                    });
+
+
+                                    $(document).ready(function () {
+                                        $('#Rate, #reading_Value, #cur_Reading, #prev_Reading').on('input', function () {
+                                            var Rate = parseFloat($('#Rate').val());
+                                            var cur_Reading = parseFloat($('#cur_Reading').val());
+                                            var prev_Reading = parseFloat($('#prev_Reading').val());
+                                            var rDate = ($('#rDate').val());
+
+                                            var calculatedReading = isNaN(cur_Reading) || isNaN(prev_Reading) ? '' : (cur_Reading - prev_Reading).toFixed(2);
+                                            $('#reading_Value').val(calculatedReading); // Update the readonly reading_Value field
+
+                                            if (cur_Reading < prev_Reading) {
+                                                window.alert('Current Reading Must be Greater Than Previous Reading')
+                                            }
+
+                                        });
+                                    });
+                                </script>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
 
@@ -109,7 +307,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model)
+                @foreach (var item in Model.invoiceList)
                 {
                     <tr>
 
@@ -145,75 +343,9 @@
         </table>
     </div>
 
-
     <script>
         new DataTable('#myTable');
     </script>
-
-    <!--The script below performs dynamic calculation to produce the product and sub of the current reading, previous reading, usage and rate-->
-
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-
-    <script>
-
-        // Number validation function
-        function validateNumber(input) {
-            if (isNaN(Number(input.value))) {
-                alert('Please enter a number');
-                input.value = '';
-            }
-        }
-
-        // Get elements
-        const cID = document.querySelector('#cID');
-        const prev_Reading = document.querySelector('#prev_Reading');
-        const cur_Reading = document.querySelector('#cur_Reading');
-
-        // Attach listeners
-
-
-        cID.addEventListener('input', () => {
-            validateNumber(cID);
-        });
-
-        prev_Reading.addEventListener('input', () => {
-            validateNumber(prev_Reading);
-        });
-
-        cur_Reading.addEventListener('input', () => {
-            validateNumber(cur_Reading);
-        });
-
-
-        $(document).ready(function () {
-            $('#Rate, #reading_Value, #cur_Reading, #prev_Reading').on('input', function () {
-                var Rate = parseFloat($('#Rate').val());
-                var cur_Reading = parseFloat($('#cur_Reading').val());
-                var prev_Reading = parseFloat($('#prev_Reading').val());
-
-                var calculatedReading = isNaN(cur_Reading) || isNaN(prev_Reading) ? '' : (cur_Reading - prev_Reading).toFixed(2);
-                $('#reading_Value').val(calculatedReading); // Update the readonly reading_Value field
-
-                // Calculate Rate based on reading_Value
-                var readingValue = parseFloat(calculatedReading);
-                if (!isNaN(readingValue)) {
-                    if (readingValue < 100) {
-                        Rate = 0.5;
-                    } else if (readingValue < 300) {
-                        Rate = 0.4;
-                    } else {
-                        Rate = 0.3;
-                    }
-                }
-                $('#Rate').val(Rate.toFixed(2)); // Update the readonly Rate field
-
-                var result = isNaN(Rate) || isNaN(calculatedReading) ? '' : (Rate * calculatedReading).toFixed(2);
-                $('#result').val(result); // Update the readonly result field
-            });
-        });
-    </script>
-
 
 </body>
 </html>

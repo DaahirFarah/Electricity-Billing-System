@@ -146,7 +146,7 @@
 
                     if (enteredDate < minDate || enteredDate > lastDayOfMonth) {
                         alert("Enter a date between the 25th and the last day of the month.");
-                        // Clear the input field or take appropriate action
+                        // Clear the input field 
                         $(this).val('');
                     }
                 });
@@ -171,7 +171,7 @@
             // Attach listeners
 
 
-            cID.addEventListener('input', () => {
+            cID.addEventListener('blur', () => {
                 validateNumber(cID);
             });
 
@@ -179,7 +179,7 @@
                 validateNumber(prev_Reading);
             });
 
-            cur_Reading.addEventListener('input', () => {
+            cur_Reading.addEventListener('blur', () => {
                 validateNumber(cur_Reading);
             });
 

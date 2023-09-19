@@ -31,8 +31,9 @@ namespace EBS.Controllers
         // GET: Invoice
         public ActionResult Index()
         {
-            List<invoiceVM> invoices = GetAllInvoices();
-            return View(invoices);
+            invWrapper wrapper = new invWrapper();
+            wrapper.invoiceList = GetAllInvoices();
+            return View(wrapper);
         }
 
         //GET: Register Invoice
@@ -308,9 +309,9 @@ namespace EBS.Controllers
         }
 
         // Fetching Invoices From the Database
-        private List<invoiceVM> GetAllInvoices()
+        private List<invoicevmList> GetAllInvoices()
         {
-            List<invoiceVM> invoices = new List<invoiceVM>();
+            List<invoicevmList> invoices = new List<invoicevmList>();
 
             using (SqlConnection Connection = new SqlConnection(SecConn))
             {
@@ -322,7 +323,7 @@ namespace EBS.Controllers
                     {
                         while (reader.Read())
                         {
-                            invoices.Add(new invoiceVM
+                            invoices.Add(new invoicevmList
                             {
                                 invoiceID = Convert.ToInt32(reader["invoiceID"]),
                                 cID = Convert.ToInt32(reader["cID"]),
@@ -476,6 +477,57 @@ namespace EBS.Controllers
             using (SqlConnection connection = new SqlConnection(SecConn))
             {
                 connection.Open();
+
+                string rateQuery = "SELECT UsageLevelNumber, Rate FROM Rates";
+                List<int> usageLevel = new List<int>();            // This list will hold the usage level number retrieved from the database
+                List<decimal> rate = new List<decimal>();         // This list will hold the rate fetched from the database
+
+                using (SqlCommand commandRate = new SqlCommand(rateQuery, connection))
+                {
+                    using (SqlDataReader reader = commandRate.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            // Retrieve values from the database and add them to the lists
+                            int intFromDatabase = reader.GetInt32(0);
+                            decimal decimalFromDatabase = reader.GetDecimal(1);
+
+                            usageLevel.Add(intFromDatabase);
+                            rate.Add(decimalFromDatabase);
+                        }
+                    }
+                }
+
+
+                // This chunk of code retrieves the standing customer balance so that the total can be the usage fee + the current balance
+                string balanceQuery = "SELECT BALANCE FROM CustomerTbl WHERE cID = @cID";
+
+                cID = model.cID;
+
+                using (SqlCommand commandBalance = new SqlCommand(balanceQuery, connection))
+                {
+                    commandBalance.Parameters.AddWithValue("@cID", model.cID);
+                    object balanceResult = commandBalance.ExecuteScalar();
+                    if (balanceResult != null && balanceResult != DBNull.Value)
+                    {
+                        balance = Convert.ToDecimal(balanceResult);
+                    }
+                }
+
+                // this piece of code sets the value of the rate and total fee based on the client usage 
+                for (int i = 0; i < usageLevel.Count; i++)
+                {
+                    if (model.reading_Value < usageLevel[i])
+                    {
+                        // Multiply SomePropertyToCompare by the corresponding value in decimalList
+                        model.Rate = rate[i];
+                        model.total_Fee = model.reading_Value * model.Rate;
+                        break;
+
+                    }
+                }
+
+
                 string query = "Update InvoiceTbl SET cID = @cID, Rate = @Rate,"
                              + "prev_Reading = @prev_Reading, cur_Reading = @cur_Reading,"
                              + "reading_Value = @reading_Value, reading_Date = @reading_Date, total_Fee = @total_Fee WHERE invoiceID = @invoiceID";

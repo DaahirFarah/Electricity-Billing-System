@@ -8,8 +8,40 @@ namespace EBS.viewModels
 {
     public class invWrapper
     {
-       public invoiceVM invoice { get; set; }
+       //public invoiceVM invoice { get; set; }
 
        public List<invoicevmList> invoiceList { get; set; }
+
+        [Key]
+        [Display(Name = "Invoice ID")]
+        public int invoiceID { get; set; }
+
+        [Display(Name = "Customer ID")]
+        [Required(ErrorMessage = "Customer ID is required.")]
+        public int cID { get; set; }
+
+        [Display(Name = "Previous Reading")]
+        [Required(ErrorMessage = "Previous Reading is required")]
+        public decimal prev_Reading { get; set; }
+
+        [Display(Name = "Current Reading")]
+        [Required(ErrorMessage = "Current Reading is required")]
+        public decimal cur_Reading { get; set; }
+
+        [Display(Name = "Usage (KwH)")]
+        [Required(ErrorMessage = "Usage Amount is required")]
+        public decimal reading_Value { get; set; }
+
+        [Display(Name = "Total Fee ($)")]
+        [Required(ErrorMessage = "Fee is required")]
+        public decimal total_Fee { get; set; }
+
+        [Display(Name = "Reading Date")]
+        [Required(ErrorMessage = "Reading Date is required")]
+        public DateTime reading_Date { get; set; }
+
+        [Display(Name = "Rate")]
+        [Required(ErrorMessage = "Rate is required")]
+        public decimal Rate { get; set; }
     }
 }
