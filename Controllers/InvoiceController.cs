@@ -131,11 +131,11 @@ namespace EBS.Controllers
             return Json(new { success = false, message = "Invoice Update Failed. Try Again!" });
         }
 
-        public ActionResult Delete(int id)
-        {
-            invWrapper invoice = GetInvoiceById(id);
-            return View(invoice);
-        }
+        //public ActionResult Delete(int id)
+        //{
+        //    invWrapper invoice = GetInvoiceById(id);
+        //    return View(invoice);
+        //}
 
         [HttpPost]
         [ActionName("Delete")]
