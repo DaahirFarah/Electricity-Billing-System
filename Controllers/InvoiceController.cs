@@ -60,15 +60,55 @@ namespace EBS.Controllers
         //GET: Update Invoice
         public ActionResult Edit(int id)
         {
-            invoiceVM invoice = GetInvoiceById(id);
+            invWrapper invoice = GetInvoiceById(id);
             return View(invoice);
+        }
+
+        [HttpPost]
+        public JsonResult GetInvoiceData(int id)
+        {
+            using (SqlConnection connection = new SqlConnection(SecConn))
+            {
+
+                connection.Open();
+                string query = "SELECT * FROM InvoiceTbl WHERE invoiceID = @invoiceID";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@invoiceID", id);
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            // Populate the invoice object
+                            invWrapper invoice = new invWrapper
+                            {
+                                invoiceID = Convert.ToInt32(reader["invoiceID"]),
+                                cID = Convert.ToInt32(reader["cID"]),
+                                prev_Reading = Convert.ToDecimal(reader["prev_Reading"]),
+                                cur_Reading = Convert.ToDecimal(reader["cur_Reading"]),
+                                reading_Date = Convert.ToDateTime(reader["reading_Date"]),
+                                Rate = Convert.ToDecimal(reader["Rate"]),
+                                reading_Value = Convert.ToDecimal(reader["reading_Value"]),
+                                total_Fee = Convert.ToDecimal(reader["total_Fee"]),
+                            };
+
+                            // Return the Invoice Data as JSON
+                            return Json(invoice, JsonRequestBehavior.AllowGet);
+                        }
+                    }
+                }
+            }
+
+            // If no data found, return an empty JSON object
+            return Json(new invWrapper(), JsonRequestBehavior.AllowGet);
         }
 
         //POST: Update Invoice
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Display(Name = "Edit")]
-        public ActionResult Edit(invoiceVM model)
+        public ActionResult Edit(invWrapper model)
         {
             if (ModelState.IsValid)
             {
@@ -81,7 +121,7 @@ namespace EBS.Controllers
 
         public ActionResult Delete(int id)
         {
-            invoiceVM invoice = GetInvoiceById(id);
+            invWrapper invoice = GetInvoiceById(id);
             return View(invoice);
         }
 
@@ -437,7 +477,7 @@ namespace EBS.Controllers
         }
 
        
-        private invoiceVM GetInvoiceById(int invoiceID)
+        private invWrapper GetInvoiceById(int invoiceID)
         {
             using (SqlConnection connection = new SqlConnection(SecConn))
             {
@@ -451,7 +491,7 @@ namespace EBS.Controllers
                     {         
                         while (reader.Read())
                         {
-                            return new invoiceVM
+                            return new invWrapper
                             {
                                 invoiceID = Convert.ToInt32(reader["invoiceID"]),
                                 cID = Convert.ToInt32(reader["cID"]),
@@ -472,7 +512,7 @@ namespace EBS.Controllers
         }
 
         // Update Invoice Logic
-        private void UpdateInvoice(invoiceVM model)
+        private void UpdateInvoice(invWrapper model)
         {
             using (SqlConnection connection = new SqlConnection(SecConn))
             {

@@ -75,12 +75,6 @@
         </form>
     </div>
 
-    @*<div class="mt-4 pt-2" style="padding-left: 40px; margin-left: 100px;">
-            <form action="@Url.Action("Create", "Invoice")" method="get">
-                <input class="btn btn-primary btn-lg btn-block" type="submit" value="Create Invoice" />
-            </form>
-        </div>*@
-
     <!--Modal Activation Button-->
     <div class="mt-4 pt-2" style="padding-left: 40px; margin-left: 100px;">
 
@@ -186,49 +180,106 @@
 
                                     </div>
                                 </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Update Invoice Modal-->
+    <div class="modal fade" id="updateInvoiceModal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="createInvoiceModalLabel" aria-hidden="true" style="color:black">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="createInvoiceModalLabel"> <strong>Update Invoice</strong></h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="card rounded shadow">
+                        <div class="card-body">
+                            @using (Html.BeginForm("Edit", "Invoice", FormMethod.Post))
+                            {
+                                @Html.AntiForgeryToken()
+                                @Html.HiddenFor(model => model.invoiceID)
+
+                                <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">
+
+                                    <div class="card-body p-4 p-md-5">
+                                        @*<h2 class="mb-4 pb-2 pb-md-0 mb-md-5"><strong>Create Invoice</strong></h2>*@
+                                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                                        <div class="row">
+                                            <div class="col-md-6 mb-4">
+
+                                                <div class="form-outline form-group">
+                                                    @Html.LabelFor(m => m.cID)
+                                                    @Html.EditorFor(model => model.cID, new { htmlAttributes = new { @class = "form-control form-control-lg", id = "cIDEdit" } })
+                                                    @Html.ValidationMessageFor(model => model.cID, "", new { @class = "text-danger" })
+                                                </div>
+
+                                            </div>
+
+                                            <div class="col-md-6 mb-4">
+
+                                                <div class="form-outline form-group">
+                                                    @Html.LabelFor(model => model.reading_Date)
+                                                    @Html.EditorFor(model => model.reading_Date, new { htmlAttributes = new { @class = "form-control form-control-lg", Type = "date", id = "rDateEdit" } })
+                                                    @Html.ValidationMessageFor(model => model.reading_Date, "", new { @class = "text-danger" })
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-6 mb-4">
+
+                                                <div class="form-outline form-group">
+                                                    @Html.LabelFor(m => m.prev_Reading)
+                                                    @Html.EditorFor(model => model.prev_Reading, new { htmlAttributes = new { @class = "form-control form-control-lg", id = "prev_ReadingEdit" } })
+                                                    @Html.ValidationMessageFor(model => model.prev_Reading, "", new { @class = "text-danger" })
+                                                </div>
+
+                                            </div>
+                                            <div class="col-md-6 mb-4">
+
+                                                <div class="form-outline form-group">
+                                                    @Html.LabelFor(model => model.cur_Reading)
+                                                    @Html.EditorFor(model => model.cur_Reading, new { htmlAttributes = new { @class = "form-control form-control-lg", id = "cur_ReadingEdit" } })
+                                                    @Html.ValidationMessageFor(model => model.cur_Reading, "", new { @class = "text-danger" })
+                                                </div>
+
+                                            </div>
+                                        </div>
 
 
-                                <script>
+                                        <div class="row">
+                                            <div class="col-md-6 mb-4">
 
-                                        console.log('I am being reached');
+                                                <div class="form-outline form-group">
+                                                    @Html.LabelFor(m => m.reading_Value)
+                                                    @Html.EditorFor(model => model.reading_Value, new { htmlAttributes = new { @class = "form-control form-control-lg", id = "reading_ValueEdit", @readonly = "readonly" } })
+                                                    @Html.ValidationMessageFor(model => model.reading_Value, "", new { @class = "text-danger" })
+                                                </div>
 
-                                         $(document).ready(function () {
-                                            $("#cID").blur(function () {
-                                            var customerID = $(this).val();
+                                            </div>
 
-                                        $.ajax({
-                                            url: '@Url.Action("GetRelatedData", "Invoice")',
-                                            type: 'POST',
-                                            data: { id: customerID },
-                                            success: function (data) {
-                                                // Populate the form fields with the retrieved data
-                                                $("#prev_Reading").val(data.cur_Reading);
+                                        </div>
 
-                                            },
-                                            error: function () {
-                                                alert("Error fetching user profile data.");
-                                            }
-                                        });
-                                    });
-                                });
-                                </script>
+                                        <div class="row">
+                                            <div class="col-md-6 mb-4 pb-2">
+                                                <button type="submit" value="Create" class="btn btn-primary btn-lg btn-block">Update</button>
+                                            </div>
+                                        </div>
 
-                                <script>
-                                    $(document).ready(function () {
-                                        $("#rDate").blur(function () {
-                                            var enteredDate = new Date($(this).val());
-                                            var currentDate = new Date();
-                                            var lastDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
-                                            var minDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 25);
 
-                                            if (enteredDate < minDate || enteredDate > lastDayOfMonth) {
-                                                alert("Enter a date between the 25th and the last day of the month.");
-                                                // Clear the input field
-                                                $(this).val('');
-                                            }
-                                        });
-                                    });
-                                </script>
+
+                                    </div>
+                                </div>
 
                                 <script>
 
@@ -241,9 +292,9 @@
                                     }
 
                                     // Get elements
-                                    const cID = document.querySelector('#cID');
-                                    const prev_Reading = document.querySelector('#prev_Reading');
-                                    const cur_Reading = document.querySelector('#cur_Reading');
+                                    const cID = document.querySelector('#cIDEdit');
+                                    const prev_Reading = document.querySelector('#prev_ReadingEdit');
+                                    const cur_Reading = document.querySelector('#cur_ReadingEdit');
 
                                     // Attach listeners
 
@@ -262,22 +313,41 @@
 
 
                                     $(document).ready(function () {
-                                        $('#Rate, #reading_Value, #cur_Reading, #prev_Reading').on('input', function () {
-                                            var Rate = parseFloat($('#Rate').val());
-                                            var cur_Reading = parseFloat($('#cur_Reading').val());
-                                            var prev_Reading = parseFloat($('#prev_Reading').val());
-                                            var rDate = ($('#rDate').val());
+                                        $('#reading_ValueEdit, #cur_ReadingEdit, #prev_ReadingEdit').on('input', function () {
+                                            var cur_Reading = parseFloat($('#cur_ReadingEdit').val());
+                                            var prev_Reading = parseFloat($('#prev_ReadingEdit').val());
+                                            var rDate = ($('#rDateEdit').val());
 
                                             var calculatedReading = isNaN(cur_Reading) || isNaN(prev_Reading) ? '' : (cur_Reading - prev_Reading).toFixed(2);
-                                            $('#reading_Value').val(calculatedReading); // Update the readonly reading_Value field
+                                            $('#reading_ValueEdit').val(calculatedReading); // Update the readonly reading_Value field
 
                                             if (cur_Reading < prev_Reading) {
                                                 window.alert('Current Reading Must be Greater Than Previous Reading')
                                             }
 
                                         });
+
+
                                     });
                                 </script>
+
+                                <script>
+                                    $(document).ready(function () {
+                                        $("#rDateEdit").blur(function () {
+                                            var enteredDate = new Date($(this).val());
+                                            var currentDate = new Date();
+                                            var lastDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+                                            var minDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 25);
+
+                                            if (enteredDate < minDate || enteredDate > lastDayOfMonth) {
+                                                alert("Enter a date between the 25th and the last day of the month.");
+                                                // Clear the input field
+                                                $(this).val('');
+                                            }
+                                        });
+                                    });
+                                </script>
+
                             }
                         </div>
                     </div>
@@ -285,9 +355,6 @@
             </div>
         </div>
     </div>
-
-
-
 
     <!--Index: DataTable-->
     <div class="container">
@@ -321,9 +388,10 @@
                         <td>@Html.DisplayFor(model => item.total_Fee)</td>
                         <td>
 
-                            <a href="@Url.Action("Edit", "Invoice", new { id = item.invoiceID })">
-                                <i class="fa-solid fa-square-pen fa-1x" style="color: #1ABC9C; "></i>
+                            <a href="#" data-toggle="modal" data-target="#updateInvoiceModal" id="@item.invoiceID">
+                                <i class="fa-solid fa-square-pen fa-1x" style="color: #1ABC9C;"></i>
                             </a>
+
 
                             <a href="@Url.Action("Delete", "Invoice", new { id = item.invoiceID })">
                                 <i class="fas fa-trash fa-1x delete-icon item" style="color: #FF5733"></i>
@@ -343,8 +411,129 @@
         </table>
     </div>
 
+
+
     <script>
         new DataTable('#myTable');
+    </script>
+
+    <script>
+
+                        console.log('I am being reached');
+
+                            $(document).ready(function () {
+                                $("a[data-toggle='modal']").click(function () {
+                                    var invoiceID = $(this).attr("id");
+                                $.ajax({
+                            url: '@Url.Action("GetInvoiceData", "Invoice")',
+                            type: 'POST',
+                            data: { id: invoiceID },
+                            success: function (data) {
+                               // Populate the form fields with the retrieved data
+                                $("#cIDEdit").val(data.cID);
+                                $("#rDateEdit").val(data.reading_Date);
+                                $("#prev_ReadingEdit").val(data.prev_Reading);
+                                $("#cur_ReadingEdit").val(data.cur_Reading);
+                                $("#reading_ValueEdit").val(data.reading_Value);
+
+                            },
+                            error: function () {
+                                alert("Error fetching invoice data.");
+                            }
+                        });
+                    });
+                });
+    </script>
+
+    <script>
+
+                        console.log('I am being reached');
+
+                            $(document).ready(function () {
+                            $("#cID").blur(function () {
+                            var customerID = $(this).val();
+
+                        $.ajax({
+                            url: '@Url.Action("GetRelatedData", "Invoice")',
+                            type: 'POST',
+                            data: { id: customerID },
+                            success: function (data) {
+                                // Populate the form fields with the retrieved data
+                                $("#prev_Reading").val(data.cur_Reading);
+
+                            },
+                            error: function () {
+                                alert("Error fetching user profile data.");
+                            }
+                        });
+                    });
+                });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $("#rDate").blur(function () {
+                var enteredDate = new Date($(this).val());
+                var currentDate = new Date();
+                var lastDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+                var minDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 25);
+
+                if (enteredDate < minDate || enteredDate > lastDayOfMonth) {
+                    alert("Enter a date between the 25th and the last day of the month.");
+                    // Clear the input field
+                    $(this).val('');
+                }
+            });
+        });
+    </script>
+
+    <script>
+
+        // Number validation function
+        function validateNumber(input) {
+            if (isNaN(Number(input.value))) {
+                alert('Please enter a number');
+                input.value = '';
+            }
+        }
+
+        // Get elements
+        const cID = document.querySelector('#cID');
+        const prev_Reading = document.querySelector('#prev_Reading');
+        const cur_Reading = document.querySelector('#cur_Reading');
+
+        // Attach listeners
+
+
+        cID.addEventListener('blur', () => {
+            validateNumber(cID);
+        });
+
+        prev_Reading.addEventListener('input', () => {
+            validateNumber(prev_Reading);
+        });
+
+        cur_Reading.addEventListener('blur', () => {
+            validateNumber(cur_Reading);
+        });
+
+
+        $(document).ready(function () {
+            $('#Rate, #reading_Value, #cur_Reading, #prev_Reading').on('input', function () {
+                var Rate = parseFloat($('#Rate').val());
+                var cur_Reading = parseFloat($('#cur_Reading').val());
+                var prev_Reading = parseFloat($('#prev_Reading').val());
+                var rDate = ($('#rDate').val());
+
+                var calculatedReading = isNaN(cur_Reading) || isNaN(prev_Reading) ? '' : (cur_Reading - prev_Reading).toFixed(2);
+                $('#reading_Value').val(calculatedReading); // Update the readonly reading_Value field
+
+                if (cur_Reading < prev_Reading) {
+                    window.alert('Current Reading Must be Greater Than Previous Reading')
+                }
+
+            });
+        });
     </script>
 
 </body>
