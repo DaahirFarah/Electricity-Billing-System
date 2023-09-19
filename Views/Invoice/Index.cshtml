@@ -204,7 +204,7 @@
                             @using (Html.BeginForm("UpdateInvoice", "Invoice", FormMethod.Post, new { id = "updateForm" }))
                             {
                                 @Html.AntiForgeryToken()
-                                @Html.HiddenFor(model => model.invoiceID)
+                                @Html.HiddenFor(model => model.invoiceID, new {id = "invoiceID"} )
 
                                 <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">
 
@@ -390,15 +390,17 @@
                                                 </div>
 
                                             </div>
+
                                             <div class="col-md-6 mb-4">
 
                                                 <div class="form-outline form-group">
-                                                    @Html.LabelFor(model => model.Rate)
-                                                    @Html.EditorFor(model => model.Rate, new { htmlAttributes = new { @class = "form-control form-control-lg", id = "rDateDelete", @readonly = "readonly"} })
-                                                    @Html.ValidationMessageFor(model => model.Rate, "", new { @class = "text-danger" })
+                                                    @Html.LabelFor(m => m.reading_Value)
+                                                    @Html.EditorFor(model => model.reading_Value, new { htmlAttributes = new { @class = "form-control form-control-lg", id = "reading_ValueDelete", @readonly = "readonly" } })
+                                                    @Html.ValidationMessageFor(model => model.reading_Value, "", new { @class = "text-danger" })
                                                 </div>
 
                                             </div>
+
                                         </div>
 
                                         <div class="row">
@@ -422,52 +424,14 @@
                                             </div>
                                         </div>
 
-
                                         <div class="row">
-                                            <div class="col-md-6 mb-4">
-
-                                                <div class="form-outline form-group">
-                                                    @Html.LabelFor(m => m.reading_Value)
-                                                    @Html.EditorFor(model => model.reading_Value, new { htmlAttributes = new { @class = "form-control form-control-lg", id = "reading_ValueDelete", @readonly = "readonly" } })
-                                                    @Html.ValidationMessageFor(model => model.reading_Value, "", new { @class = "text-danger" })
-                                                </div>
-
-                                            </div>
-                                            <div class="col-md-6 mb-4">
-
-                                                <div class="form-outline form-group">
-                                                    @Html.LabelFor(model => model.reading_Date)
-                                                    <input type="date" class="form-control form-control-lg" , readonly id="reading_DateDelete" name="reading_Date" value="@Model.reading_Date.ToString("yyyy-MM-dd")" />
-                                                    @Html.ValidationMessageFor(model => model.reading_Date, "", new { @class = "text-danger" })
-                                                </div>
-
+                                            <div class="col-md-6 mb-4 pb-2">
+                                                <button type="submit" class="btn btn-danger btn-lg btn-block">Delete</button>
                                             </div>
                                         </div>
 
-                                        <div class="row">
-                                            <div class="col-md-6 mb-4">
-
-                                                <div class="form-outline form-group">
-                                                    @Html.LabelFor(m => m.total_Fee)
-                                                    @Html.EditorFor(model => model.total_Fee, new { htmlAttributes = new { @class = "form-control form-control-lg", @readonly = "readonly", id = "total_ValueDelete" } })
-                                                    @Html.ValidationMessageFor(model => model.total_Fee, "", new { @class = "text-danger" })
-                                                </div>
-                                            </div>
-
-                                            <div class="row">
-                                                <div class="col-md-6 mb-4 pb-2">
-                                                    <button type="submit" value="Delete" class="btn btn-danger btn-lg btn-block">Delete</button>
-                                                </div>
 
 
-                                                <div class="col-md-6 mb-4 pb-2">
-                                                    @Html.ActionLink("Back", "Index", "Invoice", null, new { @class = "btn btn-secondary btn-lg btn-block" })
-                                                </div>
-
-                                            </div>
-
-
-                                        </div>
                                     </div>
 
                                 </div>
@@ -537,6 +501,7 @@
     <!--DataTable Script-->
     <script>
         new DataTable('#myTable');
+        var invID;
     </script>
 
     <!--Invoice Data Fetching Script (Update)-->
@@ -552,7 +517,8 @@
                             type: 'POST',
                             data: { id: invoiceID },
                             success: function (data) {
-                               // Populate the form fields with the retrieved data
+                                // Populate the form fields with the retrieved data
+                                $("#invoiceID").val(invoiceID);
                                 $("#cIDEdit").val(data.cID);
                                 $("#rDateEdit").val(data.reading_Date);
                                 $("#prev_ReadingEdit").val(data.prev_Reading);
@@ -696,7 +662,7 @@
 
                             $(document).ready(function () {
                                 $("a[data-toggle='modal']").click(function () {
-                                    var invID = $(this).attr("id");
+                                    invID = $(this).attr("id");
                                 $.ajax({
                             url: '@Url.Action("GetInvoiceData", "Invoice")',
                             type: 'POST',
@@ -716,6 +682,28 @@
                         });
                     });
                 });
+    </script>
+
+    <!--Delete Invoice Script-->
+    <script>
+
+                        console.log('I am being reached');
+
+        $(document).ready(function () {
+            $("a[data-toggle='modal']").click(function () {
+                invID = $(this).data("id");
+
+                            $.ajax({
+                            url: '@Url.Action("DeleteConfirmed", "Invoice")',
+                            type: 'POST',
+                            data: { id: invID },
+                                success: function (data) {
+                            },
+                            error: function () {
+                                alert("Error deleting invoice.");
+                            }
+                        });
+                    });
     </script>
 
 </body>
