@@ -204,7 +204,7 @@
                             @using (Html.BeginForm("UpdateInvoice", "Invoice", FormMethod.Post, new { id = "updateForm" }))
                             {
                                 @Html.AntiForgeryToken()
-                                @Html.HiddenFor(model => model.invoiceID, new {id = "invoiceID"} )
+                                @Html.HiddenFor(model => model.invoiceID, new { id = "invoiceID" })
 
                                 <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">
 
@@ -373,6 +373,7 @@
                             @using (Html.BeginForm("Delete", "Invoice", FormMethod.Post))
                             {
                                 @Html.AntiForgeryToken()
+                                @Html.HiddenFor(model => model.invoiceID, new { id = "invoiceID" })
 
                                 <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">
 
@@ -501,7 +502,6 @@
     <!--DataTable Script-->
     <script>
         new DataTable('#myTable');
-        var invID;
     </script>
 
     <!--Invoice Data Fetching Script (Update)-->
@@ -662,13 +662,14 @@
 
                             $(document).ready(function () {
                                 $("a[data-toggle='modal']").click(function () {
-                                    invID = $(this).attr("id");
+                                     window.invID = $(this).attr("id");
                                 $.ajax({
                             url: '@Url.Action("GetInvoiceData", "Invoice")',
                             type: 'POST',
                             data: { id: invID },
                             success: function (data) {
-                               // Populate the form fields with the retrieved data
+                                // Populate the form fields with the retrieved data
+                                $("#invoiceID").val(invID)
                                 $("#cIDDelete").val(data.cID);
                                 $("#rDateDelete").val(data.reading_Date);
                                 $("#prev_ReadingDelete").val(data.prev_Reading);
@@ -685,26 +686,62 @@
     </script>
 
     <!--Delete Invoice Script-->
+    <!-- Second Script: Delete Invoice Script -->
     <script>
+    console.log('I am being reached');
 
-                        console.log('I am being reached');
+    // Function to handle the delete operation
+    function handleDeleteClick() {
+        // Access the global variable window.invID
+        var invID = window.invID;
 
-        $(document).ready(function () {
-            $("a[data-toggle='modal']").click(function () {
-                invID = $(this).data("id");
+        $.ajax({
+            url: '@Url.Action("Delete", "Invoice")',
+            type: 'POST',
+            data: { id: invID },
+            success: function (response) {
+                if (response.success) {
+                    alert(response.message);
+                } else {
+                    alert("Failed to delete invoice!.");
+                }
+            },
+            error: function () {
+                alert("An error occurred while updating the invoice.");
+            }
+        });
+    }
 
-                            $.ajax({
-                            url: '@Url.Action("DeleteConfirmed", "Invoice")',
-                            type: 'POST',
-                            data: { id: invID },
-                                success: function (data) {
-                            },
-                            error: function () {
-                                alert("Error deleting invoice.");
-                            }
-                        });
-                    });
+    $(document).ready(function () {
+        $("button[type='submit']").click(function (e) {
+            e.preventDefault(); // Prevent the default form submission
+
+            // Call the function to handle the delete operation
+            handleDeleteClick();
+        });
+    });
     </script>
+
+
+    @*<script>
+
+                            console.log('I am being reached');
+
+            $(document).ready(function () {
+                $("a[data-toggle='modal']").click(function () {
+
+                    $.ajax({
+                                url: '@Url.Action("Delete", "Invoice")',
+                                type: 'POST',
+                                    data: { id: window.invID },
+                                    success: function (data) {
+                                },
+                                error: function () {
+                                    alert("Error deleting invoice.");
+                                }
+                            });
+                        });
+        </script>*@
 
 </body>
 </html>

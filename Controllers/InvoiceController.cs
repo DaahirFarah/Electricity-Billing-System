@@ -131,18 +131,25 @@ namespace EBS.Controllers
             return Json(new { success = false, message = "Invoice Update Failed. Try Again!" });
         }
 
-        //public ActionResult Delete(int id)
+        ////public ActionResult Delete(int id)
+        ////{
+        ////    invWrapper invoice = GetInvoiceById(id);
+        ////    return View(invoice);
+        ////}
+
+        //[HttpPost]
+        //[ActionName("Delete")]
+        //public ActionResult DeleteConfirmed(int id)
         //{
-        //    invWrapper invoice = GetInvoiceById(id);
-        //    return View(invoice);
+        //    DeleteInvoice(id);
+        //    return RedirectToAction("Index");
         //}
 
         [HttpPost]
-        [ActionName("Delete")]
-        public ActionResult DeleteConfirmed(int id)
+        public JsonResult Delete(int id)
         {
             DeleteInvoice(id);
-            return RedirectToAction("Index");
+            return Json(new { success = true, message = "Invoice Deleted Successfuly" });
         }
 
         // Get Related Data From the db based on ID
