@@ -91,7 +91,8 @@
                                     <div class="col-md-6 mb-4">
 
                                         <div class="form-outline form-group">
-                                            <input type="date" class="form-control form-control-lg", disabled id="reading_Date" name="reading_Date" value="@Model.reading_Date.ToString("yyyy-MM-dd")" />                                            @Html.LabelFor(model => model.reading_Date)
+                                            <input type="date" class="form-control form-control-lg", disabled id="reading_Date" name="reading_Date" value="@Model.reading_Date.ToString("yyyy-MM-dd")" />                                            
+                                            @Html.LabelFor(model => model.reading_Date)
                                             @Html.ValidationMessageFor(model => model.reading_Date, "", new { @class = "text-danger" })
                                         </div>
 

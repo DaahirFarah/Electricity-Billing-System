@@ -58,11 +58,11 @@ namespace EBS.Controllers
 
 
         //GET: Update Invoice
-        public ActionResult Edit(int id)
-        {
-            invWrapper invoice = GetInvoiceById(id);
-            return View(invoice);
-        }
+        //public ActionResult Edit(int id)
+        //{
+        //    invWrapper invoice = GetInvoiceById(id);
+        //    return View(invoice);
+        //}
 
         [HttpPost]
         public JsonResult GetInvoiceData(int id)
@@ -105,18 +105,30 @@ namespace EBS.Controllers
         }
 
         //POST: Update Invoice
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //[Display(Name = "Edit")]
+        //public ActionResult Edit(invWrapper model)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        UpdateInvoice(model);
+        //        return RedirectToAction("Index");
+        //    }
+
+        //    return View(model);
+        //}
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Display(Name = "Edit")]
-        public ActionResult Edit(invWrapper model)
+        public JsonResult UpdateInvoice(invWrapper model)
         {
             if (ModelState.IsValid)
             {
-                UpdateInvoice(model);
-                return RedirectToAction("Index");
+                UpdateInvoiceMethod(model);
+                return Json(new { success = true, message = "Invoice Updated Successfully!" });
             }
-
-            return View(model);
+            return Json(new { success = false, message = "Invoice Update Failed. Try Again!" });
         }
 
         public ActionResult Delete(int id)
@@ -512,7 +524,7 @@ namespace EBS.Controllers
         }
 
         // Update Invoice Logic
-        private void UpdateInvoice(invWrapper model)
+        private void UpdateInvoiceMethod(invWrapper model)
         {
             using (SqlConnection connection = new SqlConnection(SecConn))
             {
@@ -568,7 +580,7 @@ namespace EBS.Controllers
                 }
 
 
-                string query = "Update InvoiceTbl SET cID = @cID, Rate = @Rate,"
+                string query = "UPDATE InvoiceTbl SET cID = @cID, Rate = @Rate,"
                              + "prev_Reading = @prev_Reading, cur_Reading = @cur_Reading,"
                              + "reading_Value = @reading_Value, reading_Date = @reading_Date, total_Fee = @total_Fee WHERE invoiceID = @invoiceID";
 

@@ -1,10 +1,10 @@
-﻿
+﻿﻿
 @model EBS.viewModels.invWrapper
 
 @{
     ViewBag.Title = "Invoices | SEC";
     Layout = "~/Views/Shared/_Layout2.cshtml";
-    
+
 }
 
 <!DOCTYPE html>
@@ -40,22 +40,22 @@
             width: 10%;
             padding-top: 20px;
         }
+
         .table thead th {
             white-space: nowrap; /* Prevent text wrapping */
         }
 
         .container {
-            margin-left:100px;
+            margin-left: 100px;
             padding-top: 30px;
             padding-left: 40px;
             padding-right: 20px;
             padding-bottom: 20px;
         }
 
-        .modal-body{
-            width:100%;
+        .modal-body {
+            width: 100%;
         }
-
     </style>
 
     <title>Invoices | SEC</title>
@@ -201,7 +201,7 @@
                 <div class="modal-body">
                     <div class="card rounded shadow">
                         <div class="card-body">
-                            @using (Html.BeginForm("Edit", "Invoice", FormMethod.Post))
+                            @using (Html.BeginForm("UpdateInvoice", "Invoice", FormMethod.Post, new { id = "updateForm" }))
                             {
                                 @Html.AntiForgeryToken()
                                 @Html.HiddenFor(model => model.invoiceID)
@@ -209,7 +209,6 @@
                                 <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">
 
                                     <div class="card-body p-4 p-md-5">
-                                        @*<h2 class="mb-4 pb-2 pb-md-0 mb-md-5"><strong>Create Invoice</strong></h2>*@
                                         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
                                         <div class="row">
@@ -272,7 +271,7 @@
 
                                         <div class="row">
                                             <div class="col-md-6 mb-4 pb-2">
-                                                <button type="submit" value="Create" class="btn btn-primary btn-lg btn-block">Update</button>
+                                                <button type="submit" class="btn btn-primary btn-lg btn-block">Update</button>
                                             </div>
                                         </div>
 
@@ -281,6 +280,7 @@
                                     </div>
                                 </div>
 
+                                <!--Validation Script-->
                                 <script>
 
                                     // Number validation function
@@ -331,6 +331,7 @@
                                     });
                                 </script>
 
+                                <!--Date Validation Script-->
                                 <script>
                                     $(document).ready(function () {
                                         $("#rDateEdit").blur(function () {
@@ -412,11 +413,12 @@
     </div>
 
 
-
+    <!--DataTable Script-->
     <script>
         new DataTable('#myTable');
     </script>
 
+    <!--Invoice Data Fetching Script-->
     <script>
 
                         console.log('I am being reached');
@@ -445,6 +447,7 @@
                 });
     </script>
 
+    <!--Getting Invoice Related Data Script-->
     <script>
 
                         console.log('I am being reached');
@@ -470,6 +473,7 @@
                 });
     </script>
 
+    <!--Validation For Creating Invoices-->
     <script>
         $(document).ready(function () {
             $("#rDate").blur(function () {
@@ -487,6 +491,7 @@
         });
     </script>
 
+    <!--Fields Data Checker Script-->
     <script>
 
         // Number validation function
@@ -535,6 +540,34 @@
             });
         });
     </script>
+
+    <!--Update Invoice Script-->
+    <script>
+    $(document).ready(function () {
+        $("#updateForm").submit(function (e) {
+            e.preventDefault(); // Prevent the default form submission
+
+            var formData = $(this).serialize(); // Serialize form data
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("UpdateInvoice", "Invoice")", // Replace with your controller and action names
+                data: formData,
+                success: function (response) {
+                    if (response.success) {
+                        alert(response.message);
+                    } else {
+                        alert("Failed to update invoice!.");
+                    }
+                },
+                error: function () {
+                    alert("An error occurred while updating the invoice.");
+                }
+            });
+        });
+    });
+    </script>
+
 
 </body>
 </html>
