@@ -702,6 +702,7 @@
             success: function (response) {
                 if (response.success) {
                     alert(response.message);
+                //    $('#deleteInvoiceModal').modal('hide');
                 } else {
                     alert("Failed to delete invoice!.");
                 }
@@ -721,27 +722,6 @@
         });
     });
     </script>
-
-
-    @*<script>
-
-                            console.log('I am being reached');
-
-            $(document).ready(function () {
-                $("a[data-toggle='modal']").click(function () {
-
-                    $.ajax({
-                                url: '@Url.Action("Delete", "Invoice")',
-                                type: 'POST',
-                                    data: { id: window.invID },
-                                    success: function (data) {
-                                },
-                                error: function () {
-                                    alert("Error deleting invoice.");
-                                }
-                            });
-                        });
-        </script>*@
 
 </body>
 </html>
