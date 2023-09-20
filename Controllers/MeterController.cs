@@ -1,4 +1,5 @@
 ﻿using EBS.viewModels;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -36,9 +37,9 @@ namespace EBS.Controllers
             if (ModelState.IsValid)
             {
                 InsertMeter(model);
-                return Json(new { success = true, message = "Meter Added Successfully!" });
+                return RedirectToAction("Index");
             }
-            return Json(new { success = false, message = "Meter Addition Failed. Please Try Again!" });
+            return View(model);
         }
 
        // POST: Get Meter Data
@@ -85,6 +86,14 @@ namespace EBS.Controllers
                 return Json(new { success = true, message = "Meter Updated Successfully!" });
             }
             return Json(new { success = false, message = "Meter Update Failed!" });
+        }
+
+        // POST: Delete
+        [HttpPost]
+        public JsonResult Delete(int id)
+        {
+            DeleteMeter(id);
+            return Json(new { success = true, message = "Meter Deleted Successfully!" });
         }
 
         // GET: /Meter/BulkInsert
