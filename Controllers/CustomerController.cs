@@ -30,8 +30,9 @@ namespace EBS.Controllers
         // GET: Customer
         public ActionResult Index()
         {
-            List<customerVM> customers = GetAllCustomers();
-            return View(customers);
+            customerWrapper wrapper = new customerWrapper();
+            wrapper.customersList = GetAllCustomers();
+            return View(wrapper);
         }
 
         //GET: Register Customer
@@ -39,7 +40,6 @@ namespace EBS.Controllers
         [HttpGet]
         public ActionResult Create()
         {
-            // Retrieve data from the database using ADO.NET
 
             List<int> meter = new List<int>();
             string query = "SELECT MeterID FROM Meters WHERE Status = 'Inactive'";
@@ -57,7 +57,7 @@ namespace EBS.Controllers
                 }
             }
 
-            customerVM model = new customerVM
+            customerWrapper model = new customerWrapper
             {
                 SelectedMeterID = meter
             };
@@ -68,7 +68,7 @@ namespace EBS.Controllers
         //SET: Register Customer
         [ValidateAntiForgeryToken]
         [HttpPost]
-        public ActionResult Create(customerVM model)
+        public ActionResult Create(customerWrapper model)
         {
             if (ModelState.IsValid)
             {
@@ -82,14 +82,14 @@ namespace EBS.Controllers
         [HttpGet]
         public ActionResult Edit(int id)
         {
-            customerVM customer = GetCustomerById(id);
+            customerWrapper customer = GetCustomerById(id);
             return View(customer);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ActionName("Edit")]
-        public ActionResult Edit(customerVM model)
+        public ActionResult Edit(customerWrapper model)
         {
             if (ModelState.IsValid)
             {
@@ -101,7 +101,7 @@ namespace EBS.Controllers
 
         public ActionResult Delete(int id)
         {
-            customerVM customer = GetCustomerById(id);
+            customerWrapper customer = GetCustomerById(id);
             return View(customer);
         }
 
@@ -325,7 +325,7 @@ namespace EBS.Controllers
 
 
         // Inserting Customers To the Database
-        private void InsertCustomer(customerVM model)
+        private void InsertCustomer(customerWrapper model)
         {   
             using (SqlConnection connection = new SqlConnection(SecConn))
             {
@@ -368,7 +368,7 @@ namespace EBS.Controllers
 
 
         // This method retrieves the data of a customer based on their ID and then it can be used to update customer data or even delete that customer
-        private customerVM GetCustomerById(int cID)
+        private customerWrapper GetCustomerById(int cID)
         {
             using (SqlConnection connection = new SqlConnection(SecConn))
             {
@@ -383,7 +383,7 @@ namespace EBS.Controllers
                     {
                         if (reader.Read())
                         {
-                            return new customerVM
+                            return new customerWrapper
                             {
                                 cID = Convert.ToInt32(reader["cID"]),
                                 cFirstName = reader["cFirstName"].ToString(),
@@ -407,7 +407,7 @@ namespace EBS.Controllers
 
 
         // Update Customer Information Logic
-        private void UpdateCustomer(customerVM model)
+        private void UpdateCustomer(customerWrapper model)
         {
             using (SqlConnection connection = new SqlConnection(SecConn))
             {
@@ -439,33 +439,7 @@ namespace EBS.Controllers
         }
 
         // Customer Information Deletion Logic for the Delete ActionResult
-        //private void DeleteCustomer(int id)
-        //{
-        //    using (SqlConnection connection = new SqlConnection(SecConn))
-        //    {
-        //        connection.Open();
-
-        //        customerVM model = new customerVM();
-
-        //        string query = "DELETE FROM CustomerTbl WHERE cID = @cID";
-        //        using (SqlCommand command = new SqlCommand(query, connection))
-        //        {
-        //            command.Parameters.AddWithValue("@cID", id);
-
-        //            command.ExecuteNonQuery();
-
-        //            // Setting the meter status to Inactive if a customer is deleted so that the meter can be used again
-        //            string meterStatusUpdate = "Update Meters SET Status = 'Active' WHERE MeterID = @meterID";
-        //            using (SqlCommand commandStatus = new SqlCommand(meterStatusUpdate, connection))
-        //            {
-        //                commandStatus.Parameters.AddWithValue("@MeterID", model.MeterID);
-        //                commandStatus.ExecuteNonQuery();
-        //            }
-
-        //        }
-        //    }
-        //}
-
+      
         private void DeleteCustomer(int id)
         {
             using (SqlConnection connection = new SqlConnection(SecConn))

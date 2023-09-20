@@ -1,5 +1,5 @@
 ﻿
-@model List<EBS.viewModels.customerVM>
+@model EBS.viewModels.customerWrapper
 
 @{
 
@@ -59,34 +59,161 @@
 </head>
 <body>
 
+    <!--Breadcrump Code-->
     <ol class="breadcrumb" style="margin-left:130px;">
         <li class="breadcrumb-item">SEC</li>
         <li class="breadcrumb-item"><a href="#">Customers</a></li>
     </ol>
 
+    <!--Generate List Button-->
     <div class="mt-4 pt-2" style="padding-left: 40px; margin-left:100px">
         <form action="@Url.Action("GenerateCustomerList", "Customer")" method="get">
             <input class="btn btn-secondary btn-lg btn-block" type="submit" value="Download Customers" />
         </form>
     </div>
 
-    <div id="export" class="mt-4 pt-2" style="padding-left: 40px; margin-left: 100px">
-        <form action="@Url.Action("Create", "Customer")" method="get">
-            <input class="btn btn-primary btn-lg btn-block" type="submit" value="Register" />
-        </form>
+    <!--Modal Activation Button-->
+    <div class="mt-4 pt-2" style="padding-left: 40px; margin-left: 100px;">
+
+        <input data-toggle="modal" data-target="#createCustomerModal" class="btn btn-primary btn-lg btn-block" type="submit" value="Register" />
+
+    </div>
+
+    <!--Create Invoice Modal-->
+    <div class="modal fade" id="createCustomerModal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="createInvoiceModalLabel" aria-hidden="true" style="color:black">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="createInvoiceModalLabel"> <strong>Register Customer</strong></h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="card rounded shadow">
+                        <div class="card-body">
+                            @using (Html.BeginForm("Create", "Customer", FormMethod.Post))
+                            {
+                                @Html.AntiForgeryToken()
+
+                                <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">
+
+                                    <div class="card-body p-4 p-md-5">
+                                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                                        <div class="row">
+                                            <div class="col-md-4 mb-4">
+
+                                                <div class="form-outline form-group">
+                                                    @Html.LabelFor(m => m.cFirstName)
+                                                    @Html.EditorFor(model => model.cFirstName, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "firstName" } })
+                                                    @Html.ValidationMessageFor(model => model.cFirstName, "", new { @class = "text-danger" })
+                                                </div>
+
+                                            </div>
+                                            <div class="col-md-4 mb-4">
+
+                                                <div class="form-outline form-group">
+                                                    @Html.LabelFor(model => model.cMidName)
+                                                    @Html.EditorFor(model => model.cMidName, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "midName" } })
+                                                    @Html.ValidationMessageFor(model => model.cMidName, "", new { @class = "text-danger" })
+                                                </div>
+
+                                            </div>
+
+                                            <div class="col-md-4 mb-4">
+
+                                                <div class="form-outline form-group">
+                                                    @Html.LabelFor(model => model.cLastName)
+                                                    @Html.EditorFor(model => model.cLastName, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "lastName" } })
+                                                    @Html.ValidationMessageFor(model => model.cLastName, "", new { @class = "text-danger" })
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                        <div class="row">
+
+                                            <div class="col-md-6 mb-4 d-flex align-items-center">
+
+
+                                                <div class="form-outline form-group">
+                                                    @Html.LabelFor(model => model.cAddress)
+                                                    @Html.EditorFor(model => model.cAddress, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "address" } })
+                                                    @Html.ValidationMessageFor(model => model.cAddress, "", new { @class = "text-danger" })
+                                                </div>
+
+                                            </div>
+
+                                            <div class="col-md-6 mb-4 d-flex align-items-center">
+
+                                                <div class="form-outline form-group">
+                                                    @Html.LabelFor(model => model.Branch)
+                                                    @Html.EditorFor(model => model.Branch, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "Branch" } })
+                                                    @Html.ValidationMessageFor(model => model.Branch, "", new { @class = "text-danger" })
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-6 mb-4 pb-2">
+
+                                                <div class="form-outline form-group">
+                                                    @Html.LabelFor(model => model.cNumber)
+                                                    @Html.EditorFor(model => model.cNumber, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "number" } })
+                                                    @Html.ValidationMessageFor(model => model.cNumber, "", new { @class = "text-danger" })
+                                                </div>
+
+                                            </div>
+                                            <div class="col-md-6 mb-4 pb-2">
+
+                                                <div class="form-outline form-group">
+                                                    @Html.LabelFor(model => model.cNumberOp)
+                                                    @Html.EditorFor(model => model.cNumberOp, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "number2" } })
+                                                    @Html.ValidationMessageFor(model => model.cNumberOp, "", new { @class = "text-danger" })
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-6 mb-4 pb-2">
+
+                                                <div class="form-outline form-group">
+                                                    @Html.LabelFor(model => model.MeterID)
+                                                    @Html.DropDownListFor(model => model.MeterID, new SelectList(Model.SelectedMeterID), "Select a Meter", new { @class = "form-control" })
+                                                    @Html.ValidationMessageFor(model => model.MeterID, "", new { @class = "text-danger" })
+                                                </div>
+                                                @Html.HiddenFor(model => model.MeterID)
+
+                                            </div>
+
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-6 mb-4 pb-2">
+                                                <button type="submit" value="Create" class="btn btn-success btn-lg btn-block">Register</button>
+                                            </div>
+                                            <div class="col-md-6 mb-4 pb-2">
+                                                @Html.ActionLink("Back", "Index", "Customer", null, new { @class = "btn btn-secondary btn-lg btn-block" })
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
 
-
-    @*<div class="mt-4 pt-2" style="padding-left: 40px; margin-left: 100px;">
-
-            <input data-toggle="modal" data-target="#cusCreateModal" class="btn btn-primary btn-lg btn-block" type="submit" value="Create Invoice" />
-            @Html.Partial("_CreateCustomerPartial", new EBS.viewModels.customerVM())
-            @Html.Partial("_UpdateCustomerPartial", new EBS.viewModels.customerVM())
-
-        </div>
-        <br />*@
-
+    <!--Index: DataTable-->
     <div class="container">
         <table id="myTable" class="table table-striped table-bordered" style="width:100%">
             <thead>
@@ -106,7 +233,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model)
+                @foreach (var item in Model.customersList)
                 {
                     <tr>
                         <td>@Html.DisplayFor(modelItem => item.cID)</td>
@@ -144,49 +271,70 @@
             </tbody>
         </table>
 
-        @*<script>
-                $(document).ready(function () {
-                    // Click event for the edit icon
-                    $(".edit-customer").click(function (e) {
-                        e.preventDefault(); // Prevent the default link behavior
-                        console.log('Icon pressed')
-                        var customerId = $(this).data("id"); // Get the customer ID from data-id attribute
-
-                        $.ajax({
-                            url: "/Customer/Edit",
-                            data: { id: customerId },
-                            method: "GET",
-                            success: function (data) {
-
-                                $("#firstName").val(data.cFirstName);
-                                $("#midName").val(data.cMidName);
-                                $("#lastName").val(data.cLastName);
-                                $("#address").val(data.cAddress);
-                                $("#Branch").val(data.Branch);
-                                $("#number").val(data.cNumber);
-                                $("#number2").val(data.cNumberOp);
-
-                                // Show the modal
-                                $("#cusUpdateModal").modal("show");
-                            },
-                            error: function () {
-                                // Handle errors
-                                @{
-                                    <h2> An Error Occured. Please Try Again.</h2>
-                                }
-                            }
-                        });
-                    });
-                });
-
-            </script>*@
-
-
         <script>
             new DataTable('#myTable');
         </script>
 
     </div>
+
+    <!--Create And Update Validation Script-->
+    <script>
+        // Text validation function
+        function validateText(input) {
+            if (!isNaN(Number(input.value))) {
+                alert('Please enter text');
+                input.value = '';
+            }
+        }
+
+        // Number validation function
+        function validateNumber(input) {
+            if (isNaN(Number(input.value))) {
+                alert('Please enter a number');
+                input.value = '';
+            }
+        }
+
+        // Get elements
+        const firstNameInput = document.querySelector('#firstName');
+        const midNameInput = document.querySelector('#midName');
+        const lastNameInput = document.querySelector('#lastName');
+        const addressInput = document.querySelector('#address');
+        const Branch = document.querySelector('#Branch');
+        const phone1Input = document.querySelector('#number');
+        const phone2Input = document.querySelector('#number2');
+
+        // Attach listeners
+        firstNameInput.addEventListener('input', () => {
+            validateText(firstNameInput);
+        });
+
+        midNameInput.addEventListener('input', () => {
+            validateText(midNameInput);
+        });
+
+        lastNameInput.addEventListener('input', () => {
+            validateText(lastNameInput);
+        });
+
+        addressInput.addEventListener('input', () => {
+            validateText(addressInput);
+        });
+
+        Branch.addEventListener('input', () => {
+            validateText(Branch);
+        });
+
+        phone1Input.addEventListener('input', () => {
+            validateNumber(phone1Input);
+        });
+
+        phone2Input.addEventListener('input', () => {
+            validateNumber(phone2Input);
+        });
+
+
+    </script>
 
 </body>
 </html>
