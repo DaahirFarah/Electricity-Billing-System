@@ -102,20 +102,12 @@ namespace EBS.Controllers
             return Json(new { success = false, message = "Payment Update Failed. Please Try Again!" });
         }
 
-        // GET: Delete
-        public ActionResult Delete(int id)
-        {
-            payVM payment = GetPaymentByID(id);
-            return View(payment);
-        }
-
-        //POST: Delete Invoice
+        // POST: Delete Payment
         [HttpPost]
-        [ActionName("Delete")]
-        public ActionResult DeleteConfirmed(int id)
+        public JsonResult Delete(int id)
         {
             DeletePayment(id);
-            return RedirectToAction("Index");
+            return Json(new { success = true, message = "Payment Deleted Successfully!" });
         }
 
 

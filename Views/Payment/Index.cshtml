@@ -180,7 +180,7 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3 class="modal-title" id="createInvoiceModalLabel"> <strong>Record Payment</strong></h3>
+                    <h3 class="modal-title" id="createInvoiceModalLabel"> <strong>Update Payment</strong></h3>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -278,6 +278,101 @@
         </div>
     </div>
 
+    <!--Delete Payment Modal-->
+    <div class="modal fade" id="deletePaymenyModal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="createInvoiceModalLabel" aria-hidden="true" style="color:black">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="createInvoiceModalLabel"> <strong>Delete Payment</strong></h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="card rounded shadow">
+                        <div class="card-body">
+                            @using (Html.BeginForm("Delete", "Payment", FormMethod.Post))
+                            {
+                                @Html.AntiForgeryToken()
+                                @Html.HiddenFor(model => model.payID, new { id = "payIDDelete" })
+
+                                <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">
+
+                                    <div class="card-body p-4 p-md-5">
+                                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                                        <div class="row">
+                                            <div class="col-md-6 mb-4">
+
+                                                <div class="form-outline form-group">
+                                                    @Html.LabelFor(model => model.invoiceID)
+                                                    @Html.EditorFor(model => model.invoiceID, new { htmlAttributes = new { @class = "form-control form-control-lg", id = "invoiceIDDelete", @readonly = "readonly" } })
+                                                    @Html.ValidationMessageFor(model => model.invoiceID, "", new { @class = "text-danger" })
+                                                </div>
+
+                                            </div>
+                                            <div class="col-md-6 mb-4">
+
+                                                <div class="form-outline form-group">
+                                                    @Html.LabelFor(m => m.cID)
+                                                    @Html.EditorFor(model => model.cID, new { htmlAttributes = new { @class = "form-control form-control-lg", id = "cIDDelete", @readonly = "readonly" } })
+                                                    @Html.ValidationMessageFor(model => model.cID, "", new { @class = "text-danger" })
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-6 mb-4">
+
+                                                <div class="form-outline form-group">
+                                                    @Html.LabelFor(m => m.paidAmount)
+                                                    @Html.EditorFor(model => model.paidAmount, new { htmlAttributes = new { @class = "form-control form-control-lg", id = "paidAmountDelete", @readonly = "readonly" } })
+                                                    @Html.ValidationMessageFor(model => model.paidAmount, "", new { @class = "text-danger" })
+                                                </div>
+
+                                            </div>
+                                            <div class="col-md-6 mb-4">
+
+                                                <div class="form-outline form-group">
+                                                    @Html.LabelFor(model => model.totalFee)
+                                                    @Html.EditorFor(model => model.totalFee, new { htmlAttributes = new { @class = "form-control form-control-lg", id = "totalFeeDelete", @readonly = "readonly" } })
+                                                    @Html.ValidationMessageFor(model => model.totalFee, "", new { @class = "text-danger" })
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-6 mb-4">
+
+                                                <div class="form-outline form-group">
+                                                    @Html.LabelFor(m => m.payMethod)
+                                                    @Html.EditorFor(model => model.payMethod, new { htmlAttributes = new { @class = "form-control form-control-lg", id = "payMethodDelete", @readonly = "readonly" } })
+                                                    @Html.ValidationMessageFor(model => model.payMethod, "", new { @class = "text-danger" })
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-6 mb-4 pb-2">
+                                                <button type="submit" value="Delete" class="btn btn-danger btn-lg btn-block">Delete</button>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!--Index: DataTable-->
     <div class="container">
         <table id="myTable" class="table table-striped table-bordered" style="width:100%">
@@ -312,7 +407,7 @@
                                 <i class="fa-solid fa-square-pen fa-1x" style="color: #1ABC9C;"></i>
                             </a>
 
-                            <a href="#" data-toggle="modal" data-target="#deletePaymentModal" id="@item.payID">
+                            <a href="#" data-toggle="modal" data-target="#deletePaymenyModal" id="@item.payID">
                                 <i class="fas fa-trash fa-1x delete-icon item" style="color: #FF5733"></i>
                             </a>
 
@@ -453,7 +548,7 @@
 
             $.ajax({
                 type: "POST",
-                url: "@Url.Action("UpdatePayment", "Payment")", 
+                url: "@Url.Action("UpdatePayment", "Payment")",
                 data: formData,
                 success: function (response) {
                     if (response.success) {
@@ -467,6 +562,74 @@
                     alert("An error occurred while updating the payment.");
                 }
             });
+        });
+    });
+    </script>
+
+    <!--Fetching Payment Data For Deletion-->
+    <script>
+
+                        console.log('I am being reached');
+
+                            $(document).ready(function () {
+                                $("a[data-toggle='modal']").click(function () {
+                                     window.payID = $(this).attr("id");
+                                $.ajax({
+                            url: '@Url.Action("GetPaymentData", "Payment")',
+                            type: 'POST',
+                            data: { id: payID },
+                            success: function (data) {
+                                // Populate the form fields with the retrieved data
+                                $("#payIDDelete").val(payID);
+                                $("#invoiceIDDelete").val(data.invoiceID);
+                                $("#cIDDelete").val(data.cID);
+                                $("#paidAmountDelete").val(data.paidAmount);
+                                $("#totalFeeDelete").val(data.totalFee);
+                                $("#payMethodDelete").val(data.payMethod);
+                                $("#dateDelete").val(data.payDate);
+
+                            },
+                            error: function () {
+                                alert("Error fetching payment data.");
+                            }
+                        });
+                    });
+                });
+    </script>
+
+    <!--Delete Payment Script -->
+    <script>
+    console.log('I am being reached');
+
+    // Function to handle the delete operation
+    function handleDeleteClick() {
+        // Access the global variable window.invID
+        var payid = window.payID;
+
+        $.ajax({
+            url: '@Url.Action("Delete", "Payment")',
+            type: 'POST',
+            data: { id: payid },
+            success: function (response) {
+                if (response.success) {
+                    alert(response.message);
+                    location.reload();
+                } else {
+                    alert("Failed to delete payment!.");
+                }
+            },
+            error: function () {
+                alert("An error occurred while deleting the payment.");
+            }
+        });
+    }
+
+    $(document).ready(function () {
+        $("button[type='submit']").click(function (e) {
+            e.preventDefault(); // Prevent the default form submission
+
+            // Call the function to handle the delete operation
+            handleDeleteClick();
         });
     });
     </script>
