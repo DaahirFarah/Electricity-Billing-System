@@ -638,7 +638,7 @@
 
             $.ajax({
                 type: "POST",
-                url: "@Url.Action("UpdateInvoice", "Invoice")", // Replace with your controller and action names
+                url: "@Url.Action("UpdateInvoice", "Invoice")", 
                 data: formData,
                 success: function (response) {
                     if (response.success) {

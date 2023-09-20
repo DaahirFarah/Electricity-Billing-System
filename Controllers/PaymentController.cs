@@ -51,8 +51,56 @@ namespace EBS.Controllers
             return View(model);
         }
 
+        // POST: GET Payment Info From Database
+        public JsonResult GetPaymentData(int id)
+        {
+            using (SqlConnection connection = new SqlConnection(SecConn))
+            {
 
-        
+                connection.Open();
+                string query = "SELECT * FROM PaymentTbl WHERE payID = @payID";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@payID", id);
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            // Populate the invoice object
+                            payWrapper pay = new payWrapper
+                            {
+                                payID = Convert.ToInt32(reader["payID"]),
+                                cID = Convert.ToInt32(reader["cID"]),
+                                invoiceID = Convert.ToInt32(reader["invoiceID"]),
+                                paidAmount = Convert.ToDecimal(reader["paidAmount"]),
+                                totalFee = Convert.ToDecimal(reader["totalFee"]),
+                                payMethod = Convert.ToString(reader["payMethod"]),
+                                payDate = Convert.ToDateTime(reader["payDate"])
+                            };
+
+                            // Return the Invoice Data as JSON
+                            return Json(pay, JsonRequestBehavior.AllowGet);
+                        }
+                    }
+                }
+            }
+
+            // If no data found, return an empty JSON object
+            return Json(new payWrapper(), JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public JsonResult UpdatePayment(payWrapper model)
+        {
+            if (ModelState.IsValid)
+            {
+                UpdatePaymentMethod(model);
+                return Json(new { success = true, message = "Payment Updated Successfully!" });
+            }
+            return Json(new { success = false, message = "Payment Update Failed. Please Try Again!" });
+        }
 
         // GET: Delete
         public ActionResult Delete(int id)
@@ -393,13 +441,13 @@ namespace EBS.Controllers
         }
 
         // Update Payment Logic
-        private void UpdatePayment(payWrapper model)
+        private void UpdatePaymentMethod(payWrapper model)
         {
             using (SqlConnection connection = new SqlConnection(SecConn))
             {
                 connection.Open();
                 string query = "Update PaymentTbl SET cID = @cID, invoiceID = @invoiceID, paidAmount = @paidAmount,"
-                             + "total_Fee = @total_Fee, payMethod = @payMethod, payDate = @payDate WHERE payID = @payID";
+                             + "totalFee = @totalFee, payMethod = @payMethod, payDate = @payDate WHERE payID = @payID";
                              
 
 
@@ -409,7 +457,7 @@ namespace EBS.Controllers
                     command.Parameters.AddWithValue("@cID", model.cID);
                     command.Parameters.AddWithValue("@invoiceID", model.invoiceID);
                     command.Parameters.AddWithValue("@paidAmount", model.paidAmount);
-                    command.Parameters.AddWithValue("@total_Fee", model.totalFee);
+                    command.Parameters.AddWithValue("@totalFee", model.totalFee);
                     command.Parameters.AddWithValue("@payMethod", model.payMethod);
                     command.Parameters.AddWithValue("@payDate", SqlDbType.DateTime2).Value = model.payDate;
 

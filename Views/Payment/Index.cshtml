@@ -175,6 +175,108 @@
         </div>
     </div>
 
+    <!--Update Payment Modal-->
+    <div class="modal fade" id="updatePaymenyModal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="createInvoiceModalLabel" aria-hidden="true" style="color:black">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="createInvoiceModalLabel"> <strong>Record Payment</strong></h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="card rounded shadow">
+                        <div class="card-body">
+                            @using (Html.BeginForm("UpdatePayment", "Payment", FormMethod.Post, new { id = "updatePaymentForm" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                @Html.HiddenFor(model => model.payID, new { id = "payIDUpdate" })
+
+                                <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">
+
+                                    <div class="card-body p-4 p-md-5">
+                                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                                        <div class="row">
+                                            <div class="col-md-6 mb-4">
+
+                                                <div class="form-outline form-group">
+                                                    @Html.LabelFor(model => model.invoiceID)
+                                                    @Html.EditorFor(model => model.invoiceID, new { htmlAttributes = new { @class = "form-control form-control-lg", id = "invoiceIDUpdate" } })
+                                                    @Html.ValidationMessageFor(model => model.invoiceID, "", new { @class = "text-danger" })
+                                                </div>
+
+                                            </div>
+                                            <div class="col-md-6 mb-4">
+
+                                                <div class="form-outline form-group">
+                                                    @Html.LabelFor(m => m.cID)
+                                                    @Html.EditorFor(model => model.cID, new { htmlAttributes = new { @class = "form-control form-control-lg", id = "cIDUpdate" } })
+                                                    @Html.ValidationMessageFor(model => model.cID, "", new { @class = "text-danger" })
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-6 mb-4">
+
+                                                <div class="form-outline form-group">
+                                                    @Html.LabelFor(m => m.paidAmount)
+                                                    @Html.EditorFor(model => model.paidAmount, new { htmlAttributes = new { @class = "form-control form-control-lg", id = "paidAmountUpdate" } })
+                                                    @Html.ValidationMessageFor(model => model.paidAmount, "", new { @class = "text-danger" })
+                                                </div>
+
+                                            </div>
+                                            <div class="col-md-6 mb-4">
+
+                                                <div class="form-outline form-group">
+                                                    @Html.LabelFor(model => model.totalFee)
+                                                    @Html.EditorFor(model => model.totalFee, new { htmlAttributes = new { @class = "form-control form-control-lg", id = "totalFeeUpdate" } })
+                                                    @Html.ValidationMessageFor(model => model.totalFee, "", new { @class = "text-danger" })
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-6 mb-4">
+
+                                                <div class="form-outline form-group">
+                                                    @Html.LabelFor(m => m.payMethod)
+                                                    @Html.EditorFor(model => model.payMethod, new { htmlAttributes = new { @class = "form-control form-control-lg", id = "payMethodUpdate" } })
+                                                    @Html.ValidationMessageFor(model => model.payMethod, "", new { @class = "text-danger" })
+                                                </div>
+
+                                            </div>
+                                            <div class="col-md-6 mb-4">
+
+                                                <div class="form-outline form-group">
+                                                    @Html.LabelFor(m => m.payDate)
+                                                    @Html.EditorFor(model => model.payDate, new { htmlAttributes = new { @class = "form-control form-control-lg", id = "payDateUpdate", type = "date" } })
+                                                    @Html.ValidationMessageFor(model => model.payDate, "", new { @class = "text-danger" })
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-6 mb-4 pb-2">
+                                                <button type="submit" value="Create" class="btn btn-primary btn-lg btn-block">Update</button>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!--Index: DataTable-->
     <div class="container">
@@ -206,7 +308,7 @@
                         <td>@Html.DisplayFor(model => item.payMethod)</td>
                         <td>@(item.payDate.Date.ToString("d"))</td>
                         <td>
-                            <a href="#" data-toggle="modal" data-target="#updatePaymentModal" id="@item.payID">
+                            <a href="#" data-toggle="modal" data-target="#updatePaymenyModal" id="@item.payID">
                                 <i class="fa-solid fa-square-pen fa-1x" style="color: #1ABC9C;"></i>
                             </a>
 
@@ -231,6 +333,56 @@
     <!--DataTable Script-->
     <script>
         new DataTable('#myTable');
+    </script>
+
+    <!--Create Validation Script-->
+    <script>
+
+        // Text validation function
+        function validateText(input) {
+            if (!isNaN(Number(input.value))) {
+                alert('Please enter text');
+                input.value = '';
+            }
+        }
+
+        // Number validation function
+        function validateNumber(input) {
+            if (isNaN(Number(input.value))) {
+                alert('Please enter a number');
+                input.value = '';
+            }
+        }
+
+        // Get elements
+        const cID = document.querySelector('#cID');
+        const invoiceID = document.querySelector('#invoiceID');
+        const paidAmount = document.querySelector('#paidAmount');
+        const totalFee = document.querySelector('#totalFee');
+        const payMethod = document.querySelector('#payMethod');
+
+        // Attach listeners
+        cID.addEventListener('input', () => {
+            validateNumber(cID);
+        });
+
+        invoiceID.addEventListener('input', () => {
+            validateNumber(invoiceID);
+        });
+
+        paidAmount.addEventListener('input', () => {
+            validateNumber(paidAmount);
+        });
+
+        totalFee.addEventListener('input', () => {
+            validateNumber(totalFee);
+        });
+
+        payMethod.addEventListener('input', () => {
+            validateText(payMethod);
+        });
+
+
     </script>
 
     <!--Getting Invoice Related Data Script-->
@@ -258,6 +410,65 @@
                         });
                     });
                 });
+    </script>
+
+    <!--Fetching Payment Data For Updating-->
+    <script>
+
+                        console.log('I am being reached');
+
+                            $(document).ready(function () {
+                                $("a[data-toggle='modal']").click(function () {
+                                    var payID = $(this).attr("id");
+                                $.ajax({
+                            url: '@Url.Action("GetPaymentData", "Payment")',
+                            type: 'POST',
+                            data: { id: payID },
+                            success: function (data) {
+                                // Populate the form fields with the retrieved data
+                                $("#payIDUpdate").val(payID);
+                                $("#invoiceIDUpdate").val(data.invoiceID);
+                                $("#cIDUpdate").val(data.cID);
+                                $("#paidAmountUpdate").val(data.paidAmount);
+                                $("#totalFeeUpdate").val(data.totalFee);
+                                $("#payMethodUpdate").val(data.payMethod);
+                                $("#dateUpdate").val(data.payDate);
+
+                            },
+                            error: function () {
+                                alert("Error fetching payment data.");
+                            }
+                        });
+                    });
+                });
+    </script>
+
+    <!--Update Payment Script-->
+    <script>
+    $(document).ready(function () {
+        $("#updatePaymentForm").submit(function (e) {
+            e.preventDefault(); // Prevent the default form submission
+
+            var formData = $(this).serialize(); // Serialize form data
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("UpdatePayment", "Payment")", 
+                data: formData,
+                success: function (response) {
+                    if (response.success) {
+                        alert(response.message);
+                        location.reload();
+                    } else {
+                        alert("Failed to update payment!.");
+                    }
+                },
+                error: function () {
+                    alert("An error occurred while updating the payment.");
+                }
+            });
+        });
+    });
     </script>
 
 </body>
