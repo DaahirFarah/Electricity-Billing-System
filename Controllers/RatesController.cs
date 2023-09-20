@@ -15,8 +15,9 @@ namespace EBS.Controllers
         // GET: Rates
         public ActionResult Index()
         {
-            List<RateVM> rate = GetAllRates();
-            return View(rate);
+            rateWrapper wrapper = new rateWrapper();
+            wrapper.rateList = GetAllRates();
+            return View(wrapper);
         }
 
         // GET: /Rates/Create
@@ -29,8 +30,7 @@ namespace EBS.Controllers
         // POST: /Rates/Create
         [ValidateAntiForgeryToken]
         [HttpPost]
-        [ActionName("Create")]
-        public ActionResult Create(RateVM model)
+        public ActionResult Create(rateWrapper model)
         {
             if (ModelState.IsValid)
             {
@@ -40,45 +40,60 @@ namespace EBS.Controllers
             return View(model);
         }
 
-        // GET: Rates/Edit
-        [HttpGet]
-        public ActionResult Edit(int id)
+        // GET Rate
+        [HttpPost]
+        public JsonResult GetRate(int id)
         {
-            RateVM rate = GetRate(id);
-            return View(rate);
+            using (SqlConnection connection = new SqlConnection(SecConn))
+            {
+
+                connection.Open();
+                string query = "SELECT * FROM Rates WHERE Id = @Id";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@Id", id);
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            // Populate the invoice object
+                            rateWrapper rate = new rateWrapper
+                            {
+                                Id = Convert.ToInt32(reader["Id"]),
+                                UsageLevelName = reader["UsageLevelName"].ToString(),
+                                UsageLevelNumber = Convert.ToInt32(reader["UsageLevelNumber"]),
+                                Rate = Convert.ToDecimal(reader["Rate"])
+                            };
+
+                            // Return the Invoice Data as JSON
+                            return Json(rate, JsonRequestBehavior.AllowGet);
+                        }
+                    }
+                }
+            }
+
+            // If no data found, return an empty JSON object
+            return Json(new rateWrapper(), JsonRequestBehavior.AllowGet);
         }
 
-        // GET: /Rates/Edit
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(RateVM model)
+        public JsonResult UpdateRate(rateWrapper model)
         {
             if (ModelState.IsValid)
             {
                 UpdateTarrif(model);
-                return RedirectToAction("Index");
+                return Json(new { success = true, message = "Rate Update Successfully!" });
             }
-            return View(model);
+            return Json(new { success = false, message = "Rate Update Failed. Please Try Again!" });
         }
 
-        // GET: /Rates/Delete
-        [HttpGet]
-        public ActionResult Delete(int id)
-        {
-            RateVM rate = GetRate(id);
-            return View(rate);
-        }
-
-        // POST: /Rates/Delete
         [HttpPost]
-        [ActionName("Delete")]
-        public ActionResult DeleteConfirmed(int id)
+        public JsonResult Delete (int id)
         {
             DeleteTarrif(id);
-            return RedirectToAction("Index");
-
+            return Json(new { success = true, message = "Rate Deleted Successfully!" });
         }
-
 
         // Fetching Rate Information From the Database
         private List<RateVM> GetAllRates()
@@ -110,40 +125,9 @@ namespace EBS.Controllers
 
             return rates;
         }
-
-        //Get Rate By ID
-        private RateVM GetRate(int Id)
-        {
-            using (SqlConnection connection = new SqlConnection(SecConn))
-            {
-                connection.Open();
-                string query = "SELECT * FROM Rates WHERE Id = @Id";
-                using (SqlCommand command = new SqlCommand(query, connection))
-                {
-                    command.Parameters.AddWithValue("@Id", Id);
-
-                    using (SqlDataReader reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            return new RateVM
-                            {
-                                Id = Convert.ToInt32(reader["Id"]),
-                                UsageLevelName = reader["UsageLevelName"].ToString(),
-                                UsageLevelNumber = Convert.ToInt32(reader["UsageLevelNumber"]),
-                                Rate = Convert.ToDecimal(reader["Rate"])
-
-                            };
-                        }
-                    }
-                }
-            }
-
-            return null;
-        }
-
+               
         // Insert Tarrif
-        private void InsertTarrif(RateVM model)
+        private void InsertTarrif(rateWrapper model)
         {
             using (SqlConnection connection = new SqlConnection(SecConn))
             {
@@ -163,7 +147,7 @@ namespace EBS.Controllers
         }
 
         // Update Tarrif Info
-        private void UpdateTarrif(RateVM model)
+        private void UpdateTarrif(rateWrapper model)
         {
             using (SqlConnection connection = new SqlConnection(SecConn))
             {
