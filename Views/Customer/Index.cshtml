@@ -342,6 +342,135 @@
         </div>
     </div>
 
+    <!--Delete Customer Modal-->
+    <div class="modal fade" id="deleteCustomerModal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="createInvoiceModalLabel" aria-hidden="true" style="color:black">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="createInvoiceModalLabel"> <strong>Delete Customer</strong></h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="card rounded shadow">
+                        <div class="card-body">
+                            @using (Html.BeginForm("Delete", "Customer", FormMethod.Post, new { id = "DeleteCustomerForm" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                @Html.HiddenFor(model => model.cID, new { id = "cIDDelete" })
+
+                                <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">
+
+                                    <div class="card-body p-4 p-md-5">
+                                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                                        <div class="row">
+                                            <div class="col-md-4 mb-4">
+
+                                                <div class="form-outline form-group">
+                                                    @Html.LabelFor(m => m.cFirstName)
+                                                    @Html.EditorFor(model => model.cFirstName, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "firstNameDelete", @readonly = "readonly" } })
+                                                    @Html.ValidationMessageFor(model => model.cFirstName, "", new { @class = "text-danger" })
+                                                </div>
+
+                                            </div>
+                                            <div class="col-md-4 mb-4">
+
+                                                <div class="form-outline form-group">
+                                                    @Html.LabelFor(model => model.cMidName)
+                                                    @Html.EditorFor(model => model.cMidName, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "midNameDelete", @readonly = "readonly" } })
+                                                    @Html.ValidationMessageFor(model => model.cMidName, "", new { @class = "text-danger" })
+                                                </div>
+
+                                            </div>
+
+                                            <div class="col-md-4 mb-4">
+
+                                                <div class="form-outline form-group">
+                                                    @Html.LabelFor(model => model.cLastName)
+                                                    @Html.EditorFor(model => model.cLastName, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "lastNameDelete", @readonly = "readonly" } })
+                                                    @Html.ValidationMessageFor(model => model.cLastName, "", new { @class = "text-danger" })
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                        <div class="row">
+
+                                            <div class="col-md-6 mb-4 d-flex align-items-center">
+
+
+                                                <div class="form-outline form-group">
+                                                    @Html.LabelFor(model => model.cAddress)
+                                                    @Html.EditorFor(model => model.cAddress, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "addressDelete", @readonly = "readonly" } })
+                                                    @Html.ValidationMessageFor(model => model.cAddress, "", new { @class = "text-danger" })
+                                                </div>
+
+                                            </div>
+
+                                            <div class="col-md-6 mb-4 d-flex align-items-center">
+
+                                                <div class="form-outline form-group">
+                                                    @Html.LabelFor(model => model.Branch)
+                                                    @Html.EditorFor(model => model.Branch, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "BranchDelete", @readonly = "readonly" } })
+                                                    @Html.ValidationMessageFor(model => model.Branch, "", new { @class = "text-danger" })
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-6 mb-4 pb-2">
+
+                                                <div class="form-outline form-group">
+                                                    @Html.LabelFor(model => model.cNumber)
+                                                    @Html.EditorFor(model => model.cNumber, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "numberDelete", @readonly = "readonly" } })
+                                                    @Html.ValidationMessageFor(model => model.cNumber, "", new { @class = "text-danger" })
+                                                </div>
+
+                                            </div>
+                                            <div class="col-md-6 mb-4 pb-2">
+
+                                                <div class="form-outline form-group">
+                                                    @Html.LabelFor(model => model.cNumberOp)
+                                                    @Html.EditorFor(model => model.cNumberOp, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "number2Delete", @readonly = "readonly" } })
+                                                    @Html.ValidationMessageFor(model => model.cNumberOp, "", new { @class = "text-danger" })
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-6 mb-4 pb-2">
+
+                                                <div class="form-outline form-group">
+                                                    @Html.LabelFor(model => model.MeterID)
+                                                    @Html.EditorFor(model => model.MeterID, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "meterIDDelete", @readonly = "readonly" } })
+                                                    @Html.ValidationMessageFor(model => model.MeterID, "", new { @class = "text-danger" })
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-6 mb-4 pb-2">
+                                                <button type="submit" class="btn btn-danger btn-lg btn-block">Delete</button>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!--Index: DataTable-->
     <div class="container">
@@ -381,7 +510,7 @@
                                 <i class="fa-solid fa-square-pen fa-1x" style="color: #1ABC9C;"></i>
                             </a>
 
-                            <a href="#" data-toggle="modal" data-target="#deleteInvoiceModal" id="@item.cID">
+                            <a href="#" data-toggle="modal" data-target="#deleteCustomerModal" id="@item.cID">
                                 <i class="fas fa-trash fa-1x delete-icon item" style="color: #FF5733"></i>
                             </a>
 
@@ -505,11 +634,12 @@
 
             $.ajax({
                 type: "POST",
-                url: "@Url.Action("UpdateCustomer", "Customer")", 
+                url: "@Url.Action("UpdateCustomer", "Customer")",
                 data: formData,
                 success: function (response) {
                     if (response.success) {
                         alert(response.message);
+                        location.reload();
                     } else {
                         alert("Failed to update customer!.");
                     }
@@ -518,6 +648,76 @@
                     alert("An error occurred while updating the customer.");
                 }
             });
+        });
+    });
+    </script>
+
+    <!--Customer Data Fetching Script (Delete)-->
+    <script>
+
+                        console.log('I am being reached');
+
+                            $(document).ready(function () {
+                                $("a[data-toggle='modal']").click(function () {
+                                    window.cID = $(this).attr("id");
+                                $.ajax({
+                            url: '@Url.Action("GetCustomerData", "Customer")',
+                            type: 'POST',
+                            data: { id: cID },
+                            success: function (data) {
+                                // Populate the form fields with the retrieved data
+                                $("#cIDDelete").val(cID);
+                                $("#firstNameDelete").val(data.cFirstName);
+                                $("#midNameDelete").val(data.cMidName);
+                                $("#lastNameDelete").val(data.cLastName);
+                                $("#addressDelete").val(data.cAddress);
+                                $("#BranchDelete").val(data.Branch);
+                                $("#numberDelete").val(data.cNumber);
+                                $("#number2Delete").val(data.cNumberOp);
+                                $("#meterIDDelete").val(data.MeterID);
+
+                            },
+                            error: function () {
+                                alert("Error fetching customer data.");
+                            }
+                        });
+                    });
+                });
+    </script>
+
+    <!--Delete Customer Script-->
+    <script>
+    console.log('I am being reached');
+
+    // Function to handle the delete operation
+    function handleDeleteClick() {
+        // Access the global variable window.invID
+        var cid = window.cID;
+
+        $.ajax({
+            url: '@Url.Action("Delete", "Customer")',
+            type: 'POST',
+            data: { id: cid },
+            success: function (response) {
+                if (response.success) {
+                    alert(response.message);
+                    location.reload();
+                } else {
+                    alert("Failed to delete customer!");
+                }
+            },
+            error: function () {
+                alert("An error occurred while deleting the customer.");
+            }
+        });
+    }
+
+    $(document).ready(function () {
+        $("button[type='submit']").click(function (e) {
+            e.preventDefault(); // Prevent the default form submission
+
+            // Call the function to handle the delete operation
+            handleDeleteClick();
         });
     });
     </script>

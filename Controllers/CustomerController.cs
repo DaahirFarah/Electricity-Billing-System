@@ -121,6 +121,7 @@ namespace EBS.Controllers
             return Json(new customerWrapper(), JsonRequestBehavior.AllowGet);
         }
 
+        // POST:Update Customer
         [HttpPost]
         public JsonResult UpdateCustomer(customerWrapper model)
         {
@@ -132,39 +133,11 @@ namespace EBS.Controllers
             return Json(new { success = false, message = "Customer Update Failed. Try Again!" });
         }
 
-        ////GET: Update Customer
-        //[HttpGet]
-        //public ActionResult Edit(int id)
-        //{
-        //    customerWrapper customer = GetCustomerById(id);
-        //    return View(customer);
-        //}
-
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //[ActionName("Edit")]
-        //public ActionResult Edit(customerWrapper model)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        UpdateCustomer(model);
-        //        return RedirectToAction("Index");
-        //    }
-        //    return View(model);
-        //}
-
-        public ActionResult Delete(int id)
-        {
-            customerWrapper customer = GetCustomerById(id);
-            return View(customer);
-        }
-
         [HttpPost]
-        [ActionName("Delete")]
-        public ActionResult DeleteConfirmed(int id)
+        public JsonResult Delete(int id)
         {
             DeleteCustomer(id);
-            return RedirectToAction("Index");
+            return Json(new { success = true, message = "Customer Deleted Successfuly" });
         }
 
 
