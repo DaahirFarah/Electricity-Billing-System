@@ -25,8 +25,9 @@ namespace EBS.Controllers
         // GET: Payment
         public ActionResult Index()
         {
-            List<payVM> payments = GetAllPayments();
-            return View(payments);
+            payWrapper wrapper = new payWrapper();
+            wrapper.pay = GetAllPayments();
+            return View(wrapper);
         }
 
         //GET: Record Payment
@@ -40,7 +41,7 @@ namespace EBS.Controllers
         [ValidateAntiForgeryToken]
         [HttpPost]
         [Display(Name = "Create")]
-        public ActionResult Create(payVM model)
+        public ActionResult Create(payWrapper model)
         {
             if (ModelState.IsValid)
             {
@@ -51,26 +52,7 @@ namespace EBS.Controllers
         }
 
 
-        //GET: Update Payment
-        [HttpGet]
-        public ActionResult Edit(int id)
-        {
-            payVM payment = GetPaymentByID(id);
-            return View(payment);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Display(Name = "Edit")]
-        public ActionResult Edit(payVM model)
-        {
-            if (ModelState.IsValid)
-            {
-                UpdatePayment(model);
-                return RedirectToAction("Index");
-            }
-            return View(model);
-        }
+        
 
         // GET: Delete
         public ActionResult Delete(int id)
@@ -337,7 +319,7 @@ namespace EBS.Controllers
 
         // Method that holds payment insertion logic
 
-        private void InsertPayment(payVM model)
+        private void InsertPayment(payWrapper model)
         {
             using (SqlConnection connection = new SqlConnection(SecConn))
             {
@@ -411,7 +393,7 @@ namespace EBS.Controllers
         }
 
         // Update Payment Logic
-        private void UpdatePayment(payVM model)
+        private void UpdatePayment(payWrapper model)
         {
             using (SqlConnection connection = new SqlConnection(SecConn))
             {

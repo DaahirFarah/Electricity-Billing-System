@@ -156,6 +156,7 @@
     <Compile Include="viewModels\MeterVM.cs" />
     <Compile Include="viewModels\payVM.cs" />
     <Compile Include="viewModels\invWrapper.cs" />
+    <Compile Include="viewModels\payWrapper.cs" />
     <Compile Include="viewModels\RateVM.cs" />
     <Compile Include="viewModels\UserVm.cs" />
   </ItemGroup>
