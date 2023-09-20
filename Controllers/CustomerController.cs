@@ -78,26 +78,80 @@ namespace EBS.Controllers
             return View(model);
         }
 
-        ////GET: Update Customer
-        [HttpGet]
-        public ActionResult Edit(int id)
+
+        [HttpPost]
+        public JsonResult GetCustomerData(int id)
         {
-            customerWrapper customer = GetCustomerById(id);
-            return View(customer);
+            using (SqlConnection connection = new SqlConnection(SecConn))
+            {
+
+                connection.Open();
+                string query = "SELECT * FROM CustomerTbl WHERE cID = @cID";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@cID", id);
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            // Populate the customer object
+                            customerWrapper wrapper = new customerWrapper
+                            {
+                                cID = Convert.ToInt32(reader["cID"]),
+                                cFirstName = reader["cFirstName"].ToString(),
+                                cMidName = reader["cMidName"].ToString(),
+                                cLastName = reader["cLastName"].ToString(),
+                                cAddress = reader["cAddress"].ToString(),
+                                cNumber = Convert.ToInt32(reader["cNumber"]),
+                                cNumberOp = reader["cNumberOp"].ToString(),
+                                MeterID = Convert.ToInt32(reader["MeterID"]),
+                                Branch = reader["Branch"].ToString(),
+                                Balance = Convert.ToDecimal(reader["Balance"])
+                            };
+
+                            // Return the Invoice Data as JSON
+                            return Json(wrapper, JsonRequestBehavior.AllowGet);
+                        }
+                    }
+                }
+            }
+
+            // If no data found, return an empty JSON object
+            return Json(new customerWrapper(), JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        [ActionName("Edit")]
-        public ActionResult Edit(customerWrapper model)
+        public JsonResult UpdateCustomer(customerWrapper model)
         {
             if (ModelState.IsValid)
             {
-                UpdateCustomer(model);
-                return RedirectToAction("Index");
+                UpdateCustomerMethod(model);
+                return Json(new { success = true, message = "Customer Info Updated Successfully!" });
             }
-            return View(model);
+            return Json(new { success = false, message = "Customer Update Failed. Try Again!" });
         }
+
+        ////GET: Update Customer
+        //[HttpGet]
+        //public ActionResult Edit(int id)
+        //{
+        //    customerWrapper customer = GetCustomerById(id);
+        //    return View(customer);
+        //}
+
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //[ActionName("Edit")]
+        //public ActionResult Edit(customerWrapper model)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        UpdateCustomer(model);
+        //        return RedirectToAction("Index");
+        //    }
+        //    return View(model);
+        //}
 
         public ActionResult Delete(int id)
         {
@@ -407,7 +461,7 @@ namespace EBS.Controllers
 
 
         // Update Customer Information Logic
-        private void UpdateCustomer(customerWrapper model)
+        private void UpdateCustomerMethod(customerWrapper model)
         {
             using (SqlConnection connection = new SqlConnection(SecConn))
             {

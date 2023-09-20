@@ -56,14 +56,6 @@ namespace EBS.Controllers
             return View(model);
         }
 
-
-        //GET: Update Invoice
-        //public ActionResult Edit(int id)
-        //{
-        //    invWrapper invoice = GetInvoiceById(id);
-        //    return View(invoice);
-        //}
-
         [HttpPost]
         public JsonResult GetInvoiceData(int id)
         {
@@ -104,21 +96,6 @@ namespace EBS.Controllers
             return Json(new invWrapper(), JsonRequestBehavior.AllowGet);
         }
 
-        //POST: Update Invoice
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //[Display(Name = "Edit")]
-        //public ActionResult Edit(invWrapper model)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        UpdateInvoice(model);
-        //        return RedirectToAction("Index");
-        //    }
-
-        //    return View(model);
-        //}
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public JsonResult UpdateInvoice(invWrapper model)
@@ -130,20 +107,6 @@ namespace EBS.Controllers
             }
             return Json(new { success = false, message = "Invoice Update Failed. Try Again!" });
         }
-
-        ////public ActionResult Delete(int id)
-        ////{
-        ////    invWrapper invoice = GetInvoiceById(id);
-        ////    return View(invoice);
-        ////}
-
-        //[HttpPost]
-        //[ActionName("Delete")]
-        //public ActionResult DeleteConfirmed(int id)
-        //{
-        //    DeleteInvoice(id);
-        //    return RedirectToAction("Index");
-        //}
 
         [HttpPost]
         public JsonResult Delete(int id)
