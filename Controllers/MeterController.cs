@@ -16,8 +16,9 @@ namespace EBS.Controllers
         // GET: Meter
         public ActionResult Index()
         {
-            List<MeterVM> meter = GetMeters();
-            return View(meter);
+            MeterWrapper wrapper = new MeterWrapper();
+            wrapper.meterList = GetMeters();
+            return View(wrapper);
         }
 
         // GET: /Meter/Create
@@ -30,52 +31,60 @@ namespace EBS.Controllers
         // POST: /Meter/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(MeterVM model)
+        public ActionResult Create(MeterWrapper model)
         {
             if (ModelState.IsValid)
             {
                 InsertMeter(model);
-                return RedirectToAction("Index");
+                return Json(new { success = true, message = "Meter Added Successfully!" });
             }
-            return View(model);
+            return Json(new { success = false, message = "Meter Addition Failed. Please Try Again!" });
         }
 
-        // GET: /Meter/Edit
-        [HttpGet]
-        public ActionResult Edit(int id)
+       // POST: Get Meter Data
+       public JsonResult GetMeterData(int id)
         {
-            MeterVM meter = GetMeterByID(id);
-            return View(meter);
+            using (SqlConnection connection = new SqlConnection(SecConn))
+            {
+
+                connection.Open();
+                string query = "SELECT * FROM Meters WHERE MeterID = @MeterID";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@MeterID", id);
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            // Populate the meter object
+                            MeterWrapper meter = new MeterWrapper
+                            {
+                                MeterID = Convert.ToInt32(reader["MeterID"]),
+                                SerialNumber = Convert.ToInt32(reader["SerialNumber"]),
+                                Type = reader["Type"].ToString(),
+                                Status = reader["Status"].ToString()
+                            };
+
+                            // Return the meter Data as JSON
+                            return Json(meter, JsonRequestBehavior.AllowGet);
+                        }
+                    }
+                }
+            }
+
+            // If no data found, return an empty JSON object
+            return Json(new MeterWrapper(), JsonRequestBehavior.AllowGet);
         }
 
-        // POST: /Meter/Edit
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(MeterVM model)
+        public JsonResult UpdateMeter(MeterWrapper model)
         {
             if (ModelState.IsValid)
             {
-                UpdateMeter(model);
-                return RedirectToAction("Index");
+                UpdateMeterMethod(model);
+                return Json(new { success = true, message = "Meter Updated Successfully!" });
             }
-            return View(model);
-        }
-
-        // GET: /Meter/Delete
-        [HttpGet]
-        public ActionResult Delete(int id)
-        {
-            MeterVM meter = GetMeterByID(id);
-            return View(meter);
-        }
-
-        // POST: /Meter/Delete
-        [HttpPost]
-        [ActionName("Delete")]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            DeleteMeter(id);
-            return RedirectToAction("Index");
+            return Json(new { success = false, message = "Meter Update Failed!" });
         }
 
         // GET: /Meter/BulkInsert
@@ -85,7 +94,7 @@ namespace EBS.Controllers
         }
 
         // POST: /Meter/BulkInsert
-        public ActionResult BulkInsert(List<MeterVM> model)
+        public ActionResult BulkInsert(List<MeterWrapper> model)
         {
             if (ModelState.IsValid)
             {
@@ -128,7 +137,7 @@ namespace EBS.Controllers
         }
 
         //Get Meter By ID
-        private MeterVM GetMeterByID(int Id)
+        private MeterWrapper GetMeterByID(int Id)
         {
             using (SqlConnection connection = new SqlConnection(SecConn))
             {
@@ -142,7 +151,7 @@ namespace EBS.Controllers
                     {
                         while (reader.Read())
                         {
-                            return new MeterVM
+                            return new MeterWrapper
                             {
                                 MeterID = Convert.ToInt32(reader["MeterID"]),
                                 SerialNumber = Convert.ToInt32(reader["SerialNumber"]),
@@ -158,7 +167,7 @@ namespace EBS.Controllers
         }
 
         // Insert Meter Data
-        private void InsertMeter(MeterVM model)
+        private void InsertMeter(MeterWrapper model)
         {
             using (SqlConnection connection = new SqlConnection(SecConn))
             {
@@ -177,7 +186,7 @@ namespace EBS.Controllers
         }
 
         // Update Meter Info
-        private void UpdateMeter(MeterVM model)
+        private void UpdateMeterMethod(MeterWrapper model)
         {
             using (SqlConnection connection = new SqlConnection(SecConn))
             {
@@ -197,7 +206,7 @@ namespace EBS.Controllers
         }
 
         // Delete Meter
-        private void DeleteMeter(int MeterId)
+        private void DeleteMeter(int id)
         {
             using (SqlConnection connection = new SqlConnection(SecConn))
             {
@@ -206,16 +215,16 @@ namespace EBS.Controllers
 
                 using (SqlCommand command = new SqlCommand(DeleteQuery, connection))
                 {
-                    command.Parameters.AddWithValue("MeterID", MeterId);
+                    command.Parameters.AddWithValue("MeterID", id);
                     command.ExecuteNonQuery();
                 }
             }
         }
 
         // Meter Bulk Insertion will be Handled by the following function
-        private void BulkInserting(List<MeterVM> model)
+        private void BulkInserting(List<MeterWrapper> model)
         {
-            List<MeterVM> met = new List<MeterVM>();
+            List<MeterWrapper> met = new List<MeterWrapper>();
 
             using(SqlConnection connection = new SqlConnection(SecConn))
             {

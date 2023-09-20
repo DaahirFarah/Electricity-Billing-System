@@ -153,6 +153,7 @@
     <Compile Include="viewModels\DashboardVM.cs" />
     <Compile Include="viewModels\invoicevmList.cs" />
     <Compile Include="viewModels\invoiceVM.cs" />
+    <Compile Include="viewModels\MeterWrapper.cs" />
     <Compile Include="viewModels\MeterVM.cs" />
     <Compile Include="viewModels\payVM.cs" />
     <Compile Include="viewModels\invWrapper.cs" />
