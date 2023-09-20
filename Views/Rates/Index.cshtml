@@ -1,5 +1,5 @@
 ﻿
-@model List<EBS.viewModels.RateVM>
+@model EBS.viewModels.rateWrapper
 
 @{
     Layout = "~/Views/Shared/_Layout2.cshtml";
@@ -68,27 +68,268 @@
         <li class="breadcrumb-item"><a href="#">Rates</a></li>
     </ol>
 
-    @*<div class="mt-4 pt-2" style="padding-left: 40px; margin-left: 100px;">
-            <form action="@Url.Action("GenerateInvoice", "Invoice")" method="get">
-                <input class="btn btn-secondary btn-lg btn-block" type="submit" value="Download Invoices" />
-            </form>
-        </div>*@
+    <!--Modal Activation Button-->
+    <div class="mt-4 pt-2" style="padding-left: 40px; margin-left: 100px;">
 
-    <div class="mt-4 pt-2" style="padding-left: 75px; margin-left: 100px;">
-        <form action="@Url.Action("Create", "Rates")" method="get">
-            <input class="btn btn-primary btn-lg btn-block" type="submit" value="Create Tarrif" />
-        </form>
+        <input data-toggle="modal" data-target="#createRateModal" class="btn btn-primary btn-lg btn-block" type="submit" value="Create Invoice" />
+
     </div>
 
-    @*<div class="mt-4 pt-2" style="padding-left: 40px; margin-left: 100px;">
+    <!--Create Meter Modal-->
+    <div class="modal fade" id="createRateModal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="createInvoiceModalLabel" aria-hidden="true" style="color:black">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="createInvoiceModalLabel"> <strong>Create Rate</strong></h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="card rounded shadow">
+                        <div class="card-body">
+                            @using (Html.BeginForm("Create", "Rates", FormMethod.Post))
+                            {
+                                @Html.AntiForgeryToken()
 
-            <input data-toggle="modal" data-target="#createInvoiceModal" class="btn btn-primary btn-lg btn-block" type="submit" value="Create Invoice" />
+                                <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">
 
-        </div>*@
+                                    <div class="card-body p-4 p-md-5">
+                                        @*<h2 class="mb-4 pb-2 pb-md-0 mb-md-5"><strong>Create Invoice</strong></h2>*@
+                                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                                        <div class="row">
+                                            <div class="col-md-4 mb-4">
+
+                                                <div class="form-outline form-group">
+                                                    @Html.LabelFor(m => m.UsageLevelName)
+                                                    @Html.EditorFor(model => model.UsageLevelName, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "ulName" } })
+                                                    @Html.ValidationMessageFor(model => model.UsageLevelName, "", new { @class = "text-danger" })
+                                                </div>
+
+                                            </div>
+                                            <div class="col-md-4 mb-4">
+
+                                                <div class="form-outline form-group">
+                                                    @Html.LabelFor(model => model.UsageLevelNumber)
+                                                    @Html.EditorFor(model => model.UsageLevelNumber, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "ulNumber" } })
+                                                    @Html.ValidationMessageFor(model => model.UsageLevelNumber, "", new { @class = "text-danger" })
+                                                </div>
+
+                                            </div>
+
+                                            <div class="col-md-4 mb-4">
+
+                                                <div class="form-outline form-group">
+                                                    @Html.LabelFor(model => model.Rate)
+                                                    @Html.EditorFor(model => model.Rate, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "rate" } })
+                                                    @Html.ValidationMessageFor(model => model.Rate, "", new { @class = "text-danger" })
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                        <!--Below div element holds some buttons. Leave it alone-->
+                                        <div class="row">
+                                            <div class="col-md-6 mb-4 pb-2">
+                                                <input type="submit" value="Create" class="btn btn-success btn-lg btn-block" />
+
+                                            </div>
 
 
+                                        </div>
+
+                                        <script>
+                                            // Text validation function
+                                            function validateText(input) {
+                                                if (!isNaN(Number(input.value))) {
+                                                    alert('Please enter text');
+                                                    input.value = '';
+                                                }
+                                            }
+
+                                            // Number validation function
+                                            function validateNumber(input) {
+                                                if (isNaN(Number(input.value))) {
+                                                    alert('Please enter a number');
+                                                    input.value = '';
+                                                }
+                                            }
+
+                                            // Get elements
+                                            const ulName = document.querySelector('#ulName');
+                                            const ulNumber = document.querySelector('#ulNumber');
+                                            const Rate = document.querySelector('#rate');
 
 
+                                            // Attach listeners
+                                            ulName.addEventListener('input', () => {
+                                                validateText(ulName);
+                                            });
+
+                                            ulNumber.addEventListener('input', () => {
+                                                validateNumber(ulNumber);
+                                            });
+
+                                            Rate.addEventListener('input', () => {
+                                                validateNumber(Rate);
+                                            });
+
+                                        </script>
+
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Update Meter Modal-->
+    <div class="modal fade" id="updateRateModal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="createInvoiceModalLabel" aria-hidden="true" style="color:black">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="createInvoiceModalLabel"> <strong>Update Rate</strong></h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="card rounded shadow">
+                        <div class="card-body">
+                            @using (Html.BeginForm("UpdateRate", "Rates", FormMethod.Post, new { id = "updateRateForm" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                @Html.HiddenFor(model => model.Id, new { id = "updateID" })
+
+                                <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">
+
+                                    <div class="card-body p-4 p-md-5">
+                                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                                        <div class="row">
+                                            <div class="col-md-4 mb-4">
+
+                                                <div class="form-outline form-group">
+                                                    @Html.LabelFor(m => m.UsageLevelName)
+                                                    @Html.EditorFor(model => model.UsageLevelName, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "ulNameUpdate" } })
+                                                    @Html.ValidationMessageFor(model => model.UsageLevelName, "", new { @class = "text-danger" })
+                                                </div>
+
+                                            </div>
+                                            <div class="col-md-4 mb-4">
+
+                                                <div class="form-outline form-group">
+                                                    @Html.LabelFor(model => model.UsageLevelNumber)
+                                                    @Html.EditorFor(model => model.UsageLevelNumber, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "ulNumberUpdate" } })
+                                                    @Html.ValidationMessageFor(model => model.UsageLevelNumber, "", new { @class = "text-danger" })
+                                                </div>
+
+                                            </div>
+
+                                            <div class="col-md-4 mb-4">
+
+                                                <div class="form-outline form-group">
+                                                    @Html.LabelFor(model => model.Rate)
+                                                    @Html.EditorFor(model => model.Rate, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "rateUpdate" } })
+                                                    @Html.ValidationMessageFor(model => model.Rate, "", new { @class = "text-danger" })
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                        <!--Below div element holds some buttons. Leave it alone-->
+                                        <div class="row">
+                                            <div class="col-md-6 mb-4 pb-2">
+                                                <input type="submit" value="Update" class="btn btn-success btn-lg btn-block" />
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Delete Meter Modal-->
+    <div class="modal fade" id="deleteRateModal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="createInvoiceModalLabel" aria-hidden="true" style="color:black">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="createInvoiceModalLabel"> <strong>Delete Rate</strong></h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="card rounded shadow">
+                        <div class="card-body">
+                            @using (Html.BeginForm("Delete", "Rates", FormMethod.Post))
+                            {
+                                @Html.AntiForgeryToken()
+                                @Html.HiddenFor(model => model.Id, new { id = "DeleteID" })
+
+                                <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">
+
+                                    <div class="card-body p-4 p-md-5">
+                                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                                        <div class="row">
+                                            <div class="col-md-4 mb-4">
+
+                                                <div class="form-outline form-group">
+                                                    @Html.LabelFor(m => m.UsageLevelName)
+                                                    @Html.EditorFor(model => model.UsageLevelName, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "ulNameDelete", @readonly = "readonly" } })
+                                                    @Html.ValidationMessageFor(model => model.UsageLevelName, "", new { @class = "text-danger" })
+                                                </div>
+
+                                            </div>
+                                            <div class="col-md-4 mb-4">
+
+                                                <div class="form-outline form-group">
+                                                    @Html.LabelFor(model => model.UsageLevelNumber)
+                                                    @Html.EditorFor(model => model.UsageLevelNumber, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "ulNumberUpdate", @readonly = "readonly" } })
+                                                    @Html.ValidationMessageFor(model => model.UsageLevelNumber, "", new { @class = "text-danger" })
+                                                </div>
+
+                                            </div>
+
+                                            <div class="col-md-4 mb-4">
+
+                                                <div class="form-outline form-group">
+                                                    @Html.LabelFor(model => model.Rate)
+                                                    @Html.EditorFor(model => model.Rate, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "rateUpdate", @readonly = "readonly" } })
+                                                    @Html.ValidationMessageFor(model => model.Rate, "", new { @class = "text-danger" })
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                        <!--Below div element holds some buttons. Leave it alone-->
+                                        <div class="row">
+                                            <div class="col-md-6 mb-4 pb-2">
+                                                <button type="submit" class="btn btn-danger btn-lg btn-block">Delete</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!--Index: DataTable-->
     <div class="container">
@@ -104,7 +345,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model)
+                @foreach (var item in Model.rateList)
                 {
                     <tr>
 
@@ -114,18 +355,14 @@
                         <td>@Html.DisplayFor(model => item.Rate)</td>
                         <td>
 
-                            <a href="@Url.Action("Edit", "Rates", new { id = item.Id })">
-                                <i class="fa-solid fa-square-pen fa-2x" style="color: #1ABC9C; "></i>
+                            <a href="#" data-toggle="modal" data-target="#updateRateModal" id="@item.Id">
+                                <i class="fa-solid fa-square-pen fa-2x" style="color: #1ABC9C;"></i>
                             </a>
 
-                            <a href="@Url.Action("Delete", "Rates", new { id = item.Id })">
+                            <a href="#" data-toggle="modal" data-target="#deleteRateModal" id="@item.Id">
                                 <i class="fas fa-trash fa-2x delete-icon item" style="color: #FF5733"></i>
                             </a>
 
-                            @*
-                                <a href="@Url.Action("CustomerBill", "Invoice", new { id = item.Id })">
-                                    <i class="fa-solid fa-file-pdf fa-1x" style="color: navy"></i>
-                                </a>*@
 
                         </td>
 
@@ -141,6 +378,130 @@
     <script>
         new DataTable('#myTable');
     </script>
+
+    <!--Fetch Data For Update-->
+    <script>
+
+                        console.log('I am being reached');
+
+                            $(document).ready(function () {
+                                $("a[data-toggle='modal']").click(function () {
+                                    var RateID = $(this).attr("id");
+                                $.ajax({
+                            url: '@Url.Action("GetRate", "Rates")',
+                            type: 'POST',
+                            data: { id: RateID },
+                            success: function (data) {
+                                // Populate the form fields with the retrieved data
+                                $("#updateID").val(RateID);
+                                $("#ulNameUpdate").val(data.UsageLevelName);
+                                $("#ulNumberUpdate").val(data.UsageLevelNumber);
+                                $("#rateUpdate").val(data.Rate);
+
+
+                            },
+                            error: function () {
+                                alert("Error fetching Rate data.");
+                            }
+                        });
+                    });
+                });
+    </script>
+
+    <!--Update Rate Script-->
+    <script>
+    $(document).ready(function () {
+        $("#updateRateForm").submit(function (e) {
+            e.preventDefault(); // Prevent the default form submission
+
+            var formData = $(this).serialize(); // Serialize form data
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("UpdateRate", "Rates")",
+                data: formData,
+                success: function (response) {
+                    if (response.success) {
+                        alert(response.message);
+                        location.reload();
+                    } else {
+                        alert("Failed to update rate!.");
+                    }
+                },
+                error: function () {
+                    alert("An error occurred while updating the rate.");
+                }
+            });
+        });
+    });
+    </script>
+
+    <!--Fetch Data For Delete-->
+    <script>
+
+                        console.log('I am being reached');
+
+                            $(document).ready(function () {
+                                $("a[data-toggle='modal']").click(function () {
+                                    window.RateID = $(this).attr("id");
+                                $.ajax({
+                            url: '@Url.Action("GetRate", "Rates")',
+                            type: 'POST',
+                            data: { id: RateID },
+                            success: function (data) {
+                                // Populate the form fields with the retrieved data
+                                $("#DeleteID").val(RateID);
+                                $("#ulNameDelete").val(data.UsageLevelName);
+                                $("#ulNumberDelete").val(data.UsageLevelNumber);
+                                $("#rateDelete").val(data.Rate);
+
+
+                            },
+                            error: function () {
+                                alert("Error fetching Rate data.");
+                            }
+                        });
+                    });
+                });
+    </script>
+
+    <!--Delete Rate Script -->
+    <script>
+    console.log('I am being reached');
+
+    // Function to handle the delete operation
+    function handleDeleteClick() {
+        // Access the global variable window.invID
+        var invID = window.RateID;
+
+        $.ajax({
+            url: '@Url.Action("Delete", "Rates")',
+            type: 'POST',
+            data: { id: invID },
+            success: function (response) {
+                if (response.success) {
+                    alert(response.message);
+                    location.reload();
+                } else {
+                    alert("Failed to delete rate!.");
+                }
+            },
+            error: function () {
+                alert("An error occurred while updating the rate.");
+            }
+        });
+    }
+
+    $(document).ready(function () {
+        $("button[type='submit']").click(function (e) {
+            e.preventDefault(); // Prevent the default form submission
+
+            // Call the function to handle the delete operation
+            handleDeleteClick();
+        });
+    });
+    </script>
+
 
 </body>
 </html>
