@@ -138,7 +138,7 @@ namespace EBS.Controllers
                             {
                                 command.Transaction = transaction;
                                 command.CommandText = "INSERT INTO PaymentTbl (cID, invoiceID, paidAmount,"
-                                                    + "totalFee, payMethod, payDate ) "
+                                                    + "totalFee, payMethod, payDate )"
                                                     + "VALUES (@cID, @invoiceID, @paidAmount, @totalFee, @payMethod, @payDate)";
 
                                 foreach (var wrapper in model)
@@ -150,20 +150,11 @@ namespace EBS.Controllers
                                     command.Parameters.AddWithValue("@payMethod", wrapper.payMethod);
                                     command.Parameters.AddWithValue("@payDate", SqlDbType.DateTime2).Value = wrapper.payDate;
 
-                                    
+                                    command.ExecuteNonQuery();
 
                                     // Calculate the difference between paidAmount and totalFee
-                                    decimal balanceDifference = wrapper.totalFee - wrapper.paidAmount;
-
-                                    // Update CustomerTbl with the balance difference
-                                    string updateBalanceQuery = "UPDATE CustomerTbl SET Balance = Balance + @balanceDifference WHERE cID = @cID";
-                                    using (SqlCommand updateBalanceCommand = new SqlCommand(updateBalanceQuery, connection))
-                                    {
-                                        updateBalanceCommand.Parameters.AddWithValue("@balanceDifference", balanceDifference);
-                                        updateBalanceCommand.Parameters.AddWithValue("@cID", wrapper.cID);
-                                        updateBalanceCommand.ExecuteNonQuery();
-                                    }
-                                    command.ExecuteNonQuery();
+                                    
+                                    
                                     // Clear parameters for the next iteration
                                     command.Parameters.Clear();
                                 }
