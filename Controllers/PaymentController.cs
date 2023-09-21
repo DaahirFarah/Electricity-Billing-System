@@ -40,7 +40,6 @@ namespace EBS.Controllers
         //SET: Record Payment
         [ValidateAntiForgeryToken]
         [HttpPost]
-        [Display(Name = "Create")]
         public ActionResult Create(payWrapper model)
         {
             if (ModelState.IsValid)
@@ -121,7 +120,7 @@ namespace EBS.Controllers
         // POST: Meter/BulkInsertion
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult BulkInsert(List<payWrapper> model)
+        public ActionResult BulkInsert(List<payVM> model)
         {
             try
             {
@@ -151,7 +150,7 @@ namespace EBS.Controllers
                                     command.Parameters.AddWithValue("@payMethod", wrapper.payMethod);
                                     command.Parameters.AddWithValue("@payDate", SqlDbType.DateTime2).Value = wrapper.payDate;
 
-                                    command.ExecuteNonQuery();
+                                    
 
                                     // Calculate the difference between paidAmount and totalFee
                                     decimal balanceDifference = wrapper.totalFee - wrapper.paidAmount;
@@ -164,7 +163,7 @@ namespace EBS.Controllers
                                         updateBalanceCommand.Parameters.AddWithValue("@cID", wrapper.cID);
                                         updateBalanceCommand.ExecuteNonQuery();
                                     }
-
+                                    command.ExecuteNonQuery();
                                     // Clear parameters for the next iteration
                                     command.Parameters.Clear();
                                 }

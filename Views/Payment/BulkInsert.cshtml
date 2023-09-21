@@ -1,5 +1,5 @@
 ﻿
-@model List<EBS.viewModels.payWrapper>
+@model List<EBS.viewModels.payVM>
 
 @{
     Layout = "~/Views/Shared/_Layout2.cshtml";
@@ -37,6 +37,10 @@
 <body>
 
     <div id="container">
+        <h2><strong>Record Payments</strong></h2>
+        <br />
+        <br />
+
         @using (Html.BeginForm("BulkInsert", "Payment", FormMethod.Post))
         {
             @Html.AntiForgeryToken()
@@ -46,14 +50,14 @@
                     <tr>
                         <th>Invoice ID</th>
                         <th>Customer ID</th>
-                        <th>Paid Amount ($)</th> 
+                        <th>Paid Amount ($)</th>
                         <th>Total Fee ($)</th>
                         <th>Payment Method</th>
                         <th>Payment Date</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @for (int i = 0; i < 5; i++)
+                    @for (int i = 0; i < 3; i++)
                     {
                         <tr>
                             <td>
@@ -100,7 +104,8 @@
             <br />
 
             <div class="col-md-6 mb-4 pb-2" style="display: flex; justify-content: center; align-items: center;">
-                <button type="submit" value="Create" class="btn btn-success btn-lg btn-block">Record</button>
+                <input type="submit" value="Create" class="btn btn-success btn-lg btn-block" />
+                @*<input class="btn btn-primary btn-lg btn-block" type="submit" value="Save" />*@
             </div>
         }
 
@@ -111,7 +116,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="validationModalLabel">Validation Error</h5>
-                   
+
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -119,7 +124,7 @@
                 <div class="modal-body">
                     Please enter valid data.
                 </div>
-                
+
             </div>
         </div>
     </div>
@@ -159,7 +164,7 @@
     const pAmount = document.querySelectorAll('.form-control-paidAmount');
     const tFee = document.querySelectorAll('.form-control-totalFee');
     const pMethod = document.querySelectorAll('.form-control-payMethod');
-    
+
 
     invID.forEach(input => {
         input.addEventListener('blur', () => {
@@ -193,5 +198,33 @@
 
     // Attach click event listener to the "OK" button in the modal
     document.getElementById('modalOkButton').addEventListener('click', hideValidationModal);
+</script>
+
+<!--Get related Data for each record-->
+<script>
+    console.log('Script is being reached');
+
+    $(document).ready(function () {
+        // Attach a blur event listener to the "invoiceID" field in each row
+        $(".form-control-invoiceID").blur(function () {
+            var invoiceID = $(this).val();
+            var row = $(this).closest("tr"); // Get the parent row
+
+            $.ajax({
+                url: '@Url.Action("GetRelatedData", "Payment")',
+                type: 'POST',
+                data: { id: invoiceID },
+                success: function (data) {
+                    // Populate the form fields within the current row with the retrieved data
+                    row.find(".form-control-cID").val(data.cID);
+                    row.find(".form-control-totalFee").val(data.totalFee);
+
+                },
+                error: function () {
+                    alert("Error fetching Invoice data.");
+                }
+            });
+        });
+    });
 </script>
 
