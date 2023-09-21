@@ -1,0 +1,197 @@
+﻿
+@model List<EBS.viewModels.payWrapper>
+
+@{
+    Layout = "~/Views/Shared/_Layout2.cshtml";
+}
+
+<style>
+    .content {
+        display: flex;
+        justify-content: center;
+        padding: 20px; /* Add padding around the table */
+    }
+
+    .table-container {
+        max-width: 700px; /* Set a maximum width for the table container */
+        width: 10%;
+        padding-top: 20px;
+    }
+
+    .table thead th {
+        white-space: nowrap; /* Prevent text wrapping */
+    }
+
+    .container {
+        margin-left: 259px;
+        padding-top: 30px;
+        padding-left: 35px;
+        padding-bottom: 20px;
+    }
+</style>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Record Payments | SEC</title>
+</head>
+<body>
+
+    <div id="container">
+        @using (Html.BeginForm("BulkInsert", "Payment", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+
+            <table class="table">
+                <thead class="thead-light">
+                    <tr>
+                        <th>Invoice ID</th>
+                        <th>Customer ID</th>
+                        <th>Paid Amount ($)</th> 
+                        <th>Total Fee ($)</th>
+                        <th>Payment Method</th>
+                        <th>Payment Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < 5; i++)
+                    {
+                        <tr>
+                            <td>
+                                @Html.LabelFor(m => Model[i].invoiceID)
+                                @Html.EditorFor(model => Model[i].invoiceID, new { htmlAttributes = new { @class = "form-control form-control-lg form-control-invoiceID" } })
+                                @Html.ValidationMessageFor(m => Model[i].invoiceID, "", new { @class = "text-danger" })
+                            </td>
+
+                            <td>
+                                @Html.LabelFor(m => Model[i].cID)
+                                @Html.EditorFor(model => Model[i].cID, new { htmlAttributes = new { @class = "form-control form-control-lg form-control-cID" } })
+                                @Html.ValidationMessageFor(m => Model[i].cID, "", new { @class = "text-danger" })
+                            </td>
+
+                            <td>
+                                @Html.LabelFor(m => Model[i].paidAmount)
+                                @Html.EditorFor(model => Model[i].paidAmount, new { htmlAttributes = new { @class = "form-control form-control-lg form-control-paidAmount" } })
+                                @Html.ValidationMessageFor(m => Model[i].paidAmount, "", new { @class = "text-danger" })
+                            </td>
+
+                            <td>
+                                @Html.LabelFor(m => Model[i].totalFee)
+                                @Html.EditorFor(model => Model[i].totalFee, new { htmlAttributes = new { @class = "form-control form-control-lg form-control-totalFee" } })
+                                @Html.ValidationMessageFor(m => Model[i].totalFee, "", new { @class = "text-danger" })
+                            </td>
+
+                            <td>
+                                @Html.LabelFor(m => Model[i].payMethod)
+                                @Html.EditorFor(model => Model[i].payMethod, new { htmlAttributes = new { @class = "form-control form-control-lg form-control-payMethod" } })
+                                @Html.ValidationMessageFor(m => Model[i].payMethod, "", new { @class = "text-danger" })
+                            </td>
+
+                            <td>
+                                @Html.LabelFor(m => Model[i].payDate)
+                                @Html.EditorFor(model => Model[i].payDate, new { htmlAttributes = new { @class = "form-control form-control-lg form-control-payDate", type = "date" } })
+                                @Html.ValidationMessageFor(m => Model[i].payDate, "", new { @class = "text-danger" })
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <br />
+            <br />
+
+            <div class="col-md-6 mb-4 pb-2" style="display: flex; justify-content: center; align-items: center;">
+                <button type="submit" value="Create" class="btn btn-success btn-lg btn-block">Record</button>
+            </div>
+        }
+
+    </div>
+
+    <div class="modal fade" id="validationModal" tabindex="-1" role="dialog" aria-labelledby="validationModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="validationModalLabel">Validation Error</h5>
+                   
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Please enter valid data.
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
+
+</body>
+</html>
+
+<!--Form Fields Validation Script-->
+<script>
+    // Function to hide the modal
+    function hideValidationModal() {
+        $('#validationModal').modal('hide');
+    }
+
+    // Text Input Validation
+    function validateText(input) {
+        if (!isNaN(Number(input.value))) {
+            // Show a Bootstrap modal with the validation message
+            $('#validationModal').modal('show');
+            input.value = '';
+        }
+    }
+
+    // Number validation function
+    function validateNumber(input) {
+        if (isNaN(Number(input.value))) {
+            // Show a Bootstrap modal with the validation message
+            $('#validationModal').modal('show');
+            input.value = '';
+        }
+    }
+
+    // Attach listeners to input fields by class when they lose focus (blur)
+    const invID = document.querySelectorAll('.form-control-invoiceID');
+    const cID = document.querySelectorAll('.form-control-cID');
+    const pAmount = document.querySelectorAll('.form-control-paidAmount');
+    const tFee = document.querySelectorAll('.form-control-totalFee');
+    const pMethod = document.querySelectorAll('.form-control-payMethod');
+    
+
+    invID.forEach(input => {
+        input.addEventListener('blur', () => {
+            validateNumber(input);
+        });
+    });
+
+    cID.forEach(input => {
+        input.addEventListener('blur', () => {
+            validateNumber(input);
+        });
+    });
+
+    pAmount.forEach(input => {
+        input.addEventListener('blur', () => {
+            validateNumber(input);
+        });
+    });
+
+    tFee.forEach(input => {
+        input.addEventListener('blur', () => {
+            validateNumber(input);
+        });
+    });
+
+    pMethod.forEach(input => {
+        input.addEventListener('blur', () => {
+            validateText(input);
+        });
+    });
+
+    // Attach click event listener to the "OK" button in the modal
+    document.getElementById('modalOkButton').addEventListener('click', hideValidationModal);
+</script>
+

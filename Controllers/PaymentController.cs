@@ -125,7 +125,63 @@ namespace EBS.Controllers
         {
             try
             {
+                using (SqlConnection connection = new SqlConnection(SecConn))
+                {
+                    connection.Open();
 
+                    // Start a SQL transaction
+                    using (SqlTransaction transaction = connection.BeginTransaction())
+                    {
+                        try
+                        {
+                            // Create a SQL command for bulk insert within the transaction
+                            using (SqlCommand command = connection.CreateCommand())
+                            {
+                                command.Transaction = transaction;
+                                command.CommandText = "INSERT INTO PaymentTbl (cID, invoiceID, paidAmount,"
+                                                    + "totalFee, payMethod, payDate ) "
+                                                    + "VALUES (@cID, @invoiceID, @paidAmount, @totalFee, @payMethod, @payDate)";
+
+                                foreach (var wrapper in model)
+                                {
+                                    command.Parameters.AddWithValue("@cID", wrapper.cID);
+                                    command.Parameters.AddWithValue("@invoiceID", wrapper.invoiceID);
+                                    command.Parameters.AddWithValue("@paidAmount", wrapper.paidAmount);
+                                    command.Parameters.AddWithValue("@totalFee", wrapper.totalFee);
+                                    command.Parameters.AddWithValue("@payMethod", wrapper.payMethod);
+                                    command.Parameters.AddWithValue("@payDate", SqlDbType.DateTime2).Value = wrapper.payDate;
+
+                                    command.ExecuteNonQuery();
+
+                                    // Calculate the difference between paidAmount and totalFee
+                                    decimal balanceDifference = wrapper.totalFee - wrapper.paidAmount;
+
+                                    // Update CustomerTbl with the balance difference
+                                    string updateBalanceQuery = "UPDATE CustomerTbl SET Balance = Balance + @balanceDifference WHERE cID = @cID";
+                                    using (SqlCommand updateBalanceCommand = new SqlCommand(updateBalanceQuery, connection))
+                                    {
+                                        updateBalanceCommand.Parameters.AddWithValue("@balanceDifference", balanceDifference);
+                                        updateBalanceCommand.Parameters.AddWithValue("@cID", wrapper.cID);
+                                        updateBalanceCommand.ExecuteNonQuery();
+                                    }
+
+                                    // Clear parameters for the next iteration
+                                    command.Parameters.Clear();
+                                }
+                            }
+
+                            // Commit the transaction if everything is successful
+                            transaction.Commit();
+                        }
+                        catch (Exception ex)
+                        {
+                            // Roll back the transaction if an error occurs
+                            transaction.Rollback();
+                            ModelState.AddModelError("", "An Error Occured While Inserting Records, Please Try Again!" + ex.Message);
+
+                        }
+                    }
+                }
 
                 return RedirectToAction("Index"); // Redirect to a success page
             }
