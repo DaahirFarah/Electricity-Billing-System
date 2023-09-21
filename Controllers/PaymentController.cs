@@ -110,6 +110,32 @@ namespace EBS.Controllers
             return Json(new { success = true, message = "Payment Deleted Successfully!" });
         }
 
+        // Bulk Insertion  For Payments. upto Five at a time
+        // GET: /Meter/BulkInsertion
+        [HttpGet]
+        public ActionResult BulkInsert()
+        {
+            return View();
+        }
+
+        // POST: Meter/BulkInsertion
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult BulkInsert(List<payWrapper> model)
+        {
+            try
+            {
+
+
+                return RedirectToAction("Index"); // Redirect to a success page
+            }
+            catch (Exception ex)
+            {
+                // Handle the exception and provide appropriate error feedback to the user
+                ModelState.AddModelError("", "An error occurred while inserting data: " + ex.Message);
+                return View(model); // Show the input form with error messages
+            }
+        }
 
         // Retrieve the Invoice Data related to the an ID
         [HttpPost]
@@ -377,8 +403,6 @@ namespace EBS.Controllers
                     command.Parameters.AddWithValue("@totalFee", model.totalFee);
                     command.Parameters.AddWithValue("@payMethod", model.payMethod);
                     command.Parameters.AddWithValue("@payDate", SqlDbType.DateTime2).Value = model.payDate;
-
-
 
                     command.ExecuteNonQuery();
 

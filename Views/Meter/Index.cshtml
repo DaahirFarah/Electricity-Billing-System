@@ -69,6 +69,13 @@
         <li class="breadcrumb-item"><a href="#">Meters</a></li>
     </ol>
 
+    <!--Create Bulk Button-->
+    <div class="mt-4 pt-2" style="padding-left: 75px; margin-left:100px">
+        <form action="@Url.Action("BulkInsert", "Meter")" method="get">
+            <input class="btn btn-secondary btn-lg btn-block" type="submit" value="Bulk Insert" />
+        </form>
+    </div>
+
     <!--Modal Activation Button-->
     <div class="mt-4 pt-2" style="padding-left: 75px; margin-left: 100px;">
 
@@ -258,7 +265,7 @@
                                             <div class="col-md-6 mb-4 pb-2">
                                                 <input type="submit" value="Update" class="btn btn-primary btn-lg btn-block" />
 
-                                            </div>                                                                                       
+                                            </div>
                                         </div>
 
                                     </div>

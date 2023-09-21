@@ -365,8 +365,6 @@ namespace EBS.Controllers
             return invoices;
         }
 
-      
-
         private void InsertInvoice(invWrapper model)
         {
             using (SqlConnection connection = new SqlConnection(SecConn))
@@ -457,8 +455,7 @@ namespace EBS.Controllers
             }
 
         }
-
-       
+     
         private invWrapper GetInvoiceById(int invoiceID)
         {
             using (SqlConnection connection = new SqlConnection(SecConn))
@@ -585,7 +582,6 @@ namespace EBS.Controllers
                 }
             }
         }
-
 
         // Method to retrieve Balance from CustomerTbl
         public ActionResult GetBalance(string cID)

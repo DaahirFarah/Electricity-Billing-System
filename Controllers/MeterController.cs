@@ -104,6 +104,7 @@ namespace EBS.Controllers
 
         // POST: /Meter/BulkInsert
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult BulkInsert(List<MeterWrapper> model)
         {
             try
