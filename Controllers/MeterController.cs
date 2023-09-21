@@ -1,14 +1,13 @@
 ﻿using EBS.viewModels;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Data;
 using System.Data.SqlClient;
 using System.Web.Mvc;
 
 namespace EBS.Controllers
 {
+    [Authorize]
     public class MeterController : Controller
     {
         // Instance of the connection String
@@ -42,8 +41,8 @@ namespace EBS.Controllers
             return View(model);
         }
 
-       // POST: Get Meter Data
-       public JsonResult GetMeterData(int id)
+        // POST: Get Meter Data
+        public JsonResult GetMeterData(int id)
         {
             using (SqlConnection connection = new SqlConnection(SecConn))
             {
@@ -97,21 +96,71 @@ namespace EBS.Controllers
         }
 
         // GET: /Meter/BulkInsert
+        [HttpGet]
         public ActionResult BulkInsert()
         {
             return View();
         }
 
         // POST: /Meter/BulkInsert
+        [HttpPost]
         public ActionResult BulkInsert(List<MeterWrapper> model)
         {
-            if (ModelState.IsValid)
+            try
             {
-                BulkInserting(model);
-                return RedirectToAction("Index");
+                using (SqlConnection connection = new SqlConnection(SecConn))
+                {
+                    connection.Open();
+
+                    // Start a SQL transaction
+                    using (SqlTransaction transaction = connection.BeginTransaction())
+                    {
+                        try
+                        {
+                            // Create a SQL command for bulk insert within the transaction
+                            using (SqlCommand command = connection.CreateCommand())
+                            {
+                                command.Transaction = transaction;
+                                command.CommandText = "INSERT INTO Meters (SerialNumber, Type, Status) VALUES (@SerialNumber, @Type, @Status)";
+
+                                foreach (var wrapper in model)
+                                {
+                                    // Set parameter values for each Meter
+                                    command.Parameters.AddWithValue("@SerialNumber", wrapper.SerialNumber);
+                                    command.Parameters.AddWithValue("@Type", wrapper.Type);
+                                    command.Parameters.AddWithValue("@Status", wrapper.Status);
+
+                                    // Execute the command for each Meter
+                                    command.ExecuteNonQuery();
+
+                                    // Clear parameters for the next iteration
+                                    command.Parameters.Clear();
+                                }
+                            }
+
+                            // Commit the transaction if everything is successful
+                            transaction.Commit();
+                        }
+                        catch (Exception ex)
+                        {
+                            // Roll back the transaction if an error occurs
+                            transaction.Rollback();
+                            ModelState.AddModelError("", "An Error Occured While Inserting Records, Please Try Again!" + ex.Message);
+
+                        }
+                    }
+                }
+
+                return RedirectToAction("Index"); // Redirect to a success page
             }
-            return View(model);
+            catch (Exception ex)
+            {
+                // Handle the exception and provide appropriate error feedback to the user
+                ModelState.AddModelError("", "An error occurred while inserting data: " + ex.Message);
+                return View(model); // Show the input form with error messages
+            }
         }
+
 
 
         // Fetching Meter Information From the Database
@@ -145,35 +194,6 @@ namespace EBS.Controllers
             return meters;
         }
 
-        //Get Meter By ID
-        private MeterWrapper GetMeterByID(int Id)
-        {
-            using (SqlConnection connection = new SqlConnection(SecConn))
-            {
-                connection.Open();
-                string query = "SELECT * FROM Meters WHERE MeterID = @MeterID";
-                using (SqlCommand command = new SqlCommand(query, connection))
-                {
-                    command.Parameters.AddWithValue("@MeterID", Id);
-
-                    using (SqlDataReader reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            return new MeterWrapper
-                            {
-                                MeterID = Convert.ToInt32(reader["MeterID"]),
-                                SerialNumber = Convert.ToInt32(reader["SerialNumber"]),
-                                Type = reader["Type"].ToString(),
-                                Status = reader["Status"].ToString()
-                            };
-                        }
-                    }
-                }
-            }
-
-            return null;
-        }
 
         // Insert Meter Data
         private void InsertMeter(MeterWrapper model)
@@ -228,42 +248,6 @@ namespace EBS.Controllers
                     command.ExecuteNonQuery();
                 }
             }
-        }
-
-        // Meter Bulk Insertion will be Handled by the following function
-        private void BulkInserting(List<MeterWrapper> model)
-        {
-            List<MeterWrapper> met = new List<MeterWrapper>();
-
-            using(SqlConnection connection = new SqlConnection(SecConn))
-            {
-                connection.Open();
-                string bulkInsertion = "INSERT INTO Meters (SerialNumber, Type, Status) VALUES (@SerialNumber, @Type, @Status)";
-
-                using (SqlTransaction transaction = connection.BeginTransaction())
-                {
-                    try
-                    {
-                        foreach(var meter in model)
-                        {
-                            var command = new SqlCommand(bulkInsertion, connection, transaction);
-
-                            command.Parameters.AddWithValue("@SerialNumber", meter.SerialNumber);
-                            command.Parameters.AddWithValue("@Type", meter.Type);
-                            command.Parameters.AddWithValue("@Status", meter.Status);
-
-                            command.ExecuteNonQuery();
-                        }
-                        transaction.Commit();
-                    }
-                    catch (Exception e)
-                    {
-                        transaction.Rollback();
-                        ModelState.AddModelError("", "An Error Occured While Inserting Records, Please Try Again!" + e.Message);
-                    }
-                }
-            }
-
         }
 
     }

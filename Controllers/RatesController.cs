@@ -7,6 +7,7 @@ using System.Web.Mvc;
 
 namespace EBS.Controllers
 {
+    [Authorize]
     public class RatesController : Controller
     {
         // Instance of the connection String
