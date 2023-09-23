@@ -157,10 +157,117 @@ namespace EBS.Controllers
         }
 
         // GET: /Invoices/BulkInsert
+        [HttpGet]
         public ActionResult BulkInsert()
         {
             return View();
         }
+
+        // POST: /Invoices/BulkInsert
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult BulkInsert(List<invoiceVM> model)
+        {
+            using (SqlConnection connection = new SqlConnection(SecConn))
+            {
+                connection.Open();
+
+                // Start a SQL transaction
+                using (SqlTransaction transaction = connection.BeginTransaction())
+                {
+                    try
+                    {
+                        foreach (var wrapper in model)
+                        {
+                            // Retrieve the usage level and rate for each record
+                            string rateQuery = "SELECT UsageLevelNumber, Rate FROM Rates";
+                            List<int> usageLevel = new List<int>();
+                            List<decimal> rate = new List<decimal>();
+
+                            using (SqlCommand commandRate = new SqlCommand(rateQuery, connection, transaction))
+                            {
+                                using (SqlDataReader reader = commandRate.ExecuteReader())
+                                {
+                                    while (reader.Read())
+                                    {
+                                        int intFromDatabase = reader.GetInt32(0);
+                                        decimal decimalFromDatabase = reader.GetDecimal(1);
+
+                                        usageLevel.Add(intFromDatabase);
+                                        rate.Add(decimalFromDatabase);
+                                    }
+                                }
+                            }
+
+                            // Retrieve the customer's balance for each record
+                            string balanceQuery = "SELECT BALANCE FROM CustomerTbl WHERE cID = @cID";
+                            using (SqlCommand commandBalance = new SqlCommand(balanceQuery, connection, transaction))
+                            {
+                                commandBalance.Parameters.AddWithValue("@cID", wrapper.cID);
+                                object balanceResult = commandBalance.ExecuteScalar();
+                                if (balanceResult != null && balanceResult != DBNull.Value)
+                                {
+                                    wrapper.balance = Convert.ToDecimal(balanceResult);
+                                }
+                            }
+
+                            // Calculate the rate and total fee for each record
+                            for (int i = 0; i < usageLevel.Count; i++)
+                            {
+                                if (wrapper.reading_Value < usageLevel[i])
+                                {
+                                    wrapper.Rate = rate[i];
+                                    wrapper.total_Fee = wrapper.reading_Value * wrapper.Rate;
+                                    break;
+                                }
+                            }
+
+                            // Insert the record into the database
+                            string query = "INSERT INTO InvoiceTbl (cID, Rate, prev_Reading, cur_Reading, reading_Value, reading_Date, total_Fee) "
+                                         + "VALUES (@cID, @Rate, @prev_Reading, @cur_Reading, @reading_Value, @reading_Date, @total_Fee + @balance)";
+
+                            using (SqlCommand command = new SqlCommand(query, connection, transaction))
+                            {
+                                command.Parameters.AddWithValue("@cID", wrapper.cID);
+                                command.Parameters.AddWithValue("@Rate", wrapper.Rate);
+                                command.Parameters.AddWithValue("@prev_Reading", wrapper.prev_Reading);
+                                command.Parameters.AddWithValue("@cur_Reading", wrapper.cur_Reading);
+                                command.Parameters.AddWithValue("@reading_Value", wrapper.reading_Value);
+                                command.Parameters.AddWithValue("@reading_Date", SqlDbType.DateTime2).Value = wrapper.reading_Date;
+                                command.Parameters.AddWithValue("@total_Fee", wrapper.total_Fee);
+                                command.Parameters.AddWithValue("@balance", wrapper.balance);
+
+                                command.ExecuteNonQuery();
+                            }
+                        }
+
+                        // Commit the transaction if everything is successful
+                        transaction.Commit();
+                    }
+                    catch (Exception ex)
+                    {
+                        // Roll back the transaction if an error occurs
+                        transaction.Rollback();
+                        ModelState.AddModelError("", "An Error Occurred While Inserting Records, Please Try Again!" + ex.Message);
+                    }
+                }
+
+                // Update the customer's balance after the transaction is committed
+                foreach (var wrapper in model)
+                {
+                    string updateBalanceQuery = "UPDATE CustomerTbl SET Balance = 0 WHERE cID = @cID";
+                    using (SqlCommand updateBalanceCommand = new SqlCommand(updateBalanceQuery, connection))
+                    {
+                        updateBalanceCommand.Parameters.AddWithValue("@cID", wrapper.cID);
+                        updateBalanceCommand.ExecuteNonQuery();
+                    }
+                }
+
+                return RedirectToAction("Index");
+            }
+
+        }
+
 
         // This action handles exporting Invoices data from the database using a library called iTextSharp. 
         // This actionResult allows the user to easily download the list of Invoices in a pdf format 

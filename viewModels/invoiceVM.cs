@@ -40,6 +40,6 @@ namespace EBS.viewModels
         [Required(ErrorMessage = "Rate is required")]
         public decimal Rate { get; set; }
 
-
+        public decimal balance { get; set; }
     }
 }
