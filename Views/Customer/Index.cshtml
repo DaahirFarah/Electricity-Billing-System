@@ -2,13 +2,9 @@
 @model EBS.viewModels.customerWrapper
 
 @{
-
-
     ViewBag.Title = "Customers | SEC";
     Layout = "~/Views/Shared/_Layout2.cshtml";
 }
-
-<!DOCTYPE html>
 
 <html>
 <head>
@@ -75,7 +71,7 @@
     <!--Modal Activation Button-->
     <div class="mt-4 pt-2" style="padding-left: 40px; margin-left: 100px;">
 
-        <input data-toggle="modal" data-target="#createCustomerModal" class="btn btn-primary btn-lg btn-block" type="submit" value="Register" />
+        <input data-toggle="modal" id="openModal" data-target="#createCustomerModal" class="btn btn-primary btn-lg btn-block" type="submit" value="Register" />
 
     </div>
 
@@ -92,7 +88,7 @@
                 <div class="modal-body">
                     <div class="card rounded shadow">
                         <div class="card-body">
-                            @using (Html.BeginForm("Create", "Customer", FormMethod.Post))
+                            @using (Html.BeginForm("Create", "Customer", FormMethod.Post, new { id = "createForm" }))
                             {
                                 @Html.AntiForgeryToken()
 
@@ -184,7 +180,7 @@
 
                                                 <div class="form-outline form-group">
                                                     @Html.LabelFor(model => model.MeterID)
-                                                    @Html.DropDownListFor(model => model.MeterID, new SelectList(Model.SelectedMeterID), "Select a Meter", new { @class = "form-control" })
+                                                    @Html.DropDownListFor(model => model.MeterID, new SelectList(Model.SelectedMeterID), "Select a Meter", new { @class = "form-control", id = "meterDropdown" })
                                                     @Html.ValidationMessageFor(model => model.MeterID, "", new { @class = "text-danger" })
                                                 </div>
                                                 @Html.HiddenFor(model => model.MeterID)
@@ -195,9 +191,9 @@
 
                                         <div class="row">
                                             <div class="col-md-6 mb-4 pb-2">
-                                                <button type="submit" value="Create" class="btn btn-success btn-lg btn-block">Register</button>
+                                                <input type="submit" value="Create" class="btn btn-success btn-lg btn-block" />
+
                                             </div>
-                                           
                                         </div>
 
                                     </div>
@@ -325,7 +321,7 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-md-6 mb-4 pb-2">
-                                                <input type="submit" value="Create" class="btn btn-success btn-lg btn-block" />
+                                                <input type="submit" value="Update" class="btn btn-primary btn-lg btn-block" />
 
                                             </div>
 
@@ -532,6 +528,34 @@
 
     </div>
 
+    <script>
+        $(document).ready(function () {
+        // Click event handler for opening the modal
+        $("#openModal").click(function () {
+            // Perform an AJAX request to fetch data
+            $.ajax({
+                type: "GET",
+                url: "@Url.Action("GetInactiveMeter", "Customer")",
+                dataType: "json",
+                success: function (data) {
+                    // Clear the existing dropdown options
+                    $("#meterDropdown").empty();
+
+                    // Populate the dropdown with the fetched data
+                    $.each(data, function (index, item) {
+                        $("#meterDropdown").append($("<option>").text(item).val(item));
+                    });
+
+                },
+                error: function () {
+                    // Handle errors if the AJAX request fails
+                    alert("Failed to fetch data.");
+                }
+            });
+        });
+    });
+    </script>
+
     <!--Create Validation Script-->
     <script>
         // Text validation function
@@ -589,6 +613,34 @@
         });
 
 
+    </script>
+
+    <!--Customer Insert Script-->
+    <script>
+    $(document).ready(function () {
+        $("#createForm").submit(function (e) {
+            e.preventDefault(); // Prevent the default form submission
+
+            var formData = $(this).serialize(); // Serialize form data
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("Create", "Customer")",
+                data: formData,
+                success: function (response) {
+                    if (response.success) {
+                        alert(response.message);
+                        location.reload();
+                    } else {
+                        alert("Failed to Insert customer!.");
+                    }
+                },
+                error: function () {
+                    alert("An error occurred while updating the customer.");
+                }
+            });
+        });
+    });
     </script>
 
     <!--Customer Data Fetching Script (Update)-->

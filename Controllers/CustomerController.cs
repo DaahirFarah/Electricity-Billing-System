@@ -1,30 +1,23 @@
 ﻿using EBS.viewModels;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
-using PdfSharp.Drawing;
-using PdfSharp.Pdf;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Web;
 using System.Web.Mvc;
-using System.Xml.Linq;
 
 namespace EBS.Controllers
 {
     [Authorize]
     public class CustomerController : Controller
     {
-       
+
         private readonly string SecConn = ConfigurationManager.ConnectionStrings["SecConn"].ConnectionString;
 
-    
+
 
         [Authorize]
         // GET: Customer
@@ -41,6 +34,33 @@ namespace EBS.Controllers
         public ActionResult Create()
         {
 
+            //List<int> meter = new List<int>();
+            //string query = "SELECT MeterID FROM Meters WHERE Status = 'Inactive'";
+
+            //using (SqlConnection connection = new SqlConnection(SecConn))
+            //{
+            //    connection.Open();
+            //    SqlCommand command = new SqlCommand(query, connection);
+            //    SqlDataReader reader = command.ExecuteReader();
+
+            //    while (reader.Read())
+            //    {
+            //        int meterId = (int)reader["MeterID"];
+            //        meter.Add(meterId);
+            //    }
+            //}
+
+            //customerWrapper model = new customerWrapper
+            //{
+            //    SelectedMeterID = meter
+            //};
+
+            return View();
+        }
+
+        [HttpGet]
+        public ActionResult GetInactiveMeter()
+        {
             List<int> meter = new List<int>();
             string query = "SELECT MeterID FROM Meters WHERE Status = 'Inactive'";
 
@@ -62,20 +82,20 @@ namespace EBS.Controllers
                 SelectedMeterID = meter
             };
 
-            return View(model);
+            return Json(meter, JsonRequestBehavior.AllowGet);
         }
 
         //SET: Register Customer
         [ValidateAntiForgeryToken]
         [HttpPost]
-        public ActionResult Create(customerWrapper model)
+        public JsonResult Create(customerWrapper model)
         {
             if (ModelState.IsValid)
             {
                 InsertCustomer(model);
-                return RedirectToAction("Index");
+                return Json(new { success = true, message = "Customer Added Successfully!" });
             }
-            return View(model);
+            return Json(new {success = false, message = "Insertion Failed. Please Try Again!"});
         }
 
 
@@ -145,7 +165,7 @@ namespace EBS.Controllers
         // This actionResult allows the user to easily download the list of customers in a pdf format 
         public ActionResult GenerateCustomerList()
         {
-           
+
             var data = GetAllCustomers();
 
             // Create a new PDF document
@@ -288,7 +308,7 @@ namespace EBS.Controllers
             AddInvoiceLine(document, $"Phone Number: {customer.cNumber.ToString()}", contentFont, lineSpacing);
             AddInvoiceLine(document, $"Phone Number (Optional): {customer.cNumberOp.ToString()}", contentFont, lineSpacing);
             AddInvoiceLine(document, $"Balance ($): {customer.Balance.ToString()}", contentFont, lineSpacing);
-            
+
 
             // Close the document
             document.Close();
@@ -353,14 +373,14 @@ namespace EBS.Controllers
 
         // Inserting Customers To the Database
         private void InsertCustomer(customerWrapper model)
-        {   
+        {
             using (SqlConnection connection = new SqlConnection(SecConn))
             {
                 connection.Open();
 
                 // This variable captures the selected meterID for the customer and then it will be the one to have the value that will go to the db
                 int meterID = model.MeterID;
-                  
+
                 string query = "INSERT INTO CustomerTbl (cFirstName, cMidName, cLastName, cAddress, cNumber, cNumberOp, MeterID, Branch, Balance) VALUES (@cFirstName, @cMidName, @cLastName, @cAddress, @cNumber, @cNumberOp, @meterID, @Branch, 0)";
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
@@ -383,7 +403,7 @@ namespace EBS.Controllers
                     command.ExecuteNonQuery();
 
                     string meterStatusUpdate = "Update Meters SET Status = 'Active' WHERE MeterID = @meterID";
-                    using(SqlCommand commandStatus = new SqlCommand(meterStatusUpdate, connection))
+                    using (SqlCommand commandStatus = new SqlCommand(meterStatusUpdate, connection))
                     {
                         commandStatus.Parameters.AddWithValue("@MeterID", meterID);
                         commandStatus.ExecuteNonQuery();
@@ -429,7 +449,7 @@ namespace EBS.Controllers
                 }
             }
 
-            return null; 
+            return null;
         }
 
 
@@ -466,7 +486,7 @@ namespace EBS.Controllers
         }
 
         // Customer Information Deletion Logic for the Delete ActionResult
-      
+
         private void DeleteCustomer(int id)
         {
             using (SqlConnection connection = new SqlConnection(SecConn))
@@ -475,7 +495,7 @@ namespace EBS.Controllers
 
                 // Retrieve the MeterID of the customer being deleted
                 string selectMeterQuery = "SELECT MeterID FROM CustomerTbl WHERE cID = @cID";
-                int meterID = -1; 
+                int meterID = -1;
 
                 using (SqlCommand selectMeterCommand = new SqlCommand(selectMeterQuery, connection))
                 {
