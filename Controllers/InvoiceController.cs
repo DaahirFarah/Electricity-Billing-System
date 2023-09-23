@@ -156,7 +156,11 @@ namespace EBS.Controllers
             return Json(new invoiceVM(), JsonRequestBehavior.AllowGet);
         }
 
-
+        // GET: /Invoices/BulkInsert
+        public ActionResult BulkInsert()
+        {
+            return View();
+        }
 
         // This action handles exporting Invoices data from the database using a library called iTextSharp. 
         // This actionResult allows the user to easily download the list of Invoices in a pdf format 

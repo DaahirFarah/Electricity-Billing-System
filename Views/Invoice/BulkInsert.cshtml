@@ -1,5 +1,5 @@
 ﻿
-@model List<EBS.viewModels.payVM>
+@model List<EBS.viewModels.invoiceVM>
 
 @{
     Layout = "~/Views/Shared/_Layout2.cshtml";
@@ -32,64 +32,59 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title>Record Payments | SEC</title>
+    <title>Insert Invoices | SEC</title>
 </head>
 <body>
 
     <div id="container">
-        <h2><strong>Record Payments</strong></h2>
+        <h2><strong>Insert Invoices</strong></h2>
 
         <br />
         <br />
 
-        @using (Html.BeginForm("BulkInsert", "Payment", FormMethod.Post))
+        @using (Html.BeginForm("BulkInsert", "Invoice", FormMethod.Post))
         {
             @Html.AntiForgeryToken()
 
             <table class="table">
                 <thead class="thead-light">
                     <tr>
-                        <th>Invoice ID</th>
                         <th>Customer ID</th>
-                        <th>Paid Amount ($)</th>
-                        <th>Total Fee ($)</th>
-                        <th>Payment Method</th>
-                        <th>Payment Date</th>
+                        <th>Reading Date</th>
+                        <th>Previous Reading</th>
+                        <th>Current Reading</th>
+                        <th>Usage(KwH)</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @for (int i = 0; i <5; i++)
+                    @for (int i = 0; i < 5; i++)
                     {
                         <tr>
-                            <td>
-                                @Html.EditorFor(model => Model[i].invoiceID, new { htmlAttributes = new { @class = "form-control form-control-lg form-control-invoiceID" } })
-                                @Html.ValidationMessageFor(m => Model[i].invoiceID, "", new { @class = "text-danger" })
-                            </td>
-
                             <td>
                                 @Html.EditorFor(model => Model[i].cID, new { htmlAttributes = new { @class = "form-control form-control-lg form-control-cID" } })
                                 @Html.ValidationMessageFor(m => Model[i].cID, "", new { @class = "text-danger" })
                             </td>
 
                             <td>
-                                @Html.EditorFor(model => Model[i].paidAmount, new { htmlAttributes = new { @class = "form-control form-control-lg form-control-paidAmount" } })
-                                @Html.ValidationMessageFor(m => Model[i].paidAmount, "", new { @class = "text-danger" })
+                                @Html.EditorFor(model => Model[i].reading_Date, new { htmlAttributes = new { @class = "form-control form-control-lg form-control-rDate", type = "Date" } })
+                                @Html.ValidationMessageFor(m => Model[i].reading_Date, "", new { @class = "text-danger" })
                             </td>
 
                             <td>
-                                @Html.EditorFor(model => Model[i].totalFee, new { htmlAttributes = new { @class = "form-control form-control-lg form-control-totalFee" } })
-                                @Html.ValidationMessageFor(m => Model[i].totalFee, "", new { @class = "text-danger" })
+                                @Html.EditorFor(model => Model[i].prev_Reading, new { htmlAttributes = new { @class = "form-control form-control-lg form-control-prev_Reading" } })
+                                @Html.ValidationMessageFor(m => Model[i].prev_Reading, "", new { @class = "text-danger" })
                             </td>
 
                             <td>
-                                @Html.EditorFor(model => Model[i].payMethod, new { htmlAttributes = new { @class = "form-control form-control-lg form-control-payMethod" } })
-                                @Html.ValidationMessageFor(m => Model[i].payMethod, "", new { @class = "text-danger" })
+                                @Html.EditorFor(model => Model[i].cur_Reading, new { htmlAttributes = new { @class = "form-control form-control-lg form-control-cur_Reading" } })
+                                @Html.ValidationMessageFor(m => Model[i].cur_Reading, "", new { @class = "text-danger" })
                             </td>
 
                             <td>
-                                @Html.EditorFor(model => Model[i].payDate, new { htmlAttributes = new { @class = "form-control form-control-lg form-control-payDate", type = "date" } })
-                                @Html.ValidationMessageFor(m => Model[i].payDate, "", new { @class = "text-danger" })
+                                @Html.EditorFor(model => Model[i].reading_Value, new { htmlAttributes = new { @class = "form-control form-control-lg form-control-reading_Value", @readonly = "readonly" } })
+                                @Html.ValidationMessageFor(m => Model[i].reading_Value, "", new { @class = "text-danger" })
                             </td>
+
                         </tr>
                     }
                 </tbody>
@@ -153,19 +148,26 @@
         }
     }
 
+    // Date Validation function
+    function validateDate(input) {
+        var enteredDate = new Date(input.value); // Get the value from the input element
+        var currentDate = new Date();
+        var lastDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+        var minDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 25);
+
+        if (enteredDate < minDate || enteredDate > lastDayOfMonth) {
+            alert("Enter a date between the 25th and the last day of the month.");
+            // Clear the input field
+            input.value = ''; // Set the input field's value to an empty string
+        }
+    }      
+
     // Attach listeners to input fields by class when they lose focus (blur)
-    const invID = document.querySelectorAll('.form-control-invoiceID');
     const cID = document.querySelectorAll('.form-control-cID');
-    const pAmount = document.querySelectorAll('.form-control-paidAmount');
-    const tFee = document.querySelectorAll('.form-control-totalFee');
-    const pMethod = document.querySelectorAll('.form-control-payMethod');
+    const prev_Reading = document.querySelectorAll('.form-control-prev_Reading');
+    const cur_Reading = document.querySelectorAll('.form-control-cur_Reading');
+    const rDate = document.querySelectorAll('.form-control-rDate');
 
-
-    invID.forEach(input => {
-        input.addEventListener('blur', () => {
-            validateNumber(input);
-        });
-    });
 
     cID.forEach(input => {
         input.addEventListener('blur', () => {
@@ -173,23 +175,46 @@
         });
     });
 
-    pAmount.forEach(input => {
+    prev_Reading.forEach(input => {
         input.addEventListener('blur', () => {
             validateNumber(input);
         });
     });
 
-    tFee.forEach(input => {
+    cur_Reading.forEach(input => {
         input.addEventListener('blur', () => {
             validateNumber(input);
         });
     });
 
-    pMethod.forEach(input => {
+    // Assuming rDate is an array of input elements
+    rDate.forEach(input => {
         input.addEventListener('blur', () => {
-            validateText(input);
+            validateDate(input);
+        });
+    });    
+
+    //Perform Usage Calculation
+    $(document).ready(function () {
+        $('.form-control-prev_Reading, .form-control-cur_Reading').on('blur', function () {
+            // Get values from corresponding fields
+            var cur_Reading = parseFloat($(this).closest('tr').find('.form-control-cur_Reading').val());
+            var prev_Reading = parseFloat($(this).closest('tr').find('.form-control-prev_Reading').val());
+            var rDate = $(this).closest('tr').find('.form-control-reading_Value').val();
+
+            // Calculate the reading difference
+            var calculatedReading = isNaN(cur_Reading) || isNaN(prev_Reading) ? '' : (cur_Reading - prev_Reading).toFixed(2);
+
+            // Update the readonly reading_Value field in the same row
+            $(this).closest('tr').find('.form-control-reading_Value').val(calculatedReading);
+
+            // Perform additional validation if needed
+            if (cur_Reading < prev_Reading) {
+                window.alert('Current Reading Must be Greater Than Previous Reading');
+            }
         });
     });
+
 
     // Attach click event listener to the "OK" button in the modal
     document.getElementById('modalOkButton').addEventListener('click', hideValidationModal);
@@ -201,22 +226,20 @@
 
     $(document).ready(function () {
         // Attach a blur event listener to the "invoiceID" field in each row
-        $(".form-control-invoiceID").blur(function () {
-            var invoiceID = $(this).val();
+        $(".form-control-cID").blur(function () {
+            var cID = $(this).val();
             var row = $(this).closest("tr"); // Get the parent row
 
             $.ajax({
-                url: '@Url.Action("GetRelatedData", "Payment")',
+                url: '@Url.Action("GetRelatedData", "Invoice")',
                 type: 'POST',
-                data: { id: invoiceID },
+                data: { id: cID },
                 success: function (data) {
                     // Populate the form fields within the current row with the retrieved data
-                    row.find(".form-control-cID").val(data.cID);
-                    row.find(".form-control-totalFee").val(data.totalFee);
-
+                    row.find(".form-control-prev_Reading").val(data.cur_Reading);
                 },
                 error: function () {
-                    alert("Error fetching Invoice data.");
+                    alert("Error fetching Customer data.");
                 }
             });
         });
