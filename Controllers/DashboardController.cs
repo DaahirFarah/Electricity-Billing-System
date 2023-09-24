@@ -33,21 +33,24 @@ namespace EBS.Controllers
                 // Below commands retrieve the number of records in each of those tables and then stores them in the corresponding properties in the viewModel
                 SqlCommand Customerscommand = new SqlCommand("SELECT COUNT(cFirstName) AS CountOfCustomers FROM CustomerTbl", connection);
                 dashboard.Customers = (int)Customerscommand.ExecuteScalar();
-                
-
+               
                 SqlCommand Invoicescommand = new SqlCommand("SELECT COUNT(invoiceID) AS CountOfInvoices FROM InvoiceTbl", connection);
                 dashboard.Invoices = (int)Invoicescommand.ExecuteScalar();
                
-
                 SqlCommand Userscommand = new SqlCommand("SELECT COUNT(Username) AS usersCount FROM Users", connection);
                 dashboard.Users = (int)Userscommand.ExecuteScalar();
                
-
-
                 SqlCommand paycommand = new SqlCommand("SELECT COUNT(payID) AS payCount FROM PaymentTbl", connection);
                 dashboard.Payments = (int)paycommand.ExecuteScalar();
-               
 
+                SqlCommand meterCommand = new SqlCommand("SELECT COUNT(MeterID) AS MeterCount FROM Meters", connection);
+                dashboard.Meters = (int)meterCommand.ExecuteScalar();
+
+                SqlCommand activeCommand = new SqlCommand("SELECT COUNT(Status) AS ActiveMeters FROM Meters WHERE Status = 'Active'", connection);
+                dashboard.ActiveMeters = (int)activeCommand.ExecuteScalar();
+                
+                SqlCommand InactiveCommand = new SqlCommand("SELECT COUNT(Status) AS InactiveMeters FROM Meters WHERE Status = 'Inactive'", connection);
+                dashboard.InactiveMeters = (int)InactiveCommand.ExecuteScalar();
 
                 // these will retrieve the sum of $Total Fees and the sum of standing Balances
 

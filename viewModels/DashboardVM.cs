@@ -14,6 +14,9 @@ namespace EBS.viewModels
         public int Users { get; set; }
         public int Payments { get; set; }
         public int Invoices { get; set; }
+        public int Meters { get; set; }
+        public int ActiveMeters { get; set; }
+        public int InactiveMeters { get; set; }
         public decimal Balances { get; set; }
     }
 }

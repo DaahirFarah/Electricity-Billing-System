@@ -32,10 +32,7 @@
     </ol>
   
     <br />
-    <br />
-    <br />
-
-
+ 
     <main class="dash-content">
         <div class="container-fluid">
             <div class="row dash-row">
@@ -57,7 +54,7 @@
                 </div>
                 <div class="col-xl-4">
                     <div class="stats stats-success ">
-                        <h3 class="stats-title"> Revenue </h3>
+                        <h3 class="stats-title"> Income </h3>
                         <div class="stats-content">
                             <div class="stats-icon">
                                 <i class="wrap-icon icon-money mr-3"></i>
@@ -84,12 +81,11 @@
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
 
 
-        <br />
-        <br />
         <br />
 
         <div class="container-fluid">
@@ -142,6 +138,55 @@
             </div>
         </div>
 
+        <br />
+
+        <div class="container-fluid">
+            <div class="row dash-row">
+                @*<div class="col-xl-4">
+                    <div class="stats stats-primary">
+                        <h3 class="stats-title"> No. of Payments </h3>
+                        <div class="stats-content">
+                            <div class="stats-icon">
+                                <i class="wrap-icon icon-money mr-3"></i>
+                            </div>
+                            <div class="stats-data">
+                                <div class="stats-number">@Model.Payments</div>
+                                <div class="stats-change">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>*@
+                <div class="col-xl-12">
+                    <div class="stats stats-success ">
+                        <h3 class="stats-title"> Meters </h3>
+                        <div class="stats-content">
+                            <div class="stats-icon">
+                                <i class="wrap-icon icon-dashboard mr-3"></i>
+                            </div>
+                            <div class="stats-data">
+                                <div class="stats-number"> @Model.Meters</div>
+                              
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @*<div class="col-xl-4">
+                    <div class="stats stats-danger">
+                        <h3 class="stats-title"> No. of Users </h3>
+                        <div class="stats-content">
+                            <div class="stats-icon">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="stats-data">
+                                <div class="stats-number">@Model.Users</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>*@
+            </div>
+        </div>
 
     </main>
 
