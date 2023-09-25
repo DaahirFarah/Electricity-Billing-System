@@ -7,6 +7,7 @@ using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
+using System.Runtime.Remoting.Lifetime;
 using System.Web.Mvc;
 
 namespace EBS.Controllers
@@ -28,33 +29,33 @@ namespace EBS.Controllers
             return View(wrapper);
         }
 
-        // GET Inactive Meters
-        [HttpGet]
-        public ActionResult GetInactiveMeter()
-        {
-            List<int> meter = new List<int>();
-            string query = "SELECT MeterID FROM Meters WHERE Status = 'Inactive'";
+        //// GET Inactive Meters
+        //[HttpGet]
+        //public ActionResult GetInactiveMeter()
+        //{
+        //    List<int> meter = new List<int>();
+        //    string query = "SELECT MeterID FROM Meters WHERE Status = 'Inactive'";
 
-            using (SqlConnection connection = new SqlConnection(SecConn))
-            {
-                connection.Open();
-                SqlCommand command = new SqlCommand(query, connection);
-                SqlDataReader reader = command.ExecuteReader();
+        //    using (SqlConnection connection = new SqlConnection(SecConn))
+        //    {
+        //        connection.Open();
+        //        SqlCommand command = new SqlCommand(query, connection);
+        //        SqlDataReader reader = command.ExecuteReader();
 
-                while (reader.Read())
-                {
-                    int meterId = (int)reader["MeterID"];
-                    meter.Add(meterId);
-                }
-            }
+        //        while (reader.Read())
+        //        {
+        //            int meterId = (int)reader["MeterID"];
+        //            meter.Add(meterId);
+        //        }
+        //    }
 
-            customerWrapper model = new customerWrapper
-            {
-                SelectedMeterID = meter
-            };
+        //    customerWrapper model = new customerWrapper
+        //    {
+        //        SelectedMeterID = meter
+        //    };
 
-            return Json(meter, JsonRequestBehavior.AllowGet);
-        }
+        //    return Json(meter, JsonRequestBehavior.AllowGet);
+        //}
 
         // GET Branches
         [HttpGet]
@@ -152,7 +153,6 @@ namespace EBS.Controllers
                                 cAddress = reader["cAddress"].ToString(),
                                 cNumber = Convert.ToInt32(reader["cNumber"]),
                                 cNumberOp = reader["cNumberOp"].ToString(),
-                                MeterID = Convert.ToInt32(reader["MeterID"]),
                                 Branch = reader["Branch"].ToString(),
                                 Balance = Convert.ToDecimal(reader["Balance"]),
                                 lockNumber = Convert.ToInt32(reader["lockNumber"]),
@@ -386,7 +386,6 @@ namespace EBS.Controllers
                                 cAddress = reader["cAddress"].ToString(),
                                 cNumber = Convert.ToInt32(reader["cNumber"]),
                                 cNumberOp = reader["cNumberOp"] != DBNull.Value ? reader["cNumberOp"].ToString() : "N/A",
-                                MeterID = Convert.ToInt32(reader["MeterID"]),
                                 Branch = reader["Branch"].ToString(),
                                 Balance = Convert.ToDecimal(reader["Balance"]),
                                 lockNumber = Convert.ToInt32(reader["lockNumber"]),
@@ -405,14 +404,15 @@ namespace EBS.Controllers
         // Inserting Customers To the Database
         private void InsertCustomer(customerWrapper model)
         {
+           
             using (SqlConnection connection = new SqlConnection(SecConn))
             {
                 connection.Open();
+                
 
                 // This variable captures the selected meterID for the customer and then it will be the one to have the value that will go to the db
-                int meterID = model.MeterID;
 
-                string query = "INSERT INTO CustomerTbl (cFirstName, cMidName, cLastName, cAddress, cNumber, cNumberOp, MeterID, Branch, Type, lockNumber, Balance) VALUES (@cFirstName, @cMidName, @cLastName, @cAddress, @cNumber, @cNumberOp, @meterID, @Branch, @Type, @lockNumber, 0)";
+                string query = "INSERT INTO CustomerTbl (cFirstName, cMidName, cLastName, cAddress, cNumber, cNumberOp, Branch, Type, lockNumber, Balance) VALUES (@cFirstName, @cMidName, @cLastName, @cAddress, @cNumber, @cNumberOp, @Branch, @Type, @lockNumber, 0)";
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@cFirstName", model.cFirstName);
@@ -428,17 +428,40 @@ namespace EBS.Controllers
                     {
                         command.Parameters.AddWithValue("@cNumberOp", model.cNumberOp);
                     }
-                    command.Parameters.AddWithValue("@MeterID", meterID);
                     command.Parameters.AddWithValue("@Branch", model.Branch);
                     command.Parameters.AddWithValue("@Type", model.Type);
                     command.Parameters.AddWithValue("@lockNumber", model.lockNumber);
 
                     command.ExecuteNonQuery();
 
-                    string meterStatusUpdate = "Update Meters SET Status = 'Active' WHERE MeterID = @meterID";
-                    using (SqlCommand commandStatus = new SqlCommand(meterStatusUpdate, connection))
+                    // Retrive the customer id from customers table using the lock number
+                    int lNum = model.lockNumber;
+
+                    string idquery = "SELECT cID FROM CustomerTbl WHERE lockNumber = @lNum";
+                   
+                        using (SqlCommand commandd = new SqlCommand(idquery, connection))
+                        {
+                            commandd.Parameters.AddWithValue("@lNum", lNum);
+
+                            using (SqlDataReader reader = commandd.ExecuteReader())
+                            {
+                                while (reader.Read())
+                                {
+                                    // Retrieve the cID value from the result set if needed.
+                                    int cID = reader.GetInt32(0);
+                                model.cID = cID;                                   
+                                }
+                            }
+                        }
+                    
+                    
+                    // Keep your eyes peeled for this part as cID might possibly throw an error
+                    string InsertToMeter = "INSERT INTO Meters (cID, lockNumber, Type, Status) VALUES (@cID, @lockNumber, @Type, 'Active')";
+                    using (SqlCommand commandStatus = new SqlCommand(InsertToMeter, connection))
                     {
-                        commandStatus.Parameters.AddWithValue("@MeterID", meterID);
+                        commandStatus.Parameters.AddWithValue("@cID", model.cID);
+                        commandStatus.Parameters.AddWithValue("@lockNumber", model.lockNumber);
+                        commandStatus.Parameters.AddWithValue("@Type", model.Type);
                         commandStatus.ExecuteNonQuery();
                     }
 
@@ -472,7 +495,6 @@ namespace EBS.Controllers
                                 cAddress = reader["cAddress"].ToString(),
                                 cNumber = Convert.ToInt32(reader["cNumber"]),
                                 cNumberOp = reader["cNumberOp"].ToString(),
-                                MeterID = Convert.ToInt32(reader["MeterID"]),
                                 Branch = reader["Branch"].ToString(),
                                 Balance = Convert.ToDecimal(reader["Balance"])
 
@@ -493,7 +515,7 @@ namespace EBS.Controllers
             {
                 connection.Open();
 
-                string query = "UPDATE CustomerTbl SET cFirstName = @cFirstName, cMidName = @cMidName, cLastName = @cLastName, cAddress = @cAddress, cNumber = @cNumber, cNumberOp = @cNumberOp, MeterID = @MeterID, Branch = @Branch, Type = @Type, lockNumber = @lockNumber WHERE cID = @cID";
+                string query = "UPDATE CustomerTbl SET cFirstName = @cFirstName, cMidName = @cMidName, cLastName = @cLastName, cAddress = @cAddress, cNumber = @cNumber, cNumberOp = @cNumberOp, Branch = @Branch, Type = @Type, lockNumber = @lockNumber WHERE cID = @cID";
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@cID", model.cID);
@@ -510,7 +532,6 @@ namespace EBS.Controllers
                     {
                         command.Parameters.AddWithValue("@cNumberOp", model.cNumberOp);
                     }
-                    command.Parameters.AddWithValue("@MeterID", model.MeterID);
                     command.Parameters.AddWithValue("@Branch", model.Branch);
                     command.Parameters.AddWithValue("@Type", model.Type);
                     command.Parameters.AddWithValue("@lockNumber", model.lockNumber);
@@ -525,33 +546,7 @@ namespace EBS.Controllers
         {
             using (SqlConnection connection = new SqlConnection(SecConn))
             {
-                connection.Open();
-
-                // Retrieve the MeterID of the customer being deleted
-                string selectMeterQuery = "SELECT MeterID FROM CustomerTbl WHERE cID = @cID";
-                int meterID = -1;
-
-                using (SqlCommand selectMeterCommand = new SqlCommand(selectMeterQuery, connection))
-                {
-                    selectMeterCommand.Parameters.AddWithValue("@cID", id);
-                    object meterIDObj = selectMeterCommand.ExecuteScalar();
-
-                    if (meterIDObj != null && meterIDObj != DBNull.Value)
-                    {
-                        meterID = Convert.ToInt32(meterIDObj);
-                    }
-                }
-
-                // Update the status of the MeterID in the Meters table
-                if (meterID != -1)
-                {
-                    string updateMeterQuery = "UPDATE Meters SET Status = 'Inactive' WHERE MeterID = @meterID";
-                    using (SqlCommand updateMeterCommand = new SqlCommand(updateMeterQuery, connection))
-                    {
-                        updateMeterCommand.Parameters.AddWithValue("@meterID", meterID);
-                        updateMeterCommand.ExecuteNonQuery();
-                    }
-                }
+                connection.Open();                            
 
                 // Delete the customer
                 string deleteCustomerQuery = "DELETE FROM CustomerTbl WHERE cID = @cID";

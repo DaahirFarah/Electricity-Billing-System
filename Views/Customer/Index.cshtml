@@ -178,14 +178,11 @@
 
                                         <div class="row">
                                             <div class="col-md-6 mb-4 pb-2">
-
                                                 <div class="form-outline form-group">
-                                                    @Html.LabelFor(model => model.MeterID)
-                                                    @Html.DropDownListFor(model => model.MeterID, new SelectList(Model.SelectedMeterID), "Select a Meter", new { @class = "form-control", id = "meterDropdown" })
-                                                    @Html.ValidationMessageFor(model => model.MeterID, "", new { @class = "text-danger" })
+                                                    @Html.LabelFor(model => model.lockNumber)
+                                                    @Html.EditorFor(model => model.lockNumber, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "lockNumber" } })
+                                                    @Html.ValidationMessageFor(model => model.lockNumber, "", new { @class = "text-danger" })
                                                 </div>
-                                                @Html.HiddenFor(model => model.MeterID)
-
                                             </div>
 
                                             <div class="col-md-6 mb-4 pb-2">
@@ -197,17 +194,6 @@
                                                 </div>
                                                 @Html.HiddenFor(model => model.Type)
 
-                                            </div>
-
-                                        </div>
-
-                                        <div class="row">
-                                            <div class="col-md-6 mb-4 pb-2">
-                                                <div class="form-outline form-group">
-                                                    @Html.LabelFor(model => model.lockNumber)
-                                                    @Html.EditorFor(model => model.lockNumber, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "lockNumber" } })
-                                                    @Html.ValidationMessageFor(model => model.lockNumber, "", new { @class = "text-danger" })
-                                                </div>
                                             </div>
 
                                         </div>
@@ -332,9 +318,9 @@
                                             <div class="col-md-6 mb-4 pb-2">
 
                                                 <div class="form-outline form-group">
-                                                    @Html.LabelFor(model => model.MeterID)
-                                                    @Html.EditorFor(model => model.MeterID, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "meterIDUpadte" } })
-                                                    @Html.ValidationMessageFor(model => model.MeterID, "", new { @class = "text-danger" })
+                                                    @Html.LabelFor(model => model.lockNumber)
+                                                    @Html.EditorFor(model => model.lockNumber, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "lockNumberUpdate" } })
+                                                    @Html.ValidationMessageFor(model => model.lockNumber, "", new { @class = "text-danger" })
                                                 </div>
 
                                             </div>
@@ -350,19 +336,7 @@
                                             </div>
 
                                         </div>
-
-                                        <div class="row">
-                                            <div class="col-md-6 mb-4 pb-2">
-
-                                                <div class="form-outline form-group">
-                                                    @Html.LabelFor(model => model.lockNumber)
-                                                    @Html.EditorFor(model => model.lockNumber, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "lockNumberUpdate" } })
-                                                    @Html.ValidationMessageFor(model => model.lockNumber, "", new { @class = "text-danger" })
-                                                </div>
-
-                                            </div>
-                                        </div>
-
+                                                                               
                                             <div class="row">
                                                 <div class="col-md-6 mb-4 pb-2">
                                                     <input type="submit" value="Update" class="btn btn-primary btn-lg btn-block" />
@@ -484,9 +458,9 @@
                                             <div class="col-md-6 mb-4 pb-2">
 
                                                 <div class="form-outline form-group">
-                                                    @Html.LabelFor(model => model.MeterID)
-                                                    @Html.EditorFor(model => model.MeterID, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "meterIDDelete", @readonly = "readonly" } })
-                                                    @Html.ValidationMessageFor(model => model.MeterID, "", new { @class = "text-danger" })
+                                                    @Html.LabelFor(model => model.lockNumber)
+                                                    @Html.EditorFor(model => model.lockNumber, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "lockNumberDelete", @readonly = "readonly" } })
+                                                    @Html.ValidationMessageFor(model => model.lockNumber, "", new { @class = "text-danger" })
                                                 </div>
 
                                             </div>
@@ -504,22 +478,10 @@
                                         </div>
 
                                         <div class="row">
-                                            <div class="col-md-6 mb-4 pb-2">
-
-                                                <div class="form-outline form-group">
-                                                    @Html.LabelFor(model => model.lockNumber)
-                                                    @Html.EditorFor(model => model.lockNumber, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "lockNumberDelete", @readonly = "readonly" } })
-                                                    @Html.ValidationMessageFor(model => model.lockNumber, "", new { @class = "text-danger" })
-                                                </div>
-
-                                            </div>
-                                        </div>
-
-                                            <div class="row">
                                                 <div class="col-md-6 mb-4 pb-2">
                                                     <button type="submit" class="btn btn-danger btn-lg btn-block">Delete</button>
                                                 </div>
-                                            </div>
+                                        </div>
 
                                         </div>
                                     </div>
@@ -543,7 +505,6 @@
                     <th>Address</th>
                     <th>Phone number</th>
                     <th>Number (Optional)</th>
-                    <th>Meter ID</th>
                     <th>Meter Type</th>
                     <th>Lock Number</th>
                     <th>Branch</th>
@@ -563,7 +524,6 @@
                         <td>@Html.DisplayFor(modelItem => item.cAddress)</td>
                         <td>@Html.DisplayFor(modelItem => item.cNumber)</td>
                         <td>@Html.DisplayFor(modelItem => item.cNumberOp)</td>
-                        <td>@Html.DisplayFor(modelItem => item.MeterID)</td>
                         <td>@Html.DisplayFor(modelItem => item.Type)</td>
                         <td>@Html.DisplayFor(modelItem => item.lockNumber)</td>
                         <td>@Html.DisplayFor(modelItem => item.Branch)</td>
@@ -595,35 +555,7 @@
 
     </div>
 
-    <!--Populate Meter ID Dropdown-->
-    <script>
-        $(document).ready(function () {
-        // Click event handler for opening the modal
-        $("#openModal").click(function () {
-            // Perform an AJAX request to fetch data
-            $.ajax({
-                type: "GET",
-                url: "@Url.Action("GetInactiveMeter", "Customer")",
-                dataType: "json",
-                success: function (data) {
-                    // Clear the existing dropdown options
-                    $("#meterDropdown").empty();
-
-                    // Populate the dropdown with the fetched data
-                    $.each(data, function (index, item) {
-                        $("#meterDropdown").append($("<option>").text(item).val(item));
-                    });
-
-                },
-                error: function () {
-                    // Handle errors if the AJAX request fails
-                    alert("Failed to fetch data.");
-                }
-            });
-        });
-    });
-    </script>
-
+   
     <!--Populate Meter Type Dropdown-->
     <script>
         $(document).ready(function () {
@@ -791,7 +723,6 @@
                                 $("#BranchUpdate").val(data.Branch);
                                 $("#numberUpdate").val(data.cNumber);
                                 $("#number2Update").val(data.cNumberOp);
-                                $("#meterIDUpadte").val(data.MeterID);
                                 $("#lockNumberUpdate").val(data.lockNumber);
                                 $("#type").val(data.Type);
                             },
@@ -853,7 +784,6 @@
                                 $("#BranchDelete").val(data.Branch);
                                 $("#numberDelete").val(data.cNumber);
                                 $("#number2Delete").val(data.cNumberOp);
-                                $("#meterIDDelete").val(data.MeterID);
                                 $("#lockNumberDelete").val(data.lockNumber);
                                 $("#typeDelete").val(data.Type);
 

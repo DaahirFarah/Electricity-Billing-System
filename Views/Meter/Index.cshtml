@@ -70,138 +70,11 @@
     </ol>
 
     <!--Create Bulk Button-->
-    <div class="mt-4 pt-2" style="padding-left: 75px; margin-left:100px">
+    @*<div class="mt-4 pt-2" style="padding-left: 75px; margin-left:100px">
         <form action="@Url.Action("BulkInsert", "Meter")" method="get">
             <input class="btn btn-secondary btn-lg btn-block" type="submit" value="Bulk Insert" />
         </form>
-    </div>
-
-    <!--Modal Activation Button-->
-    <div class="mt-4 pt-2" style="padding-left: 75px; margin-left: 100px;">
-
-        <input data-toggle="modal" data-target="#createMeterModal" class="btn btn-primary btn-lg btn-block" type="submit" value="Create Meter" />
-
-    </div>
-
-    <!--Create Meter Modal-->
-    <div class="modal fade" id="createMeterModal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="createInvoiceModalLabel" aria-hidden="true" style="color:black">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3 class="modal-title" id="createInvoiceModalLabel"> <strong>Create Meter</strong></h3>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="card rounded shadow">
-                        <div class="card-body">
-                            @using (Html.BeginForm("Create", "Meter", FormMethod.Post))
-                            {
-                                @Html.AntiForgeryToken()
-
-                                <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">
-
-                                    <div class="card-body p-4 p-md-5">
-                                        @*<h2 class="mb-4 pb-2 pb-md-0 mb-md-5"><strong>Create Invoice</strong></h2>*@
-                                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-
-                                        <div class="row">
-                                            <div class="col-md-6 mb-4">
-
-                                                <div class="form-outline form-group">
-                                                    @Html.LabelFor(m => m.SerialNumber)
-                                                    @Html.EditorFor(model => model.SerialNumber, new { htmlAttributes = new { @class = "form-control form-control-lg", id = "serialN" } })
-                                                    @Html.ValidationMessageFor(model => model.SerialNumber, "", new { @class = "text-danger" })
-                                                </div>
-
-                                            </div>
-                                            <div class="col-md-6 mb-4">
-
-                                                <div class="form-outline form-group">
-                                                    @Html.LabelFor(model => model.Type)
-                                                    @Html.EditorFor(model => model.Type, new { htmlAttributes = new { @class = "form-control form-control-lg", id = "type" } })
-                                                    @Html.ValidationMessageFor(model => model.Type, "", new { @class = "text-danger" })
-                                                </div>
-
-                                            </div>
-                                        </div>
-
-                                        <div class="row">
-
-                                            <div class="col-md-12 mb-4">
-
-                                                <div class="form-outline form-group">
-                                                    @Html.LabelFor(model => model.Status)
-                                                    @Html.EditorFor(model => model.Status, new { htmlAttributes = new { @class = "form-control form-control-lg", id = "status" } })
-                                                    @Html.ValidationMessageFor(model => model.Status, "", new { @class = "text-danger" })
-                                                </div>
-
-                                            </div>
-                                        </div>
-
-                                        <!--Below div element holds some buttons. Leave it alone-->
-                                        <div class="row">
-                                            <div class="col-md-6 mb-4 pb-2">
-                                                <input type="submit" value="Create" class="btn btn-success btn-lg btn-block" />
-
-                                            </div>
-
-
-                                        </div>
-
-                                        <script>
-
-                                            // Text Input Validation
-                                            function validateText(input) {
-                                                if (!isNaN(Number(input.value))) {
-                                                    alert('Please enter text');
-                                                    input.value = '';
-                                                }
-                                            }
-
-                                            // Number validation function
-                                            function validateNumber(input) {
-                                                if (isNaN(Number(input.value))) {
-                                                    alert('Please enter a number');
-                                                    input.value = '';
-                                                }
-                                            }
-
-                                            // Get elements
-                                            const serialN = document.querySelector('#serialN');
-                                            const type = document.querySelector('#type');
-                                            const iDate = document.querySelector('#iDate');
-                                            const statuss = document.querySelector('#status');
-
-                                            // Attach listeners
-
-
-                                            serialN.addEventListener('input', () => {
-                                                validateNumber(serialN);
-                                            });
-
-                                            type.addEventListener('input', () => {
-                                                validateText(type);
-                                            });
-
-                                            statuss.addEventListener('input', () => {
-                                                validateText(statuss);
-                                            });
-
-
-
-                                        </script>
-
-                                    </div>
-                                </div>
-                            }
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    </div>*@
 
     <!--Update Meter Modal-->
     <div class="modal fade" id="updateMeterModal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="createInvoiceModalLabel" aria-hidden="true" style="color:black">
@@ -230,9 +103,9 @@
                                             <div class="col-md-6 mb-4">
 
                                                 <div class="form-outline form-group">
-                                                    @Html.LabelFor(m => m.SerialNumber)
-                                                    @Html.EditorFor(model => model.SerialNumber, new { htmlAttributes = new { @class = "form-control form-control-lg", id = "serialNUpdate" } })
-                                                    @Html.ValidationMessageFor(model => model.SerialNumber, "", new { @class = "text-danger" })
+                                                    @Html.LabelFor(m => m.cID)
+                                                    @Html.EditorFor(model => model.cID, new { htmlAttributes = new { @class = "form-control form-control-lg", id = "cIDUpdate" } })
+                                                    @Html.ValidationMessageFor(model => model.cID, "", new { @class = "text-danger" })
                                                 </div>
 
                                             </div>
@@ -248,8 +121,17 @@
                                         </div>
 
                                         <div class="row">
+                                            <div class="col-md-6 mb-4">
 
-                                            <div class="col-md-12 mb-4">
+                                                <div class="form-outline form-group">
+                                                    @Html.LabelFor(m => m.lockNumber)
+                                                    @Html.EditorFor(model => model.lockNumber, new { htmlAttributes = new { @class = "form-control form-control-lg", id = "lockNUpdate" } })
+                                                    @Html.ValidationMessageFor(model => model.lockNumber, "", new { @class = "text-danger" })
+                                                </div>
+
+                                            </div>
+
+                                            <div class="col-md-6 mb-4">
 
                                                 <div class="form-outline form-group">
                                                     @Html.LabelFor(model => model.Status)
@@ -305,9 +187,9 @@
                                             <div class="col-md-6 mb-4">
 
                                                 <div class="form-outline form-group">
-                                                    @Html.LabelFor(m => m.SerialNumber)
-                                                    @Html.EditorFor(model => model.SerialNumber, new { htmlAttributes = new { @class = "form-control form-control-lg", id = "serialNDelete", @readonly = "readonly" } })
-                                                    @Html.ValidationMessageFor(model => model.SerialNumber, "", new { @class = "text-danger" })
+                                                    @Html.LabelFor(m => m.cID)
+                                                    @Html.EditorFor(model => model.cID, new { htmlAttributes = new { @class = "form-control form-control-lg", id = "cIDDelete", @readonly = "readonly" } })
+                                                    @Html.ValidationMessageFor(model => model.cID, "", new { @class = "text-danger" })
                                                 </div>
 
                                             </div>
@@ -323,8 +205,17 @@
                                         </div>
 
                                         <div class="row">
+                                            <div class="col-md-6 mb-4">
 
-                                            <div class="col-md-12 mb-4">
+                                                <div class="form-outline form-group">
+                                                    @Html.LabelFor(m => m.lockNumber)
+                                                    @Html.EditorFor(model => model.lockNumber, new { htmlAttributes = new { @class = "form-control form-control-lg", id = "lockNDelete", @readonly = "readonly" } })
+                                                    @Html.ValidationMessageFor(model => model.lockNumber, "", new { @class = "text-danger" })
+                                                </div>
+
+                                            </div>
+
+                                            <div class="col-md-6 mb-4">
 
                                                 <div class="form-outline form-group">
                                                     @Html.LabelFor(model => model.Status)
@@ -358,7 +249,8 @@
             <thead>
                 <tr>
                     <th>Meter ID</th>
-                    <th>Serial Number</th>
+                    <th>Customer ID</th>
+                    <th>Lock Number</th>
                     <th>Type</th>
                     <th>Status</th>
                     <th>Actions</th>
@@ -371,7 +263,8 @@
                     <tr>
 
                         <td>@Html.DisplayFor(model => item.MeterID)</td>
-                        <td>@Html.DisplayFor(model => item.SerialNumber)</td>
+                        <td>@Html.DisplayFor(model => item.cID)</td>
+                        <td>@Html.DisplayFor(model => item.lockNumber)</td>
                         <td>@Html.DisplayFor(model => item.Type)</td>
                         <td>@Html.DisplayFor(model => item.Status)</td>
                         <td>
@@ -414,7 +307,8 @@
                             success: function (data) {
                                 // Populate the form fields with the retrieved data
                                 $("#meterID").val(meterID);
-                                $("#serialNUpdate").val(data.SerialNumber);
+                                $("#cIDUpdate").val(cID);
+                                $("#lockNUpdate").val(data.lockNumber);
                                 $("#typeUpdate").val(data.Type);
                                 $("#statusUpdate").val(data.Status);
 
@@ -470,7 +364,8 @@
                             success: function (data) {
                                 // Populate the form fields with the retrieved data
                                 $("#meterIDDelete").val(meterID);
-                                $("#serialNDelete").val(data.SerialNumber);
+                                $("#cIDDelete").val(cID);
+                                $("#lockNDelete").val(data.lockNumber);
                                 $("#typeDelete").val(data.Type);
                                 $("#statusDelete").val(data.Status);
 
