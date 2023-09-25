@@ -28,9 +28,6 @@ namespace EBS.Controllers
             return View(wrapper);
         }
 
-        //GET: Register Customer
-               
-
         [HttpGet]
         public ActionResult GetInactiveMeter()
         {

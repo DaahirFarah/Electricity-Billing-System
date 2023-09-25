@@ -14,6 +14,8 @@ namespace EBS.viewModels
         {
             // Initialize SelectedMeterID with a default value of 0
             SelectedMeterID = new List<int> { 0 };
+            SelectedType = new List<string> { "" };
+            SelectedBranch = new List<string> { "" };
         }
 
 
@@ -40,11 +42,9 @@ namespace EBS.viewModels
 
         [Required(ErrorMessage = "Please Provide Customer Phone Number")]
         [Display(Name = "Phone Number")]
-        //[RegularExpression(@"^\d{10}$", ErrorMessage = "Phone Number Should be 10 digits starting 061.")]
         public int cNumber { get; set; }
 
         [Display(Name = "Phone Number (Optional)")]
-        //[RegularExpression(@"^\d{10}$", ErrorMessage = "Phone Number Should be 10 digits starting 061.")]
         public string cNumberOp { get; set; }
 
         [Required]
@@ -53,6 +53,18 @@ namespace EBS.viewModels
         [Required(ErrorMessage = "Please Insert Meter ID")]
         [Display(Name = "Meter ID")]
         public int MeterID { get; set; }
+
+        [Required(ErrorMessage = "Please Insert Lock Number")]
+        [Display(Name = "Lock Number")]
+        public int lockNumber { get; set; }
+
+        public List<string> SelectedType { get; set; }
+
+        [Required]
+        [Display(Name = "Meter Type")]
+        public string Type { get; set; }
+
+        public List<string> SelectedBranch { get; set; }
 
         [Required(ErrorMessage = "Please Provide Customer Branch")]
         [Display(Name = "Branch")]
