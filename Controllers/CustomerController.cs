@@ -29,34 +29,7 @@ namespace EBS.Controllers
         }
 
         //GET: Register Customer
-
-        [HttpGet]
-        public ActionResult Create()
-        {
-
-            //List<int> meter = new List<int>();
-            //string query = "SELECT MeterID FROM Meters WHERE Status = 'Inactive'";
-
-            //using (SqlConnection connection = new SqlConnection(SecConn))
-            //{
-            //    connection.Open();
-            //    SqlCommand command = new SqlCommand(query, connection);
-            //    SqlDataReader reader = command.ExecuteReader();
-
-            //    while (reader.Read())
-            //    {
-            //        int meterId = (int)reader["MeterID"];
-            //        meter.Add(meterId);
-            //    }
-            //}
-
-            //customerWrapper model = new customerWrapper
-            //{
-            //    SelectedMeterID = meter
-            //};
-
-            return View();
-        }
+               
 
         [HttpGet]
         public ActionResult GetInactiveMeter()
