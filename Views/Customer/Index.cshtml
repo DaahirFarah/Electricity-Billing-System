@@ -212,13 +212,13 @@
 
                                         </div>
 
-                                            <div class="row">
-                                                <div class="col-md-6 mb-4 pb-2">
-                                                    <input type="submit" value="Create" class="btn btn-success btn-lg btn-block" />
-                                                </div>
+                                        <div class="row">
+                                            <div class="col-md-6 mb-4 pb-2">
+                                                <input type="submit" value="Create" class="btn btn-success btn-lg btn-block" />
                                             </div>
                                         </div>
                                     </div>
+                                </div>
                             }
                         </div>
                     </div>
@@ -502,6 +502,8 @@
                     <th>Phone number</th>
                     <th>Number (Optional)</th>
                     <th>Meter ID</th>
+                    <th>Meter Type</th>
+                    <th>Lock Number</th>
                     <th>Branch</th>
                     <th>Balance</th>
                     <th>Actions</th>
@@ -520,6 +522,8 @@
                         <td>@Html.DisplayFor(modelItem => item.cNumber)</td>
                         <td>@Html.DisplayFor(modelItem => item.cNumberOp)</td>
                         <td>@Html.DisplayFor(modelItem => item.MeterID)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Type)</td>
+                        <td>@Html.DisplayFor(modelItem => item.lockNumber)</td>
                         <td>@Html.DisplayFor(modelItem => item.Branch)</td>
                         <td>@Html.DisplayFor(modelItem => item.Balance)</td>
                         <td>
@@ -549,6 +553,7 @@
 
     </div>
 
+    <!--Populate Meter ID Dropdown-->
     <script>
         $(document).ready(function () {
         // Click event handler for opening the modal
@@ -565,6 +570,64 @@
                     // Populate the dropdown with the fetched data
                     $.each(data, function (index, item) {
                         $("#meterDropdown").append($("<option>").text(item).val(item));
+                    });
+
+                },
+                error: function () {
+                    // Handle errors if the AJAX request fails
+                    alert("Failed to fetch data.");
+                }
+            });
+        });
+    });
+    </script>
+
+    <!--Populate Meter Type Dropdown-->
+    <script>
+        $(document).ready(function () {
+        // Click event handler for opening the modal
+        $("#openModal").click(function () {
+            // Perform an AJAX request to fetch data
+            $.ajax({
+                type: "GET",
+                url: "@Url.Action("GetMeterType", "Customer")",
+                dataType: "json",
+                success: function (data) {
+                    // Clear the existing dropdown options
+                    $("#meterTypeDropdown").empty();
+
+                    // Populate the dropdown with the fetched data
+                    $.each(data, function (index, item) {
+                        $("#meterTypeDropdown").append($("<option>").text(item).val(item));
+                    });
+
+                },
+                error: function () {
+                    // Handle errors if the AJAX request fails
+                    alert("Failed to fetch data.");
+                }
+            });
+        });
+    });
+    </script>
+
+    <!--Populate Branch Dropdown-->
+    <script>
+        $(document).ready(function () {
+        // Click event handler for opening the modal
+        $("#openModal").click(function () {
+            // Perform an AJAX request to fetch data
+            $.ajax({
+                type: "GET",
+                url: "@Url.Action("GetBranches", "Customer")",
+                dataType: "json",
+                success: function (data) {
+                    // Clear the existing dropdown options
+                    $("#branchDropdown").empty();
+
+                    // Populate the dropdown with the fetched data
+                    $.each(data, function (index, item) {
+                        $("#branchDropdown").append($("<option>").text(item).val(item));
                     });
 
                 },

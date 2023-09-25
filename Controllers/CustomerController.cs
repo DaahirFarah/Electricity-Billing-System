@@ -28,6 +28,7 @@ namespace EBS.Controllers
             return View(wrapper);
         }
 
+        // GET Inactive Meters
         [HttpGet]
         public ActionResult GetInactiveMeter()
         {
@@ -55,6 +56,62 @@ namespace EBS.Controllers
             return Json(meter, JsonRequestBehavior.AllowGet);
         }
 
+        // GET Branches
+        [HttpGet]
+        public ActionResult GetBranches()
+        {
+            List<string> Branch = new List<string>();
+            string query = "SELECT BranchName FROM Branches";
+
+            using (SqlConnection connection = new SqlConnection(SecConn))
+            {
+                connection.Open();
+                SqlCommand command = new SqlCommand(query, connection);
+                SqlDataReader reader = command.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    string branch = (string)reader["BranchName"];
+                    Branch.Add(branch);
+                }
+            }
+
+            customerWrapper model = new customerWrapper
+            {
+                SelectedBranch = Branch
+            };
+
+            return Json(Branch, JsonRequestBehavior.AllowGet);
+        }
+
+        // GET Meter Types
+        [HttpGet]
+        public ActionResult GetMeterType()
+        {
+            List<string> Type = new List<string>();
+            string query = "SELECT Type FROM MeterType";
+
+            using (SqlConnection connection = new SqlConnection(SecConn))
+            {
+                connection.Open();
+                SqlCommand command = new SqlCommand(query, connection);
+                SqlDataReader reader = command.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    string type = (string)reader["Type"];
+                    Type.Add(type);
+                }
+            }
+
+            customerWrapper model = new customerWrapper
+            {
+                SelectedBranch = Type
+            };
+
+            return Json(Type, JsonRequestBehavior.AllowGet);
+        }
+
         //SET: Register Customer
         [ValidateAntiForgeryToken]
         [HttpPost]
@@ -65,7 +122,7 @@ namespace EBS.Controllers
                 InsertCustomer(model);
                 return Json(new { success = true, message = "Customer Added Successfully!" });
             }
-            return Json(new {success = false, message = "Insertion Failed. Please Try Again!"});
+            return Json(new { success = false, message = "Insertion Failed. Please Try Again!" });
         }
 
 
@@ -329,7 +386,9 @@ namespace EBS.Controllers
                                 cNumberOp = reader["cNumberOp"] != DBNull.Value ? reader["cNumberOp"].ToString() : "N/A",
                                 MeterID = Convert.ToInt32(reader["MeterID"]),
                                 Branch = reader["Branch"].ToString(),
-                                Balance = Convert.ToDecimal(reader["Balance"])
+                                Balance = Convert.ToDecimal(reader["Balance"]),
+                                lockNumber = Convert.ToInt32(reader["lockNumber"]),
+                                Type = reader["Type"].ToString(),
 
                             });
                         }
@@ -351,7 +410,7 @@ namespace EBS.Controllers
                 // This variable captures the selected meterID for the customer and then it will be the one to have the value that will go to the db
                 int meterID = model.MeterID;
 
-                string query = "INSERT INTO CustomerTbl (cFirstName, cMidName, cLastName, cAddress, cNumber, cNumberOp, MeterID, Branch, Balance) VALUES (@cFirstName, @cMidName, @cLastName, @cAddress, @cNumber, @cNumberOp, @meterID, @Branch, 0)";
+                string query = "INSERT INTO CustomerTbl (cFirstName, cMidName, cLastName, cAddress, cNumber, cNumberOp, MeterID, Branch, Type, lockNumber, Balance) VALUES (@cFirstName, @cMidName, @cLastName, @cAddress, @cNumber, @cNumberOp, @meterID, @Branch, @Type, @lockNumber, 0)";
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@cFirstName", model.cFirstName);
@@ -369,6 +428,8 @@ namespace EBS.Controllers
                     }
                     command.Parameters.AddWithValue("@MeterID", meterID);
                     command.Parameters.AddWithValue("@Branch", model.Branch);
+                    command.Parameters.AddWithValue("@Type", model.Type);
+                    command.Parameters.AddWithValue("@lockNumber", model.lockNumber);
 
                     command.ExecuteNonQuery();
 
