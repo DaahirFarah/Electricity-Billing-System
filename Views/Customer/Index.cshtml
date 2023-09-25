@@ -339,18 +339,38 @@
 
                                             </div>
 
-                                        </div>
-                                        <div class="row">
                                             <div class="col-md-6 mb-4 pb-2">
-                                                <input type="submit" value="Update" class="btn btn-primary btn-lg btn-block" />
+
+                                                <div class="form-outline form-group">
+                                                    @Html.LabelFor(model => model.Type)
+                                                    @Html.EditorFor(model => model.Type, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "type" } })
+                                                    @Html.ValidationMessageFor(model => model.Type, "", new { @class = "text-danger" })
+                                                </div>
 
                                             </div>
 
-
                                         </div>
 
+                                        <div class="row">
+                                            <div class="col-md-6 mb-4 pb-2">
+
+                                                <div class="form-outline form-group">
+                                                    @Html.LabelFor(model => model.lockNumber)
+                                                    @Html.EditorFor(model => model.lockNumber, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "lockNumberUpdate" } })
+                                                    @Html.ValidationMessageFor(model => model.lockNumber, "", new { @class = "text-danger" })
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                            <div class="row">
+                                                <div class="col-md-6 mb-4 pb-2">
+                                                    <input type="submit" value="Update" class="btn btn-primary btn-lg btn-block" />
+                                                </div>
+                                            </div>
+
+                                        </div>
                                     </div>
-                                </div>
                             }
                         </div>
                     </div>
@@ -471,16 +491,38 @@
 
                                             </div>
 
+                                            <div class="col-md-6 mb-4 pb-2">
+
+                                                <div class="form-outline form-group">
+                                                    @Html.LabelFor(model => model.Type)
+                                                    @Html.EditorFor(model => model.Type, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "typeDelete", @readonly = "readonly" } })
+                                                    @Html.ValidationMessageFor(model => model.Type, "", new { @class = "text-danger" })
+                                                </div>
+
+                                            </div>
+
                                         </div>
 
                                         <div class="row">
                                             <div class="col-md-6 mb-4 pb-2">
-                                                <button type="submit" class="btn btn-danger btn-lg btn-block">Delete</button>
+
+                                                <div class="form-outline form-group">
+                                                    @Html.LabelFor(model => model.lockNumber)
+                                                    @Html.EditorFor(model => model.lockNumber, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "lockNumberDelete", @readonly = "readonly" } })
+                                                    @Html.ValidationMessageFor(model => model.lockNumber, "", new { @class = "text-danger" })
+                                                </div>
+
                                             </div>
                                         </div>
 
+                                            <div class="row">
+                                                <div class="col-md-6 mb-4 pb-2">
+                                                    <button type="submit" class="btn btn-danger btn-lg btn-block">Delete</button>
+                                                </div>
+                                            </div>
+
+                                        </div>
                                     </div>
-                                </div>
                             }
                         </div>
                     </div>
@@ -750,7 +792,8 @@
                                 $("#numberUpdate").val(data.cNumber);
                                 $("#number2Update").val(data.cNumberOp);
                                 $("#meterIDUpadte").val(data.MeterID);
-
+                                $("#lockNumberUpdate").val(data.lockNumber);
+                                $("#type").val(data.Type);
                             },
                             error: function () {
                                 alert("Error fetching invoice data.");
@@ -811,6 +854,8 @@
                                 $("#numberDelete").val(data.cNumber);
                                 $("#number2Delete").val(data.cNumberOp);
                                 $("#meterIDDelete").val(data.MeterID);
+                                $("#lockNumberDelete").val(data.lockNumber);
+                                $("#typeDelete").val(data.Type);
 
                             },
                             error: function () {

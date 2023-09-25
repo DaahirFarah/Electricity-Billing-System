@@ -154,7 +154,9 @@ namespace EBS.Controllers
                                 cNumberOp = reader["cNumberOp"].ToString(),
                                 MeterID = Convert.ToInt32(reader["MeterID"]),
                                 Branch = reader["Branch"].ToString(),
-                                Balance = Convert.ToDecimal(reader["Balance"])
+                                Balance = Convert.ToDecimal(reader["Balance"]),
+                                lockNumber = Convert.ToInt32(reader["lockNumber"]),
+                                Type = reader["Type"].ToString()
                             };
 
                             // Return the Invoice Data as JSON
@@ -491,7 +493,7 @@ namespace EBS.Controllers
             {
                 connection.Open();
 
-                string query = "UPDATE CustomerTbl SET cFirstName = @cFirstName, cMidName = @cMidName, cLastName = @cLastName, cAddress = @cAddress, cNumber = @cNumber, cNumberOp = @cNumberOp, MeterID = @MeterID, Branch = @Branch WHERE cID = @cID";
+                string query = "UPDATE CustomerTbl SET cFirstName = @cFirstName, cMidName = @cMidName, cLastName = @cLastName, cAddress = @cAddress, cNumber = @cNumber, cNumberOp = @cNumberOp, MeterID = @MeterID, Branch = @Branch, Type = @Type, lockNumber = @lockNumber WHERE cID = @cID";
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@cID", model.cID);
@@ -510,6 +512,8 @@ namespace EBS.Controllers
                     }
                     command.Parameters.AddWithValue("@MeterID", model.MeterID);
                     command.Parameters.AddWithValue("@Branch", model.Branch);
+                    command.Parameters.AddWithValue("@Type", model.Type);
+                    command.Parameters.AddWithValue("@lockNumber", model.lockNumber);
 
                     command.ExecuteNonQuery();
                 }
@@ -517,7 +521,6 @@ namespace EBS.Controllers
         }
 
         // Customer Information Deletion Logic for the Delete ActionResult
-
         private void DeleteCustomer(int id)
         {
             using (SqlConnection connection = new SqlConnection(SecConn))
