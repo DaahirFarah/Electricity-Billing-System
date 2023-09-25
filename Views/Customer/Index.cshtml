@@ -142,13 +142,14 @@
 
                                             </div>
 
-                                            <div class="col-md-6 mb-4 d-flex align-items-center">
+                                            <div class="col-md-6 mb-4 pb-2">
 
                                                 <div class="form-outline form-group">
                                                     @Html.LabelFor(model => model.Branch)
-                                                    @Html.EditorFor(model => model.Branch, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "Branch" } })
+                                                    @Html.DropDownListFor(model => model.Branch, new SelectList(Model.SelectedBranch), "Select Branch", new { @class = "form-control", id = "branchDropdown" })
                                                     @Html.ValidationMessageFor(model => model.Branch, "", new { @class = "text-danger" })
                                                 </div>
+                                                @Html.HiddenFor(model => model.Branch)
 
                                             </div>
 
@@ -186,15 +187,38 @@
                                                 @Html.HiddenFor(model => model.MeterID)
 
                                             </div>
+
+                                            <div class="col-md-6 mb-4 pb-2">
+
+                                                <div class="form-outline form-group">
+                                                    @Html.LabelFor(model => model.Type)
+                                                    @Html.DropDownListFor(model => model.Type, new SelectList(Model.SelectedType), "Select Meter Type", new { @class = "form-control", id = "meterTypeDropdown" })
+                                                    @Html.ValidationMessageFor(model => model.Type, "", new { @class = "text-danger" })
+                                                </div>
+                                                @Html.HiddenFor(model => model.Type)
+
+                                            </div>
+
                                         </div>
 
                                         <div class="row">
                                             <div class="col-md-6 mb-4 pb-2">
-                                                <input type="submit" value="Create" class="btn btn-success btn-lg btn-block" />
+                                                <div class="form-outline form-group">
+                                                    @Html.LabelFor(model => model.lockNumber)
+                                                    @Html.EditorFor(model => model.lockNumber, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "lockNumber" } })
+                                                    @Html.ValidationMessageFor(model => model.lockNumber, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                            <div class="row">
+                                                <div class="col-md-6 mb-4 pb-2">
+                                                    <input type="submit" value="Create" class="btn btn-success btn-lg btn-block" />
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
                             }
                         </div>
                     </div>
