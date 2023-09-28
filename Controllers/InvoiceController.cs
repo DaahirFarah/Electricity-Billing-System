@@ -1,23 +1,17 @@
 ﻿using EBS.viewModels;
-using iTextSharp.text.pdf;
 using iTextSharp.text;
+using iTextSharp.text.pdf;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Web;
 using System.Web.Mvc;
-using System.Xml.Linq;
-using System.Collections;
 
 namespace EBS.Controllers
 {
-    [Authorize]
+    //[Authorize]
     public class InvoiceController : Controller
     {
         // This variable holds the balance so that it can be accessed in all methods
@@ -142,7 +136,7 @@ namespace EBS.Controllers
                             // Populate the UserProfile object
                             invoiceVM invoice = new invoiceVM
                             {
-                               cur_Reading = Convert.ToDecimal(reader["cur_Reading"]),
+                                cur_Reading = Convert.ToDecimal(reader["cur_Reading"]),
                             };
 
                             // Return the UserProfile as JSON
@@ -165,8 +159,8 @@ namespace EBS.Controllers
 
         // POST: /Invoices/BulkInsert
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult BulkInsert(List<invoiceVM> model)
+        //[ValidateAntiForgeryToken]
+        public ActionResult BulkInsert(List<invoiceVM> models)
         {
             using (SqlConnection connection = new SqlConnection(SecConn))
             {
@@ -177,7 +171,7 @@ namespace EBS.Controllers
                 {
                     try
                     {
-                        foreach (var wrapper in model)
+                        foreach (var wrapper in models)
                         {
                             // Retrieve the usage level and rate for each record
                             string rateQuery = "SELECT UsageLevelNumber, Rate FROM Rates";
@@ -253,7 +247,7 @@ namespace EBS.Controllers
                 }
 
                 // Update the customer's balance after the transaction is committed
-                foreach (var wrapper in model)
+                foreach (var wrapper in models)
                 {
                     string updateBalanceQuery = "UPDATE CustomerTbl SET Balance = 0 WHERE cID = @cID";
                     using (SqlCommand updateBalanceCommand = new SqlCommand(updateBalanceQuery, connection))
@@ -516,7 +510,7 @@ namespace EBS.Controllers
                     if (balanceResult != null && balanceResult != DBNull.Value)
                     {
                         balance = Convert.ToDecimal(balanceResult);
-                        
+
                     }
                 }
 
@@ -527,7 +521,7 @@ namespace EBS.Controllers
                     {
                         // Multiply SomePropertyToCompare by the corresponding value in decimalList
                         model.Rate = rate[i];
-                        model.total_Fee = model.reading_Value * model.Rate;                      
+                        model.total_Fee = model.reading_Value * model.Rate;
                         break;
 
                     }
@@ -556,17 +550,17 @@ namespace EBS.Controllers
                     string updateBalanceQuery = "UPDATE CustomerTbl SET Balance = 0 WHERE cID = @cID";
                     using (SqlCommand updateBalanceCommand = new SqlCommand(updateBalanceQuery, connection))
                     {
-                        
+
                         updateBalanceCommand.Parameters.AddWithValue("@cID", model.cID);
                         updateBalanceCommand.ExecuteNonQuery();
                     }
 
-                    
+
                 }
             }
 
         }
-     
+
         private invWrapper GetInvoiceById(int invoiceID)
         {
             using (SqlConnection connection = new SqlConnection(SecConn))
@@ -578,7 +572,7 @@ namespace EBS.Controllers
                     command.Parameters.AddWithValue("@invoiceID", invoiceID);
 
                     using (SqlDataReader reader = command.ExecuteReader())
-                    {         
+                    {
                         while (reader.Read())
                         {
                             return new invWrapper
@@ -720,6 +714,6 @@ namespace EBS.Controllers
         }
 
 
-       
+
     }
 }

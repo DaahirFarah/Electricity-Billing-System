@@ -40,36 +40,46 @@
         <h2><strong>Insert Invoices</strong></h2>
 
         <br />
-        <br />
+
 
         @using (Html.BeginForm("BulkInsert", "Invoice", FormMethod.Post))
         {
-            @Html.AntiForgeryToken()
+            @*@Html.AntiForgeryToken()*@
+
 
             <table class="table">
                 <thead class="thead-light">
                     <tr>
+                        <th>Check</th>
                         <th>Customer ID</th>
                         <th>Reading Date</th>
                         <th>Previous Reading</th>
                         <th>Current Reading</th>
                         <th>Usage(KwH)</th>
+                        @*<th>Rate</th>
+                        <th>Charge($)</th>
+                        <th>Balance($)</th>
+                        <th>Amount Due($)</th>*@
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @for (int i = 0; i < 10; i++)
+                    @for (int i = 0; i < 2; i++)
                     {
                         <tr>
+                            <td>
+                                <input type="checkbox" class="form-check-input" name="invCheck" style="width: 20px; height: 20px; margin-top:13px; margin-left:15px;" />
+                            </td>
+
                             <td>
                                 @Html.EditorFor(model => Model[i].cID, new { htmlAttributes = new { @class = "form-control form-control-lg form-control-cID" } })
                                 @Html.ValidationMessageFor(m => Model[i].cID, "", new { @class = "text-danger" })
                             </td>
-
                             <td>
                                 @Html.EditorFor(model => Model[i].reading_Date, new { htmlAttributes = new { @class = "form-control form-control-lg form-control-rDate", type = "Date" } })
                                 @Html.ValidationMessageFor(m => Model[i].reading_Date, "", new { @class = "text-danger" })
                             </td>
-
+                           
                             <td>
                                 @Html.EditorFor(model => Model[i].prev_Reading, new { htmlAttributes = new { @class = "form-control form-control-lg form-control-prev_Reading" } })
                                 @Html.ValidationMessageFor(m => Model[i].prev_Reading, "", new { @class = "text-danger" })
@@ -85,6 +95,10 @@
                                 @Html.ValidationMessageFor(m => Model[i].reading_Value, "", new { @class = "text-danger" })
                             </td>
 
+                            <td>
+                                <button class="btn btn-success btn-lg btn-block btn-save-row" id="saverow" type="button">Save</button>
+                            </td>
+
                         </tr>
                     }
                 </tbody>
@@ -93,9 +107,8 @@
             <br />
             <br />
 
-            <div class="col-md-6 mb-4 pb-2" style="display: flex; justify-content: center; align-items: center;">
-                <input type="submit" value="Create" class="btn btn-success btn-lg btn-block" />
-                @*<input class="btn btn-primary btn-lg btn-block" type="submit" value="Save" />*@
+            <div class="col-md-6 mb-4 pb-2" style="justify-content: center; align-items: center;">
+                <button id="save-all-button" class="btn btn-success btn-lg btn-block" type="button">Save All</button>
             </div>
         }
 
@@ -160,7 +173,7 @@
             // Clear the input field
             input.value = ''; // Set the input field's value to an empty string
         }
-    }      
+    }
 
     // Attach listeners to input fields by class when they lose focus (blur)
     const cID = document.querySelectorAll('.form-control-cID');
@@ -192,7 +205,7 @@
         input.addEventListener('blur', () => {
             validateDate(input);
         });
-    });    
+    });
 
     //Perform Usage Calculation
     $(document).ready(function () {
@@ -213,11 +226,86 @@
                 window.alert('Current Reading Must be Greater Than Previous Reading');
             }
         });
+@*$('.btn-save-row').on('click', function () {
+  // Get the current row
+  var row = $(this).closest('tr');
+
+  // Check if the corresponding checkbox is checked
+  var checkbox = row.find('input[type="checkbox"]');
+  if (checkbox.is(':checked')) {
+    // Construct the data object from row elements
+    var data = {
+      cID: row.find('.form-control-cID').val(),
+      reading_Date: row.find('.form-control-rDate').val(),
+      prev_Reading: row.find('.form-control-prev_Reading').val(),
+      cur_Reading: row.find('.form-control-cur_Reading').val(),
+      reading_Value: row.find('.form-control-reading_Value').val(),
+    };
+
+    // Send the form data to the server via AJAX
+    $.ajax({
+      type: "POST",
+      url: "@Url.Action("BulkInsert", "Invoice")",
+      data: JSON.stringify(data), // Send the 'data' object directly
+      success: function (response, status, xhr) {
+        // Check the response status code
+        if (status === 'success') {
+          alert("Row inserted successfully.");
+        } else {
+          // Handle error, e.g., show an error message to the user
+          alert("Error inserting row into the database: " + response.statusText);
+        }
+      },
+      error: function (xhr, status, error) {
+        alert("Error inserting row into the database: " + error);
+      }
+    });
+  }
+});*@
+
+$('.btn-save-row').on('click', function () {
+  // Get the current row
+  var row = $(this).closest('tr');
+
+  // Check if the corresponding checkbox is checked
+  var checkbox = row.find('input[type="checkbox"]');
+  if (checkbox.is(':checked')) {
+    // Construct the data object from row elements
+    var model = {
+      cID: row.find('.form-control-cID').val(),
+      reading_Date: row.find('.form-control-rDate').val(),
+      prev_Reading: row.find('.form-control-prev_Reading').val(),
+      cur_Reading: row.find('.form-control-cur_Reading').val(),
+      reading_Value: row.find('.form-control-reading_Value').val(),
+      };
+
+      var models = [];
+      models.push(model);
+    // Send the form data to the server via AJAX
+    $.ajax({
+      type: "POST",
+      url: "@Url.Action("BulkInsert", "Invoice")",
+        data: JSON.stringify({ models: models }), 
+      contentType: "application/json",
+      success: function (response, status, xhr) {
+        // Check the response status code
+        if (status === 'success') {
+          alert("Row inserted successfully.");
+        } else {
+          // Handle error, e.g., show an error message to the user
+          alert("Error inserting row into the database: " + response.statusText);
+        }
+      },
+      error: function (xhr, status, error) {
+        alert("Error inserting row into the database: " + error);
+      }
+    });
+  }
+});
+
+
     });
 
-
-    // Attach click event listener to the "OK" button in the modal
-    document.getElementById('modalOkButton').addEventListener('click', hideValidationModal);
 </script>
 
 <!--Get related Data for each record-->
