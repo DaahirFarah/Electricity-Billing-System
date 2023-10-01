@@ -32,12 +32,12 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title>Insert Invoices | SEC</title>
+    <title>Bill Customers | SEC</title>
 </head>
 <body>
 
     <div id="container">
-        <h2><strong>Insert Invoices</strong></h2>
+        <h2><strong>Bill Customers</strong></h2>
 
         <br />
 
@@ -102,7 +102,7 @@
                             </td>
 
                             <td>
-                                <button class="btn btn-success btn-lg btn-block btn-save-row" id="saverow" type="button">Save</button>
+                                <button class="btn btn-success btn-lg btn-block btn-save-row" id="saverow" type="button">Bill</button>
                             </td>
 
                         </tr>
@@ -114,7 +114,7 @@
             <br />
 
             <div class="col-md-6 mb-4 pb-2" style="justify-content: center; align-items: center;">
-                <button id="save-all-button" class="btn btn-success btn-lg btn-block" type="button">Save All</button>
+                <button id="save-all-button" class="btn btn-success btn-lg btn-block" type="button">Bill All</button>
             </div>
         }
 
@@ -261,14 +261,16 @@ $('.btn-save-row').on('click', function () {
       success: function (response, status, xhr) {
         // Check the response status code
         if (status === 'success') {
-          alert("Row inserted successfully.");
+          alert("Billed Customer Successfully.");
+          // Refresh Page After Billing Customer  
+          location.reload();
         } else {
           // Handle error, e.g., show an error message to the user
-          alert("Error inserting row into the database: " + response.statusText);
+          alert("Billing Failed! Try Again!: " + response.statusText);
         }
       },
       error: function (xhr, status, error) {
-        alert("Error inserting row into the database: " + error);
+          alert("Billing Failed! Try Again!: " + error);
       }
     });
   }
@@ -324,6 +326,8 @@ function saveAllRows() {
 
     success: function(res) {
         alert("Billed Customers successfully.");
+        // Refresh Page
+        location.reload();
     },
 
     error: function(err) {
