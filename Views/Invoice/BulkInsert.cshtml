@@ -56,9 +56,10 @@
                         <th>Previous Reading</th>
                         <th>Current Reading</th>
                         <th>Usage(KwH)</th>
+                        <th>Balance($)</th>
                         @*<th>Rate</th>
                         <th>Charge($)</th>
-                        <th>Balance($)</th>
+                        
                         <th>Amount Due($)</th>*@
                         <th>Action</th>
                     </tr>
@@ -79,7 +80,7 @@
                                 @Html.EditorFor(model => Model[i].reading_Date, new { htmlAttributes = new { @class = "form-control form-control-lg form-control-rDate", type = "Date" } })
                                 @Html.ValidationMessageFor(m => Model[i].reading_Date, "", new { @class = "text-danger" })
                             </td>
-                           
+
                             <td>
                                 @Html.EditorFor(model => Model[i].prev_Reading, new { htmlAttributes = new { @class = "form-control form-control-lg form-control-prev_Reading" } })
                                 @Html.ValidationMessageFor(m => Model[i].prev_Reading, "", new { @class = "text-danger" })
@@ -93,6 +94,11 @@
                             <td>
                                 @Html.EditorFor(model => Model[i].reading_Value, new { htmlAttributes = new { @class = "form-control form-control-lg form-control-reading_Value", @readonly = "readonly" } })
                                 @Html.ValidationMessageFor(m => Model[i].reading_Value, "", new { @class = "text-danger" })
+                            </td>
+
+                            <td>
+                                @Html.EditorFor(model => Model[i].balance, new { htmlAttributes = new { @class = "form-control form-control-lg form-control-balance", @readonly = "readonly" } })
+                                @Html.ValidationMessageFor(m => Model[i].balance, "", new { @class = "text-danger" })
                             </td>
 
                             <td>
@@ -290,6 +296,7 @@ $('.btn-save-row').on('click', function () {
                 success: function (data) {
                     // Populate the form fields within the current row with the retrieved data
                     row.find(".form-control-prev_Reading").val(data.cur_Reading);
+                    row.find(".form-control-balance").val(data.balance);
                 },
                 error: function () {
                     alert("Error fetching Customer data.");

@@ -114,41 +114,48 @@ namespace EBS.Controllers
         [HttpPost]
         public JsonResult GetRelatedData(int id)
         {
-            // Create a connection to your SQL Server database
+            // Define a variable to hold the result
+            invoiceVM result = new invoiceVM();
+
             using (SqlConnection connection = new SqlConnection(SecConn))
             {
                 connection.Open();
 
-                // Define your SQL query to retrieve user profile data based on the provided ID
-                string query = "SELECT TOP 1 cur_Reading FROM InvoiceTbl WHERE cID = @cID ORDER BY invoiceID DESC";
-
-                // Create a SqlCommand
-                using (SqlCommand cmd = new SqlCommand(query, connection))
+                // Retrieve cur_Reading from InvoiceTbl
+                string queryReading = "SELECT TOP 1 cur_Reading FROM InvoiceTbl WHERE cID = @cID ORDER BY invoiceID DESC";
+                using (SqlCommand cmdReading = new SqlCommand(queryReading, connection))
                 {
-                    // Add the ID parameter
-                    cmd.Parameters.AddWithValue("@cID", id);
+                    cmdReading.Parameters.AddWithValue("@cID", id);
 
-                    // Execute the query and read the data
-                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    using (SqlDataReader reader = cmdReading.ExecuteReader())
                     {
                         if (reader.Read())
                         {
-                            // Populate the UserProfile object
-                            invoiceVM invoice = new invoiceVM
-                            {
-                                cur_Reading = Convert.ToDecimal(reader["cur_Reading"]),
-                            };
+                            result.cur_Reading = Convert.ToDecimal(reader["cur_Reading"]);
+                        }
+                    }
+                }
 
-                            // Return the UserProfile as JSON
-                            return Json(invoice, JsonRequestBehavior.AllowGet);
+                // Retrieve Balance from CustomerTbl
+                string queryBalance = "SELECT Balance FROM CustomerTbl WHERE cID = @cID";
+                using (SqlCommand cmdBalance = new SqlCommand(queryBalance, connection))
+                {
+                    cmdBalance.Parameters.AddWithValue("@cID", id);
+
+                    using (SqlDataReader reader = cmdBalance.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            result.balance = Convert.ToDecimal(reader["Balance"]);
                         }
                     }
                 }
             }
 
-            // If no data found, return an empty JSON object
-            return Json(new invoiceVM(), JsonRequestBehavior.AllowGet);
+            // Return the result as JSON
+            return Json(result, JsonRequestBehavior.AllowGet);
         }
+
 
         // GET: /Invoices/BulkInsert
         [HttpGet]
