@@ -256,7 +256,7 @@ $('.btn-save-row').on('click', function () {
     $.ajax({
       type: "POST",
       url: "@Url.Action("BulkInsert", "Invoice")",
-        data: JSON.stringify({ models: models }), 
+        data: JSON.stringify({ models: models }),
       contentType: "application/json",
       success: function (response, status, xhr) {
         // Check the response status code
@@ -274,6 +274,64 @@ $('.btn-save-row').on('click', function () {
   }
 });
 
+// NEW CODE. STARTS HERE.  
+
+// Select the Save All button
+const saveAllBtn = document.querySelector('#save-all-button');
+
+// Add click event listener
+saveAllBtn.addEventListener('click', saveAllRows);
+
+// Save all checked rows
+function saveAllRows() {
+
+  // Get all table rows
+  const rows = document.querySelectorAll('tbody tr');
+
+  // Array to store data for checked rows
+  const models = [];
+
+  // Loop through rows
+  rows.forEach(row => {
+
+    // Get checkbox
+    const checkbox = row.querySelector('input[type="checkbox"]');
+
+    // Check if checked
+    if(checkbox.checked) {
+
+      // Construct data object
+      const model = {
+        cID: row.querySelector('.form-control-cID').value,
+        reading_Date: row.querySelector('.form-control-rDate').value,
+        prev_Reading: row.querySelector('.form-control-prev_Reading').value,
+        cur_Reading: row.querySelector('.form-control-cur_Reading').value,
+        reading_Value: row.querySelector('.form-control-reading_Value').value,
+      };
+
+      // Push to models array
+      models.push(model);
+    }
+
+  });
+
+  // AJAX request to save models
+  $.ajax({
+    url: '@Url.Action("BulkInsert", "Invoice")',
+    method: 'POST',
+    contentType: 'application/json',
+    data: JSON.stringify({models}),
+
+    success: function(res) {
+        alert("Billed Customers successfully.");
+    },
+
+    error: function(err) {
+        alert("Billing Failed! Please Try Again or Contact Admin.");
+    }
+  });
+
+}
 
     });
 
