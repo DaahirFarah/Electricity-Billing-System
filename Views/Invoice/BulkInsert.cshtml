@@ -226,42 +226,7 @@
                 window.alert('Current Reading Must be Greater Than Previous Reading');
             }
         });
-@*$('.btn-save-row').on('click', function () {
-  // Get the current row
-  var row = $(this).closest('tr');
 
-  // Check if the corresponding checkbox is checked
-  var checkbox = row.find('input[type="checkbox"]');
-  if (checkbox.is(':checked')) {
-    // Construct the data object from row elements
-    var data = {
-      cID: row.find('.form-control-cID').val(),
-      reading_Date: row.find('.form-control-rDate').val(),
-      prev_Reading: row.find('.form-control-prev_Reading').val(),
-      cur_Reading: row.find('.form-control-cur_Reading').val(),
-      reading_Value: row.find('.form-control-reading_Value').val(),
-    };
-
-    // Send the form data to the server via AJAX
-    $.ajax({
-      type: "POST",
-      url: "@Url.Action("BulkInsert", "Invoice")",
-      data: JSON.stringify(data), // Send the 'data' object directly
-      success: function (response, status, xhr) {
-        // Check the response status code
-        if (status === 'success') {
-          alert("Row inserted successfully.");
-        } else {
-          // Handle error, e.g., show an error message to the user
-          alert("Error inserting row into the database: " + response.statusText);
-        }
-      },
-      error: function (xhr, status, error) {
-        alert("Error inserting row into the database: " + error);
-      }
-    });
-  }
-});*@
 
 $('.btn-save-row').on('click', function () {
   // Get the current row
