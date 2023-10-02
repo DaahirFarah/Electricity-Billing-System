@@ -833,5 +833,32 @@
     });
     </script>
 
+    <!-- Script For checking if lock number number already exists -->
+    <script>
+        $(document).ready(function () {
+            // Get the value of the field
+            $("#lockNumber").on("blur", function () {
+                var lockNumber = $(this).val();
+
+                // Ajax call to check the value
+                $.ajax({
+                    url: '@Url.Action("CheckLockNumber", "Customer")',
+                    type: 'POST',
+                    data: { lockNumber: lockNumber },
+                    success: function (result) {
+                        if (result.lockExists) {
+                            alert("This Lock Number is Already in Use.");
+                            $("#lockNumber").val('');
+                        }
+                    },
+                    error: function () {
+                        alert("Error Occured Checking Lock Number. Try Again or Contact Admin");
+                    }
+                })
+
+            })
+        })
+    </script>
+
 </body>
 </html>

@@ -12,7 +12,7 @@ using System.Web.Mvc;
 
 namespace EBS.Controllers
 {
-    [Authorize]
+    //[Authorize]
     public class CustomerController : Controller
     {
 
@@ -29,33 +29,29 @@ namespace EBS.Controllers
             return View(wrapper);
         }
 
-        //// GET Inactive Meters
-        //[HttpGet]
-        //public ActionResult GetInactiveMeter()
-        //{
-        //    List<int> meter = new List<int>();
-        //    string query = "SELECT MeterID FROM Meters WHERE Status = 'Inactive'";
+        // Remote Validation For Lock Number. The field is unique so it should be checked before inserting data into the appropriate tables
+        [HttpPost]
+        public JsonResult CheckLockNumber(string lockNumber)
+        {
+            bool lockExists = false;
 
-        //    using (SqlConnection connection = new SqlConnection(SecConn))
-        //    {
-        //        connection.Open();
-        //        SqlCommand command = new SqlCommand(query, connection);
-        //        SqlDataReader reader = command.ExecuteReader();
+            using (SqlConnection connection = new SqlConnection(SecConn))
+            {
+                connection.Open();
 
-        //        while (reader.Read())
-        //        {
-        //            int meterId = (int)reader["MeterID"];
-        //            meter.Add(meterId);
-        //        }
-        //    }
+                // Create a SQL command to check if the lock number exists
+                string query = "SELECT COUNT(*) FROM CustomerTbl WHERE lockNumber = @lockNumber";
+                SqlCommand command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@lockNumber", lockNumber);
 
-        //    customerWrapper model = new customerWrapper
-        //    {
-        //        SelectedMeterID = meter
-        //    };
+                int count = (int)command.ExecuteScalar();
 
-        //    return Json(meter, JsonRequestBehavior.AllowGet);
-        //}
+                lockExists = count > 0;
+            }
+
+            return Json(new { lockExists });
+        }
+
 
         // GET Branches
         [HttpGet]
