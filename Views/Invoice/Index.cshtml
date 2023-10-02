@@ -71,14 +71,14 @@
 
     <div class="mt-4 pt-2" style="padding-left: 40px; margin-left: 100px;">
         <form action="@Url.Action("BulkInsert", "Invoice")" method="get">
-            <input class="btn btn-secondary btn-lg btn-block" type="submit" value="Bill Customers" />
+            <input class="btn btn-secondary btn-lg btn-block" type="submit" value="Multi-Customer Billing" />
         </form>
     </div>
 
     <!--Modal Activation Button-->
     <div class="mt-4 pt-2" style="padding-left: 40px; margin-left: 100px;">
 
-        <input data-toggle="modal" data-target="#createInvoiceModal" class="btn btn-primary btn-lg btn-block" type="submit" value="Create Invoice" />
+        <input data-toggle="modal" data-target="#createInvoiceModal" class="btn btn-primary btn-lg btn-block" type="submit" value="Customer-Specific Billing" />
 
     </div>
     <!--Create Invoice Modal-->
@@ -86,7 +86,7 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3 class="modal-title" id="createInvoiceModalLabel"> <strong>Create Invoice</strong></h3>
+                    <h3 class="modal-title" id="createInvoiceModalLabel"> <strong>Bill Customer</strong></h3>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
