@@ -36,6 +36,10 @@ namespace EBS.viewModels
         [Required(ErrorMessage = "Reading Date is required")]
         public DateTime reading_Date { get; set; }
 
+        [Display(Name = "Reading Date")]
+        [Required(ErrorMessage = "Reading Date is required")]
+        public DateTime selectedDate { get; set; }
+
         [Display(Name = "Rate")]
         [Required(ErrorMessage = "Rate is required")]
         public decimal Rate { get; set; }

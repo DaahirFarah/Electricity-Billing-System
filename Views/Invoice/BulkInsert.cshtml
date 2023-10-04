@@ -41,6 +41,14 @@
 
         <br />
 
+        @for (int i = 0; i < 1; i++)
+        {
+           <strong> @Html.LabelFor(model => model[i].selectedDate) </strong>
+            @Html.EditorFor(model => Model[i].selectedDate, new { htmlAttributes = new { @class = "form-control form-control-lg form-control-rDate", type = "Date", id = "datepicker" } })
+            @Html.ValidationMessageFor(m => Model[i].selectedDate, "", new { @class = "text-danger" })
+        }
+
+        <br />
 
         @using (Html.BeginForm("BulkInsert", "Invoice", FormMethod.Post))
         {
@@ -52,14 +60,13 @@
                     <tr>
                         <th>Check</th>
                         <th>Customer ID</th>
-                        <th>Reading Date</th>
+                        <th style="display:none">Reading Date</th>  
                         <th>Previous Reading</th>
                         <th>Current Reading</th>
                         <th>Usage(KwH)</th>
                         <th>Balance($)</th>
                         @*<th>Rate</th>
                         <th>Charge($)</th>
-                        
                         <th>Amount Due($)</th>*@
                         <th>Action</th>
                     </tr>
@@ -76,10 +83,15 @@
                                 @Html.EditorFor(model => Model[i].cID, new { htmlAttributes = new { @class = "form-control form-control-lg form-control-cID" } })
                                 @Html.ValidationMessageFor(m => Model[i].cID, "", new { @class = "text-danger" })
                             </td>
-                            <td>
+
+                            <td style="display:none">
+                                @Html.EditorFor(model => model[i].reading_Date, new { htmlAttributes = new { @class = "form-control form-control-lg form-control-rDatee" } })
+                            </td>
+
+                            @*<td>
                                 @Html.EditorFor(model => Model[i].reading_Date, new { htmlAttributes = new { @class = "form-control form-control-lg form-control-rDate", type = "Date" } })
                                 @Html.ValidationMessageFor(m => Model[i].reading_Date, "", new { @class = "text-danger" })
-                            </td>
+                            </td>*@
 
                             <td>
                                 @Html.EditorFor(model => Model[i].prev_Reading, new { htmlAttributes = new { @class = "form-control form-control-lg form-control-prev_Reading" } })
@@ -219,7 +231,7 @@
             // Get values from corresponding fields
             var cur_Reading = parseFloat($(this).closest('tr').find('.form-control-cur_Reading').val());
             var prev_Reading = parseFloat($(this).closest('tr').find('.form-control-prev_Reading').val());
-            var rDate = $(this).closest('tr').find('.form-control-reading_Value').val();
+            //var rDate = $(this).closest('tr').find('.form-control-reading_Value').val();
 
             // Calculate the reading difference
             var calculatedReading = isNaN(cur_Reading) || isNaN(prev_Reading) ? '' : (cur_Reading - prev_Reading).toFixed(2);
@@ -233,6 +245,9 @@
             }
         });
 
+        $('#datepicker').change(function () {
+            $('.form-control-rDatee').val(this.value);
+        });
 
 $('.btn-save-row').on('click', function () {
   // Get the current row
@@ -244,7 +259,7 @@ $('.btn-save-row').on('click', function () {
     // Construct the data object from row elements
     var model = {
       cID: row.find('.form-control-cID').val(),
-      reading_Date: row.find('.form-control-rDate').val(),
+      reading_Date: row.find('.form-control-rDatee').val(),
       prev_Reading: row.find('.form-control-prev_Reading').val(),
       cur_Reading: row.find('.form-control-cur_Reading').val(),
       reading_Value: row.find('.form-control-reading_Value').val(),
@@ -305,7 +320,7 @@ function saveAllRows() {
       // Construct data object
       const model = {
         cID: row.querySelector('.form-control-cID').value,
-        reading_Date: row.querySelector('.form-control-rDate').value,
+        reading_Date: row.querySelector('.form-control-rDatee').value,
         prev_Reading: row.querySelector('.form-control-prev_Reading').value,
         cur_Reading: row.querySelector('.form-control-cur_Reading').value,
         reading_Value: row.querySelector('.form-control-reading_Value').value,
