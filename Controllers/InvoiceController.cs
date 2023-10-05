@@ -1,6 +1,7 @@
 ﻿using EBS.viewModels;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
+using Org.BouncyCastle.Crypto;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -156,6 +157,46 @@ namespace EBS.Controllers
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
+        // Get Rates for bulk insertion 
+        public JsonResult GetRate(decimal usage)
+        {
+            // variable to hold the rate fetched from database
+            decimal Rate = 0;
+            using (SqlConnection connection = new SqlConnection(SecConn))
+            {
+                connection.Open();
+                // Retrieve the usage level and rate for each record
+                string rateQuery = "SELECT UsageLevelNumber, Rate FROM Rates";
+                List<int> usageLevel = new List<int>();
+                List<decimal> rate = new List<decimal>();
+               
+
+                using (SqlCommand commandRate = new SqlCommand(rateQuery, connection))
+                {
+                    using (SqlDataReader reader = commandRate.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            int intFromDatabase = reader.GetInt32(0);
+                            decimal decimalFromDatabase = reader.GetDecimal(1);
+
+                            usageLevel.Add(intFromDatabase);
+                            rate.Add(decimalFromDatabase);
+                        }
+                    }
+                    for (int i = 0; i < usageLevel.Count; i++)
+                    {
+                        if (usage < usageLevel[i])
+                        {
+                            Rate = rate[i];
+                            break;
+                        }
+                    }
+                }
+            }
+            
+            return Json(Rate, JsonRequestBehavior.AllowGet);
+        }
 
         // GET: /Invoices/BulkInsert
         [HttpGet]

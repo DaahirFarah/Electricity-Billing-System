@@ -65,8 +65,8 @@
                         <th>Current Reading</th>
                         <th>Usage(KwH)</th>
                         <th>Balance($)</th>
-                        @*<th>Rate</th>
-                        <th>Charge($)</th>
+                        <th>Rate</th>
+                       @* <th>Charge($)</th>
                         <th>Amount Due($)</th>*@
                         <th>Action</th>
                     </tr>
@@ -89,9 +89,9 @@
                             </td>
 
                             @*<td>
-                                @Html.EditorFor(model => Model[i].reading_Date, new { htmlAttributes = new { @class = "form-control form-control-lg form-control-rDate", type = "Date" } })
-                                @Html.ValidationMessageFor(m => Model[i].reading_Date, "", new { @class = "text-danger" })
-                            </td>*@
+            @Html.EditorFor(model => Model[i].reading_Date, new { htmlAttributes = new { @class = "form-control form-control-lg form-control-rDate", type = "Date" } })
+            @Html.ValidationMessageFor(m => Model[i].reading_Date, "", new { @class = "text-danger" })
+        </td>*@
 
                             <td>
                                 @Html.EditorFor(model => Model[i].prev_Reading, new { htmlAttributes = new { @class = "form-control form-control-lg form-control-prev_Reading" } })
@@ -111,6 +111,10 @@
                             <td>
                                 @Html.EditorFor(model => Model[i].balance, new { htmlAttributes = new { @class = "form-control form-control-lg form-control-balance", @readonly = "readonly" } })
                                 @Html.ValidationMessageFor(m => Model[i].balance, "", new { @class = "text-danger" })
+                            </td>
+                            <td>
+                                @Html.EditorFor(model => Model[i].Rate, new { htmlAttributes = new { @class = "form-control form-control-lg form-control-Rate", @readonly = "readonly" } })
+                                @Html.ValidationMessageFor(m => Model[i].Rate, "", new { @class = "text-danger" })
                             </td>
 
                             <td>
@@ -226,28 +230,57 @@
     });
 
     //Perform Usage Calculation
-    $(document).ready(function () {
-        $('.form-control-prev_Reading, .form-control-cur_Reading').on('blur', function () {
-            // Get values from corresponding fields
-            var cur_Reading = parseFloat($(this).closest('tr').find('.form-control-cur_Reading').val());
-            var prev_Reading = parseFloat($(this).closest('tr').find('.form-control-prev_Reading').val());
-            //var rDate = $(this).closest('tr').find('.form-control-reading_Value').val();
+   $(document).ready(function () {
 
-            // Calculate the reading difference
-            var calculatedReading = isNaN(cur_Reading) || isNaN(prev_Reading) ? '' : (cur_Reading - prev_Reading).toFixed(2);
+    let calculatedReading;
 
-            // Update the readonly reading_Value field in the same row
-            $(this).closest('tr').find('.form-control-reading_Value').val(calculatedReading);
+function sendReadingValue(row) {
+  if(calculatedReading) {
+    $.ajax({
+      url: "@Url.Action("GetRate", "Invoice")",
+      type: 'POST',
+      data: { usage: calculatedReading },
+        success: function (data) {
+            console.log('Data from server:', data);
+            row.find('.form-control-Rate').val(data);
 
-            // Perform additional validation if needed
-            if (cur_Reading < prev_Reading) {
-                window.alert('Current Reading Must be Greater Than Previous Reading');
-            }
-        });
+            // After setting the rate field value
+            console.log('Rate field value after setting:', row.find('.form-control-Rate').val(data));
+        },
+      error: function() {
+        // handle error
+      }
+    });
+  }
+}
 
-        $('#datepicker').change(function () {
-            $('.form-control-rDatee').val(this.value);
-        });
+       $('.form-control-prev_Reading, .form-control-cur_Reading').on('blur', function () {
+           // Save reference to row
+           var row = $(this).closest('tr');
+        // Get values from corresponding fields
+        var cur_Reading = parseFloat($(this).closest('tr').find('.form-control-cur_Reading').val());
+        var prev_Reading = parseFloat($(this).closest('tr').find('.form-control-prev_Reading').val());
+        //var rDate = $(this).closest('tr').find('.form-control-reading_Value').val();
+
+        // Calculate the reading difference
+        calculatedReading = isNaN(cur_Reading) || isNaN(prev_Reading) ? '' : (cur_Reading - prev_Reading).toFixed(2);
+
+        // Update the readonly reading_Value field in the same row
+        //$(this).closest('tr').find('.form-control-reading_Value').val(window.calculatedReading);
+        row.find('.form-control-reading_Value').val(calculatedReading);
+
+        // Perform additional validation if needed
+        if (cur_Reading < prev_Reading) {
+            window.alert('Current Reading Must be Greater Than Previous Reading');
+        }
+        sendReadingValue(row); 
+
+    });
+
+    $('#datepicker').change(function () {
+        $('.form-control-rDatee').val(this.value);
+    });
+});
 
 $('.btn-save-row').on('click', function () {
   // Get the current row
@@ -277,7 +310,7 @@ $('.btn-save-row').on('click', function () {
         // Check the response status code
         if (status === 'success') {
           alert("Billed Customer Successfully.");
-          // Refresh Page After Billing Customer  
+          // Refresh Page After Billing Customer
           location.reload();
         } else {
           // Handle error, e.g., show an error message to the user
@@ -290,8 +323,6 @@ $('.btn-save-row').on('click', function () {
     });
   }
 });
-
-// NEW CODE. STARTS HERE.  
 
 // Select the Save All button
 const saveAllBtn = document.querySelector('#save-all-button');
@@ -352,7 +383,7 @@ function saveAllRows() {
 
 }
 
-    });
+
 
 </script>
 
