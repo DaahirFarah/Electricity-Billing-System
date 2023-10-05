@@ -45,5 +45,7 @@ namespace EBS.viewModels
         public decimal Rate { get; set; }
 
         public decimal balance { get; set; }
+
+        public decimal charge { get; set; }
     }
 }

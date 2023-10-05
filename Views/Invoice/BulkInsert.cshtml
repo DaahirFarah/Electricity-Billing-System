@@ -60,14 +60,14 @@
                     <tr>
                         <th>Check</th>
                         <th>Customer ID</th>
-                        <th style="display:none">Reading Date</th>  
+                        <th style="display:none">Reading Date</th>
                         <th>Previous Reading</th>
                         <th>Current Reading</th>
                         <th>Usage(KwH)</th>
                         <th>Balance($)</th>
-                        <th>Rate</th>
-                       @* <th>Charge($)</th>
-                        <th>Amount Due($)</th>*@
+                        <th>Rate($)</th>
+                        <th>Charge($)</th>
+                        @*<th>Amount Due($)</th>*@
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -88,11 +88,6 @@
                                 @Html.EditorFor(model => model[i].reading_Date, new { htmlAttributes = new { @class = "form-control form-control-lg form-control-rDatee" } })
                             </td>
 
-                            @*<td>
-            @Html.EditorFor(model => Model[i].reading_Date, new { htmlAttributes = new { @class = "form-control form-control-lg form-control-rDate", type = "Date" } })
-            @Html.ValidationMessageFor(m => Model[i].reading_Date, "", new { @class = "text-danger" })
-        </td>*@
-
                             <td>
                                 @Html.EditorFor(model => Model[i].prev_Reading, new { htmlAttributes = new { @class = "form-control form-control-lg form-control-prev_Reading" } })
                                 @Html.ValidationMessageFor(m => Model[i].prev_Reading, "", new { @class = "text-danger" })
@@ -112,9 +107,15 @@
                                 @Html.EditorFor(model => Model[i].balance, new { htmlAttributes = new { @class = "form-control form-control-lg form-control-balance", @readonly = "readonly" } })
                                 @Html.ValidationMessageFor(m => Model[i].balance, "", new { @class = "text-danger" })
                             </td>
+
                             <td>
                                 @Html.EditorFor(model => Model[i].Rate, new { htmlAttributes = new { @class = "form-control form-control-lg form-control-Rate", @readonly = "readonly" } })
                                 @Html.ValidationMessageFor(m => Model[i].Rate, "", new { @class = "text-danger" })
+                            </td>
+
+                            <td>
+                                @Html.EditorFor(model => Model[i].charge, new { htmlAttributes = new { @class = "form-control form-control-lg form-control-charge", @readonly = "readonly" } })
+                                @Html.ValidationMessageFor(m => Model[i].charge, "", new { @class = "text-danger" })
                             </td>
 
                             <td>
@@ -241,8 +242,12 @@ function sendReadingValue(row) {
       type: 'POST',
       data: { usage: calculatedReading },
         success: function (data) {
+            var rate = data;
+            var charge = rate * calculatedReading;
+            console.log("Charge = ", calculatedReading * rate);
             console.log('Data from server:', data);
             row.find('.form-control-Rate').val(data);
+            row.find('.form-control-charge').val(charge);
 
             // After setting the rate field value
             console.log('Rate field value after setting:', row.find('.form-control-Rate').val(data));
