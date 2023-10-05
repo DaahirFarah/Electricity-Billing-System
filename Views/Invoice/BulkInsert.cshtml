@@ -67,7 +67,7 @@
                         <th>Balance($)</th>
                         <th>Rate($)</th>
                         <th>Charge($)</th>
-                        @*<th>Amount Due($)</th>*@
+                        <th>Amount Due($)</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -116,6 +116,11 @@
                             <td>
                                 @Html.EditorFor(model => Model[i].charge, new { htmlAttributes = new { @class = "form-control form-control-lg form-control-charge", @readonly = "readonly" } })
                                 @Html.ValidationMessageFor(m => Model[i].charge, "", new { @class = "text-danger" })
+                            </td>
+
+                            <td>
+                                @Html.EditorFor(model => Model[i].total_Fee, new { htmlAttributes = new { @class = "form-control form-control-lg form-control-tFee", @readonly = "readonly" } })
+                                @Html.ValidationMessageFor(m => Model[i].total_Fee, "", new { @class = "text-danger" })
                             </td>
 
                             <td>
@@ -244,10 +249,13 @@ function sendReadingValue(row) {
         success: function (data) {
             var rate = data;
             var charge = rate * calculatedReading;
+            var tFee = window.balance + charge;
             console.log("Charge = ", calculatedReading * rate);
             console.log('Data from server:', data);
+            console.log("Total Charge = ", window.balance + charge);
             row.find('.form-control-Rate').val(data);
             row.find('.form-control-charge').val(charge);
+            row.find('.form-control-tFee').val(tFee);
 
             // After setting the rate field value
             console.log('Rate field value after setting:', row.find('.form-control-Rate').val(data));
@@ -408,6 +416,7 @@ function saveAllRows() {
                 data: { id: cID },
                 success: function (data) {
                     // Populate the form fields within the current row with the retrieved data
+                    window.balance = data.balance;
                     row.find(".form-control-prev_Reading").val(data.cur_Reading);
                     row.find(".form-control-balance").val(data.balance);
                 },
