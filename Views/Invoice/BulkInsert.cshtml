@@ -72,7 +72,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @for (int i = 0; i < 2; i++)
+                    @for (int i = 0; i < 10; i++)
                     {
                         <tr>
                             <td>
@@ -286,7 +286,7 @@ function sendReadingValue(row) {
         if (cur_Reading < prev_Reading) {
             window.alert('Current Reading Must be Greater Than Previous Reading');
         }
-        sendReadingValue(row); 
+        sendReadingValue(row);
 
     });
 
@@ -376,23 +376,29 @@ function saveAllRows() {
 
   });
 
-  // AJAX request to save models
-  $.ajax({
-    url: '@Url.Action("BulkInsert", "Invoice")',
-    method: 'POST',
-    contentType: 'application/json',
-    data: JSON.stringify({models}),
+    if (models.length > 0) {
+        // AJAX request to save models
+        $.ajax({
+            url: '@Url.Action("BulkInsert", "Invoice")',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ models }),
 
-    success: function(res) {
-        alert("Billed Customers successfully.");
-        // Refresh Page
-        location.reload();
-    },
+            success: function (res) {
+                alert("Billed Customers successfully.");
+                // Refresh Page
+                location.reload();
+            },
 
-    error: function(err) {
-        alert("Billing Failed! Please Try Again or Contact Admin.");
+            error: function (err) {
+                alert("Billing Failed! Please Try Again or Contact Admin.");
+            }
+        });
     }
-  });
+    else {
+        alert("No rows are Checked!");
+    }
+
 
 }
 
