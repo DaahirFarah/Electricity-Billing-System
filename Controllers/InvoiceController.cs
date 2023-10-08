@@ -1,7 +1,6 @@
 ﻿using EBS.viewModels;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
-using Org.BouncyCastle.Crypto;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -12,7 +11,7 @@ using System.Web.Mvc;
 
 namespace EBS.Controllers
 {
-    [Authorize]
+    //[Authorize]
     public class InvoiceController : Controller
     {
         // This variable holds the balance so that it can be accessed in all methods
@@ -110,8 +109,69 @@ namespace EBS.Controllers
             return Json(new { success = true, message = "Invoice Deleted Successfuly" });
         }
 
-        // Get Related Data From the db based on ID
+        // Get each customer's information and reading data from the db who is not billed based on their branch and pass it to the model
+        [HttpPost]
+        public JsonResult GetCustomerBillInfo(string branch)
+        {
+            List<invoiceVM> invoice = new List<invoiceVM>();
+            using (SqlConnection connection = new SqlConnection(SecConn))
+            {
+                connection.Open();
+                // String that holds the query to get the customers that are not billed yet and their latest meter reading based on the selected branch
+                string query = ";WITH CTE AS (\r\n    SELECT \r\n\t\tC.cID,\r\n        C.cFirstName, \r\n        C.cMidName, \r\n        C.cLastName, \r\n\t\tC.Balance,\r\n        I.cur_Reading,\r\n        ROW_NUMBER() OVER (PARTITION BY C.cID ORDER BY I.invoiceID DESC) AS rn\r\n    FROM CustomerTbl C\r\n    JOIN InvoiceTbl I ON C.cID = I.cID\r\n\tWHERE C.isBilledThisMonth = 0\r\n\tAND C.Branch = @branch\r\n)\r\nSELECT cID, cFirstName, cMidName, cLastName, cur_Reading, Balance\r\nFROM CTE\r\nWHERE rn = 1";
 
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@branch", branch);
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            invoice.Add(new invoiceVM
+                            {
+                                cID = Convert.ToInt32(reader["cID"]),
+                                balance = Convert.ToDecimal(reader["Balance"]),
+                                prev_Reading = Convert.ToDecimal(reader["cur_Reading"]),
+                                cFirstName = reader["cFirstName"].ToString(),
+                                cMidName = reader["cMidName"].ToString(),
+                                cLastName = reader["cLastName"].ToString(),
+
+                            });
+                        }
+                    }
+                }
+            }
+
+            return Json(invoice);
+        }
+
+        // GET Branches
+        [HttpGet]
+        public List<string> GetBranches()
+        {
+            List<string> Branch = new List<string>();
+            string query = "SELECT BranchName FROM Branches";
+
+            using (SqlConnection connection = new SqlConnection(SecConn))
+            {
+                connection.Open();
+                SqlCommand command = new SqlCommand(query, connection);
+                SqlDataReader reader = command.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    string branch = (string)reader["BranchName"];
+                    Branch.Add(branch);
+                }
+            }
+
+            
+
+            return Branch;
+        }
+
+        // Get Related Data From the db based on ID
         [HttpPost]
         public JsonResult GetRelatedData(int id)
         {
@@ -169,7 +229,7 @@ namespace EBS.Controllers
                 string rateQuery = "SELECT UsageLevelNumber, Rate FROM Rates";
                 List<int> usageLevel = new List<int>();
                 List<decimal> rate = new List<decimal>();
-               
+
 
                 using (SqlCommand commandRate = new SqlCommand(rateQuery, connection))
                 {
@@ -194,7 +254,7 @@ namespace EBS.Controllers
                     }
                 }
             }
-            
+
             return Json(Rate, JsonRequestBehavior.AllowGet);
         }
 
@@ -202,7 +262,17 @@ namespace EBS.Controllers
         [HttpGet]
         public ActionResult BulkInsert()
         {
-            return View();
+            // Create invoiceVM
+            invoiceVM model = new invoiceVM();
+
+            // Populate model properties  
+            model.SelectedBranch = GetBranches();
+
+            // Create list with single item
+            var modelList = new List<invoiceVM>();
+            modelList.Add(model);
+
+            return View(modelList);
         }
 
         // POST: /Invoices/BulkInsert

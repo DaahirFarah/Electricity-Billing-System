@@ -43,61 +43,102 @@
 
         @for (int i = 0; i < 1; i++)
         {
-            <div class="row">
-
-                <div class="col-md-6 mb-4 d-flex align-items-center">
-
-                    <div class="form-outline form-group">
-                        <strong> @Html.LabelFor(model => model[i].selectedDate) </strong>
-                        @Html.EditorFor(model => Model[i].selectedDate, new { htmlAttributes = new { @class = "form-control form-control-lg form-control-rDate", type = "Date", id = "datepicker" } })
-                        @Html.ValidationMessageFor(m => Model[i].selectedDate, "", new { @class = "text-danger" })
-
-
-                    </div>
-
-                </div>
-
-                <div class="form-outline form-group">
-                    @*<strong>@Html.LabelFor(model => model[i].SelectedBranch)</strong> <br />*@
-                    @Html.DropDownListFor(m => m[i].SelectedBranch, new SelectList(Model[i].SelectedBranch), "Select Branch", new { id = "branchDropdown" })
-                    @Html.ValidationMessageFor(model => model[i].SelectedBranch, "", new { @class = "text-danger" })
-                </div>
-
-
-
-            </div>
+           <strong> @Html.LabelFor(model => model[i].selectedDate) </strong>
+            @Html.EditorFor(model => Model[i].selectedDate, new { htmlAttributes = new { @class = "form-control form-control-lg form-control-rDate", type = "Date", id = "datepicker" } })
+            @Html.ValidationMessageFor(m => Model[i].selectedDate, "", new { @class = "text-danger" })
         }
 
         <br />
 
-        <table class="table">
-            <thead class="thead-light">
-                <tr>
-                    <th>Check</th>
-                    <th style="display:none">Customer ID</th>
-                    <th style="display:none">Reading Date</th>
-                    <th>Full Name</th>
-                    <th>Previous Reading</th>
-                    <th>Current Reading</th>
-                    <th>Usage(KwH)</th>
-                    <th>Balance($)</th>
-                    <th>Rate($)</th>
-                    <th>Charge($)</th>
-                    <th>Amount Due($)</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody id="tableBody">
-            </tbody>
-        </table>
+        @using (Html.BeginForm("BulkInsert", "Invoice", FormMethod.Post))
+        {
+            @*@Html.AntiForgeryToken()*@
 
-        <br />
-        <br />
 
-        <div class="col-md-6 mb-4 pb-2" style="justify-content: center; align-items: center;">
-            <button id="save-all-button" class="btn btn-success btn-lg btn-block" type="button">Bill All</button>
-        </div>
+            <table class="table">
+                <thead class="thead-light">
+                    <tr>
+                        <th>Check</th>
+                        <th>Customer ID</th>
+                        <th style="display:none">Reading Date</th>
+                        <th>Previous Reading</th>
+                        <th>Current Reading</th>
+                        <th>Usage(KwH)</th>
+                        <th>Balance($)</th>
+                        <th>Rate($)</th>
+                        <th>Charge($)</th>
+                        <th>Amount Due($)</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < 10; i++)
+                    {
+                        <tr>
+                            <td>
+                                <input type="checkbox" class="form-check-input" name="invCheck" style="width: 20px; height: 20px; margin-top:13px; margin-left:15px;" />
+                            </td>
 
+                            <td>
+                                @Html.EditorFor(model => Model[i].cID, new { htmlAttributes = new { @class = "form-control form-control-lg form-control-cID" } })
+                                @Html.ValidationMessageFor(m => Model[i].cID, "", new { @class = "text-danger" })
+                            </td>
+
+                            <td style="display:none">
+                                @Html.EditorFor(model => model[i].reading_Date, new { htmlAttributes = new { @class = "form-control form-control-lg form-control-rDatee" } })
+                            </td>
+
+                            <td>
+                                @Html.EditorFor(model => Model[i].prev_Reading, new { htmlAttributes = new { @class = "form-control form-control-lg form-control-prev_Reading" } })
+                                @Html.ValidationMessageFor(m => Model[i].prev_Reading, "", new { @class = "text-danger" })
+                            </td>
+
+                            <td>
+                                @Html.EditorFor(model => Model[i].cur_Reading, new { htmlAttributes = new { @class = "form-control form-control-lg form-control-cur_Reading" } })
+                                @Html.ValidationMessageFor(m => Model[i].cur_Reading, "", new { @class = "text-danger" })
+                            </td>
+
+                            <td>
+                                @Html.EditorFor(model => Model[i].reading_Value, new { htmlAttributes = new { @class = "form-control form-control-lg form-control-reading_Value", @readonly = "readonly" } })
+                                @Html.ValidationMessageFor(m => Model[i].reading_Value, "", new { @class = "text-danger" })
+                            </td>
+
+                            <td>
+                                @Html.EditorFor(model => Model[i].balance, new { htmlAttributes = new { @class = "form-control form-control-lg form-control-balance", @readonly = "readonly" } })
+                                @Html.ValidationMessageFor(m => Model[i].balance, "", new { @class = "text-danger" })
+                            </td>
+
+                            <td>
+                                @Html.EditorFor(model => Model[i].Rate, new { htmlAttributes = new { @class = "form-control form-control-lg form-control-Rate", @readonly = "readonly" } })
+                                @Html.ValidationMessageFor(m => Model[i].Rate, "", new { @class = "text-danger" })
+                            </td>
+
+                            <td>
+                                @Html.EditorFor(model => Model[i].charge, new { htmlAttributes = new { @class = "form-control form-control-lg form-control-charge", @readonly = "readonly" } })
+                                @Html.ValidationMessageFor(m => Model[i].charge, "", new { @class = "text-danger" })
+                            </td>
+
+                            <td>
+                                @Html.EditorFor(model => Model[i].total_Fee, new { htmlAttributes = new { @class = "form-control form-control-lg form-control-tFee", @readonly = "readonly" } })
+                                @Html.ValidationMessageFor(m => Model[i].total_Fee, "", new { @class = "text-danger" })
+                            </td>
+
+                            <td>
+                                <button class="btn btn-success btn-lg btn-block btn-save-row" id="saverow" type="button">Bill</button>
+                            </td>
+
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <br />
+            <br />
+
+            <div class="col-md-6 mb-4 pb-2" style="justify-content: center; align-items: center;">
+                <button id="save-all-button" class="btn btn-success btn-lg btn-block" type="button">Bill All</button>
+            </div>
+        }
 
     </div>
 
@@ -123,112 +164,8 @@
 </body>
 </html>
 
-<!--This is a table template script that the script that retrieves the branch data is going to use-->
-<script type="text/html" id="rowTemplate">
-
-    <tr>
-        <td>
-            <input type="checkbox" class="form-check-input">
-        </td>
-
-        <td style="display:none">
-            <input type="number" class="form-control-cID">
-        </td>
-
-        <td style="display:none">
-            <input type="date" class="form-control-rDatee">
-        </td>
-
-        <td>
-            <input type="text" class="form-control-fullName">
-        </td>
-
-        <td>
-            <input type="number" class="form-check-prev_Reading" readonly>
-        </td>
-
-        <td>
-            <input type="number" class="form-control-cur_Reading">
-        </td>
-
-        <td>
-            <input type="number" class="form-control-reading_Value">
-        </td>
-
-        <td>
-            <input type="number" class="form-control-balance" readonly>
-        </td>
-
-        <td>
-            <input type="number" class="form-check-Rate" readonly>
-        </td>
-
-        <td>
-            <input type="number" class="form-control-charge" readonly>
-        </td>
-
-        <td>
-            <input type="number" class="form-control-tFee" readonly>
-        </td>
-
-        <td>
-            <button class="btn btn-success btn-lg btn-block btn-save-row" id="saverow" type="button">Bill</button>
-        </td>
-
-    </tr>
-
-</script>
-
-<!--Script to call the GetCustomerBillInfo() method to get customer info-->
-<script>
-
-    $(document).ready(function () {
-
-        $('#branchDropdown').on('change', function () {
-            console.log("I only live here!")
-
-  // Call method via AJAX
-  $.ajax({
-    url: '@Url.Action("GetCustomerBillInfo", "Invoice")',
-    type: 'POST',
-    data: { branch: $(this).val() },
-      success: function (data) {
-
-          // Remove existing rows
-          $('#tableBody').empty();
-
-          // Loop through data and append rows 
-          $.each(data, function (i, item) {
-
-              // Clone the template 
-              var row = $('#rowTemplate').clone();
-              var fName = item.cFirstName;
-              var mName = item.cMidName;
-              var lName = item.cLastName;
-              var fuName = fName + " " + mName + " " + lName;
-
-              // Populate data
-              row.find('.form-control-cID').val(item.cID);
-              row.find('.form-control-prev_Reading').val(item.prev_Reading);
-              row.find('.form-control-balance').val(item.Balance);
-              row.find('.form-control-fullName').val(fuName);
-
-              // Append row 
-              $('#tableBody').append(row);
-
-          });
-
-      },
-
-      Error: function () {
-          alert("Error Occured During Data Retrieval! Try Again or Contact Admin");
-      }
-      });
-
-</script>
-
 <!--Form Fields Validation Script-->
-@*<script>
+<script>
     // Function to hide the modal
     function hideValidationModal() {
         $('#validationModal').modal('hide');
@@ -467,10 +404,10 @@ function saveAllRows() {
 
 
 
-</script>*@
+</script>
 
 <!--Get related Data for each record-->
-@*<script>
+<script>
     console.log('Script is being reached');
 
     $(document).ready(function () {
@@ -495,5 +432,5 @@ function saveAllRows() {
             });
         });
     });
-</script>*@
+</script>
 

@@ -8,6 +8,14 @@ namespace EBS.viewModels
 {
     public class invoiceVM
     {
+        public invoiceVM()
+        {
+            SelectedBranch = new List<string> { "" };
+        }
+
+        [Display(Name = "Branch")]
+        public List<string> SelectedBranch { get; set;}
+
         [Key]
         [Display(Name = "Invoice ID")]
         public int invoiceID { get; set; }
@@ -47,5 +55,20 @@ namespace EBS.viewModels
         public decimal balance { get; set; }
 
         public decimal charge { get; set; }
+
+        public string cFirstName { get; set; }
+        public string cMidName { get; set; }
+        public string cLastName { get; set; }
+        public string cFullName
+        {
+            get
+            {
+                // Concatenate the first name, middle name, and last name with spaces
+                return $"{cFirstName} {cMidName} {cLastName}";
+            }
+        }
+
+        public int MyProperty { get; set; }
+
     }
 }
