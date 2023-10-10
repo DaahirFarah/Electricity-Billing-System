@@ -30,7 +30,7 @@
     }
 </style>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 <head>
     <title>Bill Customers | SEC</title>
 </head>
@@ -51,8 +51,6 @@
                         <strong> @Html.LabelFor(model => model[i].selectedDate) </strong>
                         @Html.EditorFor(model => Model[i].selectedDate, new { htmlAttributes = new { @class = "form-control form-control-lg form-control-rDate", type = "Date", id = "datepicker" } })
                         @Html.ValidationMessageFor(m => Model[i].selectedDate, "", new { @class = "text-danger" })
-
-
                     </div>
 
                 </div>
@@ -70,7 +68,7 @@
 
         <br />
 
-        <table class="table">
+        <table class="table" id="invBulk">
             <thead class="thead-light">
                 <tr>
                     <th>Check</th>
@@ -119,381 +117,383 @@
         </div>
     </div>
 
+    <!--This is a table template script that the script that retrieves the branch data is going to use-->
+    <script type="text/html" id="rowTemplate">
 
-</body>
-</html>
+        <tr>
+            <td>
+                <input type="checkbox" class="form-check-input">
+            </td>
 
-<!--This is a table template script that the script that retrieves the branch data is going to use-->
-<script type="text/html" id="rowTemplate">
+            <td style="display:none">
+                <input type="number" class="form-control-cID">
+            </td>
 
-    <tr>
-        <td>
-            <input type="checkbox" class="form-check-input">
-        </td>
+            <td style="display:none">
+                <input type="date" class="form-control-rDatee">
+            </td>
 
-        <td style="display:none">
-            <input type="number" class="form-control-cID">
-        </td>
+            <td>
+                <input type="text" class="form-control-fullName">
+            </td>
 
-        <td style="display:none">
-            <input type="date" class="form-control-rDatee">
-        </td>
+            <td>
+                <input type="number" class="form-check-prev_Reading" readonly>
+            </td>
 
-        <td>
-            <input type="text" class="form-control-fullName">
-        </td>
+            <td>
+                <input type="number" class="form-control-cur_Reading">
+            </td>
 
-        <td>
-            <input type="number" class="form-check-prev_Reading" readonly>
-        </td>
+            <td>
+                <input type="number" class="form-control-reading_Value">
+            </td>
 
-        <td>
-            <input type="number" class="form-control-cur_Reading">
-        </td>
+            <td>
+                <input type="number" class="form-control-balance" readonly>
+            </td>
 
-        <td>
-            <input type="number" class="form-control-reading_Value">
-        </td>
+            <td>
+                <input type="number" class="form-check-Rate" readonly>
+            </td>
 
-        <td>
-            <input type="number" class="form-control-balance" readonly>
-        </td>
+            <td>
+                <input type="number" class="form-control-charge" readonly>
+            </td>
 
-        <td>
-            <input type="number" class="form-check-Rate" readonly>
-        </td>
+            <td>
+                <input type="number" class="form-control-tFee" readonly>
+            </td>
 
-        <td>
-            <input type="number" class="form-control-charge" readonly>
-        </td>
+            <td>
+                <button class="btn btn-success btn-lg btn-block btn-save-row" id="saverow" type="button">Bill</button>
+            </td>
 
-        <td>
-            <input type="number" class="form-control-tFee" readonly>
-        </td>
+        </tr>
 
-        <td>
-            <button class="btn btn-success btn-lg btn-block btn-save-row" id="saverow" type="button">Bill</button>
-        </td>
+    </script>
 
-    </tr>
-
-</script>
-
-<!--Script to call the GetCustomerBillInfo() method to get customer info-->
-<script>
+    <!--Script to call the GetCustomerBillInfo() method to get customer info-->
+    <script>
 
     $(document).ready(function () {
 
+       
         $('#branchDropdown').on('change', function () {
-            console.log("I only live here!")
+            console.log('I only live here!');
 
-  // Call method via AJAX
-  $.ajax({
-    url: '@Url.Action("GetCustomerBillInfo", "Invoice")',
-    type: 'POST',
-    data: { branch: $(this).val() },
-      success: function (data) {
-
-          // Remove existing rows
-          $('#tableBody').empty();
-
-          // Loop through data and append rows 
-          $.each(data, function (i, item) {
-
-              // Clone the template 
-              var row = $('#rowTemplate').clone();
-              var fName = item.cFirstName;
-              var mName = item.cMidName;
-              var lName = item.cLastName;
-              var fuName = fName + " " + mName + " " + lName;
-
-              // Populate data
-              row.find('.form-control-cID').val(item.cID);
-              row.find('.form-control-prev_Reading').val(item.prev_Reading);
-              row.find('.form-control-balance').val(item.Balance);
-              row.find('.form-control-fullName').val(fuName);
-
-              // Append row 
-              $('#tableBody').append(row);
-
-          });
-
-      },
-
-      Error: function () {
-          alert("Error Occured During Data Retrieval! Try Again or Contact Admin");
-      }
-      });
-
-</script>
-
-<!--Form Fields Validation Script-->
-@*<script>
-    // Function to hide the modal
-    function hideValidationModal() {
-        $('#validationModal').modal('hide');
-    }
-
-    // Text Input Validation
-    function validateText(input) {
-        if (!isNaN(Number(input.value))) {
-            // Show a Bootstrap modal with the validation message
-            $('#validationModal').modal('show');
-            input.value = '';
-        }
-    }
-
-    // Number validation function
-    function validateNumber(input) {
-        if (isNaN(Number(input.value))) {
-            // Show a Bootstrap modal with the validation message
-            $('#validationModal').modal('show');
-            input.value = '';
-        }
-    }
-
-    // Date Validation function
-    function validateDate(input) {
-        var enteredDate = new Date(input.value); // Get the value from the input element
-        var currentDate = new Date();
-        var lastDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
-        var minDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 25);
-
-        if (enteredDate < minDate || enteredDate > lastDayOfMonth) {
-            alert("Enter a date between the 25th and the last day of the month.");
-            // Clear the input field
-            input.value = ''; // Set the input field's value to an empty string
-        }
-    }
-
-    // Attach listeners to input fields by class when they lose focus (blur)
-    const cID = document.querySelectorAll('.form-control-cID');
-    const prev_Reading = document.querySelectorAll('.form-control-prev_Reading');
-    const cur_Reading = document.querySelectorAll('.form-control-cur_Reading');
-    const rDate = document.querySelectorAll('.form-control-rDate');
-
-
-    cID.forEach(input => {
-        input.addEventListener('blur', () => {
-            validateNumber(input);
-        });
-    });
-
-    prev_Reading.forEach(input => {
-        input.addEventListener('blur', () => {
-            validateNumber(input);
-        });
-    });
-
-    cur_Reading.forEach(input => {
-        input.addEventListener('blur', () => {
-            validateNumber(input);
-        });
-    });
-
-    // Assuming rDate is an array of input elements
-    rDate.forEach(input => {
-        input.addEventListener('blur', () => {
-            validateDate(input);
-        });
-    });
-
-    //Perform Usage Calculation
-   $(document).ready(function () {
-
-    let calculatedReading;
-
-function sendReadingValue(row) {
-  if(calculatedReading) {
-    $.ajax({
-      url: "@Url.Action("GetRate", "Invoice")",
-      type: 'POST',
-      data: { usage: calculatedReading },
-        success: function (data) {
-            var rate = data;
-            var charge = rate * calculatedReading;
-            var tFee = window.balance + charge;
-            console.log("Charge = ", calculatedReading * rate);
-            console.log('Data from server:', data);
-            console.log("Total Charge = ", window.balance + charge);
-            row.find('.form-control-Rate').val(data);
-            row.find('.form-control-charge').val(charge);
-            row.find('.form-control-tFee').val(tFee);
-
-            // After setting the rate field value
-            console.log('Rate field value after setting:', row.find('.form-control-Rate').val(data));
-        },
-      error: function() {
-        // handle error
-      }
-    });
-  }
-}
-
-       $('.form-control-prev_Reading, .form-control-cur_Reading').on('blur', function () {
-           // Save reference to row
-           var row = $(this).closest('tr');
-        // Get values from corresponding fields
-        var cur_Reading = parseFloat($(this).closest('tr').find('.form-control-cur_Reading').val());
-        var prev_Reading = parseFloat($(this).closest('tr').find('.form-control-prev_Reading').val());
-        //var rDate = $(this).closest('tr').find('.form-control-reading_Value').val();
-
-        // Calculate the reading difference
-        calculatedReading = isNaN(cur_Reading) || isNaN(prev_Reading) ? '' : (cur_Reading - prev_Reading).toFixed(2);
-
-        // Update the readonly reading_Value field in the same row
-        //$(this).closest('tr').find('.form-control-reading_Value').val(window.calculatedReading);
-        row.find('.form-control-reading_Value').val(calculatedReading);
-
-        // Perform additional validation if needed
-        if (cur_Reading < prev_Reading) {
-            window.alert('Current Reading Must be Greater Than Previous Reading');
-        }
-        sendReadingValue(row);
-
-    });
-
-    $('#datepicker').change(function () {
-        $('.form-control-rDatee').val(this.value);
-    });
-});
-
-$('.btn-save-row').on('click', function () {
-  // Get the current row
-  var row = $(this).closest('tr');
-
-  // Check if the corresponding checkbox is checked
-  var checkbox = row.find('input[type="checkbox"]');
-  if (checkbox.is(':checked')) {
-    // Construct the data object from row elements
-    var model = {
-      cID: row.find('.form-control-cID').val(),
-      reading_Date: row.find('.form-control-rDatee').val(),
-      prev_Reading: row.find('.form-control-prev_Reading').val(),
-      cur_Reading: row.find('.form-control-cur_Reading').val(),
-      reading_Value: row.find('.form-control-reading_Value').val(),
-      };
-
-      var models = [];
-      models.push(model);
-    // Send the form data to the server via AJAX
-    $.ajax({
-      type: "POST",
-      url: "@Url.Action("BulkInsert", "Invoice")",
-        data: JSON.stringify({ models: models }),
-      contentType: "application/json",
-      success: function (response, status, xhr) {
-        // Check the response status code
-        if (status === 'success') {
-          alert("Billed Customer Successfully.");
-          // Refresh Page After Billing Customer
-          location.reload();
-        } else {
-          // Handle error, e.g., show an error message to the user
-          alert("Billing Failed! Try Again!: " + response.statusText);
-        }
-      },
-      error: function (xhr, status, error) {
-          alert("Billing Failed! Try Again!: " + error);
-      }
-    });
-  }
-});
-
-// Select the Save All button
-const saveAllBtn = document.querySelector('#save-all-button');
-
-// Add click event listener
-saveAllBtn.addEventListener('click', saveAllRows);
-
-// Save all checked rows
-function saveAllRows() {
-
-  // Get all table rows
-  const rows = document.querySelectorAll('tbody tr');
-
-  // Array to store data for checked rows
-  const models = [];
-
-  // Loop through rows
-  rows.forEach(row => {
-
-    // Get checkbox
-    const checkbox = row.querySelector('input[type="checkbox"]');
-
-    // Check if checked
-    if(checkbox.checked) {
-
-      // Construct data object
-      const model = {
-        cID: row.querySelector('.form-control-cID').value,
-        reading_Date: row.querySelector('.form-control-rDatee').value,
-        prev_Reading: row.querySelector('.form-control-prev_Reading').value,
-        cur_Reading: row.querySelector('.form-control-cur_Reading').value,
-        reading_Value: row.querySelector('.form-control-reading_Value').value,
-      };
-
-      // Push to models array
-      models.push(model);
-    }
-
-  });
-
-    if (models.length > 0) {
-        // AJAX request to save models
-        $.ajax({
-            url: '@Url.Action("BulkInsert", "Invoice")',
-            method: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify({ models }),
-
-            success: function (res) {
-                alert("Billed Customers successfully.");
-                // Refresh Page
-                location.reload();
-            },
-
-            error: function (err) {
-                alert("Billing Failed! Please Try Again or Contact Admin.");
-            }
-        });
-    }
-    else {
-        alert("No rows are Checked!");
-    }
-
-
-}
-
-
-
-</script>*@
-
-<!--Get related Data for each record-->
-@*<script>
-    console.log('Script is being reached');
-
-    $(document).ready(function () {
-        // Attach a blur event listener to the "invoiceID" field in each row
-        $(".form-control-cID").blur(function () {
-            var cID = $(this).val();
-            var row = $(this).closest("tr"); // Get the parent row
-
+            // Call method via AJAX
             $.ajax({
-                url: '@Url.Action("GetRelatedData", "Invoice")',
+                url: '@Url.Action("GetCustomerBillInfo", "Invoice")',
                 type: 'POST',
-                data: { id: cID },
-                success: function (data) {
-                    // Populate the form fields within the current row with the retrieved data
-                    window.balance = data.balance;
-                    row.find(".form-control-prev_Reading").val(data.cur_Reading);
-                    row.find(".form-control-balance").val(data.balance);
+                data: { branch: $(this).val() },
+                // Use dataSrc 
+                dataSrc: function (data) {
+                    // Transform response data as needed
+                    return data.results;
                 },
+
+                success: function (data) {
+                    // Empty table
+                    $("#tableBody").empty();
+
+                    // Loop through data and append rows
+                    data.forEach(item => {
+                        // Clone the template and get its HTML content
+                        const rowTemplate = $("#rowTemplate").html();
+                        const row = $(rowTemplate);
+
+                        // Populate data into the row
+                        row.find('.form-control-cID').val(item.cID);
+                        row.find('.form-control-prev_Reading').val(item.prev_Reading);
+                        row.find('.form-control-balance').val(item.balance);
+                        row.find('.form-control-fullName').val(item.cFullName);
+
+                        // Append the row to the table
+                        $("#tableBody").append(row);
+                    });
+                },
+
                 error: function () {
-                    alert("Error fetching Customer data.");
+                    alert("Error Occured During Data Retrieval! Try Again or Contact Admin");
                 }
             });
         });
     });
-</script>*@
+
+    </script>
+
+</body>
+</html>
+
+
+<!--Form Fields Validation Script-->
+@*<script>
+        // Function to hide the modal
+        function hideValidationModal() {
+            $('#validationModal').modal('hide');
+        }
+
+        // Text Input Validation
+        function validateText(input) {
+            if (!isNaN(Number(input.value))) {
+                // Show a Bootstrap modal with the validation message
+                $('#validationModal').modal('show');
+                input.value = '';
+            }
+        }
+
+        // Number validation function
+        function validateNumber(input) {
+            if (isNaN(Number(input.value))) {
+                // Show a Bootstrap modal with the validation message
+                $('#validationModal').modal('show');
+                input.value = '';
+            }
+        }
+
+        // Date Validation function
+        function validateDate(input) {
+            var enteredDate = new Date(input.value); // Get the value from the input element
+            var currentDate = new Date();
+            var lastDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+            var minDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 25);
+
+            if (enteredDate < minDate || enteredDate > lastDayOfMonth) {
+                alert("Enter a date between the 25th and the last day of the month.");
+                // Clear the input field
+                input.value = ''; // Set the input field's value to an empty string
+            }
+        }
+
+        // Attach listeners to input fields by class when they lose focus (blur)
+        const cID = document.querySelectorAll('.form-control-cID');
+        const prev_Reading = document.querySelectorAll('.form-control-prev_Reading');
+        const cur_Reading = document.querySelectorAll('.form-control-cur_Reading');
+        const rDate = document.querySelectorAll('.form-control-rDate');
+
+
+        cID.forEach(input => {
+            input.addEventListener('blur', () => {
+                validateNumber(input);
+            });
+        });
+
+        prev_Reading.forEach(input => {
+            input.addEventListener('blur', () => {
+                validateNumber(input);
+            });
+        });
+
+        cur_Reading.forEach(input => {
+            input.addEventListener('blur', () => {
+                validateNumber(input);
+            });
+        });
+
+        // Assuming rDate is an array of input elements
+        rDate.forEach(input => {
+            input.addEventListener('blur', () => {
+                validateDate(input);
+            });
+        });
+
+        //Perform Usage Calculation
+       $(document).ready(function () {
+
+        let calculatedReading;
+
+    function sendReadingValue(row) {
+      if(calculatedReading) {
+        $.ajax({
+          url: "@Url.Action("GetRate", "Invoice")",
+          type: 'POST',
+          data: { usage: calculatedReading },
+            success: function (data) {
+                var rate = data;
+                var charge = rate * calculatedReading;
+                var tFee = window.balance + charge;
+                console.log("Charge = ", calculatedReading * rate);
+                console.log('Data from server:', data);
+                console.log("Total Charge = ", window.balance + charge);
+                row.find('.form-control-Rate').val(data);
+                row.find('.form-control-charge').val(charge);
+                row.find('.form-control-tFee').val(tFee);
+
+                // After setting the rate field value
+                console.log('Rate field value after setting:', row.find('.form-control-Rate').val(data));
+            },
+          error: function() {
+            // handle error
+          }
+        });
+      }
+    }
+
+           $('.form-control-prev_Reading, .form-control-cur_Reading').on('blur', function () {
+               // Save reference to row
+               var row = $(this).closest('tr');
+            // Get values from corresponding fields
+            var cur_Reading = parseFloat($(this).closest('tr').find('.form-control-cur_Reading').val());
+            var prev_Reading = parseFloat($(this).closest('tr').find('.form-control-prev_Reading').val());
+            //var rDate = $(this).closest('tr').find('.form-control-reading_Value').val();
+
+            // Calculate the reading difference
+            calculatedReading = isNaN(cur_Reading) || isNaN(prev_Reading) ? '' : (cur_Reading - prev_Reading).toFixed(2);
+
+            // Update the readonly reading_Value field in the same row
+            //$(this).closest('tr').find('.form-control-reading_Value').val(window.calculatedReading);
+            row.find('.form-control-reading_Value').val(calculatedReading);
+
+            // Perform additional validation if needed
+            if (cur_Reading < prev_Reading) {
+                window.alert('Current Reading Must be Greater Than Previous Reading');
+            }
+            sendReadingValue(row);
+
+        });
+
+        $('#datepicker').change(function () {
+            $('.form-control-rDatee').val(this.value);
+        });
+    });
+
+    $('.btn-save-row').on('click', function () {
+      // Get the current row
+      var row = $(this).closest('tr');
+
+      // Check if the corresponding checkbox is checked
+      var checkbox = row.find('input[type="checkbox"]');
+      if (checkbox.is(':checked')) {
+        // Construct the data object from row elements
+        var model = {
+          cID: row.find('.form-control-cID').val(),
+          reading_Date: row.find('.form-control-rDatee').val(),
+          prev_Reading: row.find('.form-control-prev_Reading').val(),
+          cur_Reading: row.find('.form-control-cur_Reading').val(),
+          reading_Value: row.find('.form-control-reading_Value').val(),
+          };
+
+          var models = [];
+          models.push(model);
+        // Send the form data to the server via AJAX
+        $.ajax({
+          type: "POST",
+          url: "@Url.Action("BulkInsert", "Invoice")",
+            data: JSON.stringify({ models: models }),
+          contentType: "application/json",
+          success: function (response, status, xhr) {
+            // Check the response status code
+            if (status === 'success') {
+              alert("Billed Customer Successfully.");
+              // Refresh Page After Billing Customer
+              location.reload();
+            } else {
+              // Handle error, e.g., show an error message to the user
+              alert("Billing Failed! Try Again!: " + response.statusText);
+            }
+          },
+          error: function (xhr, status, error) {
+              alert("Billing Failed! Try Again!: " + error);
+          }
+        });
+      }
+    });
+
+    // Select the Save All button
+    const saveAllBtn = document.querySelector('#save-all-button');
+
+    // Add click event listener
+    saveAllBtn.addEventListener('click', saveAllRows);
+
+    // Save all checked rows
+    function saveAllRows() {
+
+      // Get all table rows
+      const rows = document.querySelectorAll('tbody tr');
+
+      // Array to store data for checked rows
+      const models = [];
+
+      // Loop through rows
+      rows.forEach(row => {
+
+        // Get checkbox
+        const checkbox = row.querySelector('input[type="checkbox"]');
+
+        // Check if checked
+        if(checkbox.checked) {
+
+          // Construct data object
+          const model = {
+            cID: row.querySelector('.form-control-cID').value,
+            reading_Date: row.querySelector('.form-control-rDatee').value,
+            prev_Reading: row.querySelector('.form-control-prev_Reading').value,
+            cur_Reading: row.querySelector('.form-control-cur_Reading').value,
+            reading_Value: row.querySelector('.form-control-reading_Value').value,
+          };
+
+          // Push to models array
+          models.push(model);
+        }
+
+      });
+
+        if (models.length > 0) {
+            // AJAX request to save models
+            $.ajax({
+                url: '@Url.Action("BulkInsert", "Invoice")',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ models }),
+
+                success: function (res) {
+                    alert("Billed Customers successfully.");
+                    // Refresh Page
+                    location.reload();
+                },
+
+                error: function (err) {
+                    alert("Billing Failed! Please Try Again or Contact Admin.");
+                }
+            });
+        }
+        else {
+            alert("No rows are Checked!");
+        }
+
+
+    }
+
+
+
+    </script>*@
+
+<!--Get related Data for each record-->
+@*<script>
+        console.log('Script is being reached');
+
+        $(document).ready(function () {
+            // Attach a blur event listener to the "invoiceID" field in each row
+            $(".form-control-cID").blur(function () {
+                var cID = $(this).val();
+                var row = $(this).closest("tr"); // Get the parent row
+
+                $.ajax({
+                    url: '@Url.Action("GetRelatedData", "Invoice")',
+                    type: 'POST',
+                    data: { id: cID },
+                    success: function (data) {
+                        // Populate the form fields within the current row with the retrieved data
+                        window.balance = data.balance;
+                        row.find(".form-control-prev_Reading").val(data.cur_Reading);
+                        row.find(".form-control-balance").val(data.balance);
+                    },
+                    error: function () {
+                        alert("Error fetching Customer data.");
+                    }
+                });
+            });
+        });
+    </script>*@
 

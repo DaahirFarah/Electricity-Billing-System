@@ -143,7 +143,7 @@ namespace EBS.Controllers
                 }
             }
 
-            return Json(invoice);
+            return Json(invoice, JsonRequestBehavior.AllowGet);
         }
 
         // GET Branches
@@ -166,7 +166,7 @@ namespace EBS.Controllers
                 }
             }
 
-            
+
 
             return Branch;
         }
