@@ -308,6 +308,14 @@ namespace EBS.Controllers
                                         usageLevel.Add(intFromDatabase);
                                         rate.Add(decimalFromDatabase);
                                     }
+
+                                    // Set the date to 25 of the month if the date field is empty
+                                    if (wrapper.reading_Date == DateTime.MinValue)
+                                    {
+                                        DateTime currentDate = DateTime.Now;
+                                        DateTime desiredDate = new DateTime(currentDate.Year, currentDate.Month, 28);
+                                        wrapper.reading_Date = desiredDate;
+                                    }
                                 }
                             }
 
@@ -369,6 +377,16 @@ namespace EBS.Controllers
                 {
                     string updateBalanceQuery = "UPDATE CustomerTbl SET Balance = 0 WHERE cID = @cID";
                     using (SqlCommand updateBalanceCommand = new SqlCommand(updateBalanceQuery, connection))
+                    {
+                        updateBalanceCommand.Parameters.AddWithValue("@cID", wrapper.cID);
+                        updateBalanceCommand.ExecuteNonQuery();
+                    }
+                }
+
+                foreach (var wrapper in models)
+                {
+                    string billMarkquery = "UPDATE CustomerTbl SET isBilledThisMonth = 1 WHERE cID = @cID";
+                    using (SqlCommand updateBalanceCommand = new SqlCommand(billMarkquery, connection))
                     {
                         updateBalanceCommand.Parameters.AddWithValue("@cID", wrapper.cID);
                         updateBalanceCommand.ExecuteNonQuery();
