@@ -317,7 +317,8 @@
             success: function (data) {
                 var rate = data;
                 var charge = rate * calculatedReading;
-                var tFee = window.balance + charge;
+                var Balance = row.find('.form-control-balance').val()
+                var tFee = parseFloat(Balance) + parseFloat(charge);
                 console.log("Charge = ", calculatedReading * rate);
                 console.log('Data from server:', data);
                 console.log("Total Charge = ", window.balance + charge);

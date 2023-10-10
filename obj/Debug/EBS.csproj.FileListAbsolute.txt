@@ -88,3 +88,17 @@ C:\Users\Firxi\source\repos\EBS\obj\Debug\EBS.csproj.CoreCompileInputs.cache
 C:\Users\Firxi\source\repos\EBS\obj\Debug\EBS.csproj.CopyComplete
 C:\Users\Firxi\source\repos\EBS\obj\Debug\EBS.dll
 C:\Users\Firxi\source\repos\EBS\obj\Debug\EBS.pdb
+C:\Users\Firxi\source\repos\EBS\bin\Microsoft.Extensions.Logging.Abstractions.dll
+C:\Users\Firxi\source\repos\EBS\bin\Quartz.dll
+C:\Users\Firxi\source\repos\EBS\bin\System.Buffers.dll
+C:\Users\Firxi\source\repos\EBS\bin\System.Diagnostics.DiagnosticSource.dll
+C:\Users\Firxi\source\repos\EBS\bin\System.Memory.dll
+C:\Users\Firxi\source\repos\EBS\bin\System.Numerics.Vectors.dll
+C:\Users\Firxi\source\repos\EBS\bin\System.Runtime.CompilerServices.Unsafe.dll
+C:\Users\Firxi\source\repos\EBS\bin\Microsoft.Extensions.Logging.Abstractions.xml
+C:\Users\Firxi\source\repos\EBS\bin\Quartz.xml
+C:\Users\Firxi\source\repos\EBS\bin\System.Buffers.xml
+C:\Users\Firxi\source\repos\EBS\bin\System.Diagnostics.DiagnosticSource.xml
+C:\Users\Firxi\source\repos\EBS\bin\System.Memory.xml
+C:\Users\Firxi\source\repos\EBS\bin\System.Numerics.Vectors.xml
+C:\Users\Firxi\source\repos\EBS\bin\System.Runtime.CompilerServices.Unsafe.xml
