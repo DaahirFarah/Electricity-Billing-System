@@ -118,7 +118,7 @@ namespace EBS.Controllers
             {
                 connection.Open();
                 // String that holds the query to get the customers that are not billed yet and their latest meter reading based on the selected branch
-                string query = ";WITH CTE AS (\r\n    SELECT \r\n\t\tC.cID,\r\n        C.cFirstName, \r\n        C.cMidName, \r\n        C.cLastName, \r\n\t\tC.Balance,\r\n        I.cur_Reading,\r\n        ROW_NUMBER() OVER (PARTITION BY C.cID ORDER BY I.invoiceID DESC) AS rn\r\n    FROM CustomerTbl C\r\n    JOIN InvoiceTbl I ON C.cID = I.cID\r\n\tWHERE C.isBilledThisMonth = 0\r\n\tAND C.Branch = @branch\r\n)\r\nSELECT cID, cFirstName, cMidName, cLastName, cur_Reading, Balance\r\nFROM CTE\r\nWHERE rn = 1";
+                string query = ";WITH CTE AS (\r\n    SELECT \r\n        C.cID,\r\n        C.cFirstName, \r\n        C.cMidName, \r\n        C.cLastName, \r\n        C.Balance,\r\n        COALESCE(I.cur_Reading, 0) AS cur_Reading,\r\n        ROW_NUMBER() OVER (PARTITION BY C.cID ORDER BY I.invoiceID DESC) AS rn\r\n    FROM CustomerTbl C\r\n    LEFT JOIN InvoiceTbl I ON C.cID = I.cID\r\n    WHERE C.isBilledThisMonth = 0\r\n    AND C.Branch = @branch\r\n)\r\nSELECT cID, cFirstName, cMidName, cLastName, cur_Reading, Balance\r\nFROM CTE\r\nWHERE rn = 1";
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
