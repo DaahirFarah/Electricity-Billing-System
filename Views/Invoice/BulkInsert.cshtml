@@ -138,7 +138,7 @@
             </td>
 
             <td>
-                <input type="number" class="form-check-prev_Reading" readonly>
+                <input type="number" class="form-control-prev_Reading" readonly>
             </td>
 
             <td>
@@ -146,7 +146,7 @@
             </td>
 
             <td>
-                <input type="number" class="form-control-reading_Value">
+                <input type="number" class="form-control-reading_Value" readonly>
             </td>
 
             <td>
@@ -154,7 +154,7 @@
             </td>
 
             <td>
-                <input type="number" class="form-check-Rate" readonly>
+                <input type="number" class="form-control-Rate" readonly>
             </td>
 
             <td>
@@ -202,6 +202,9 @@
                         // Clone the template and get its HTML content
                         const rowTemplate = $("#rowTemplate").html();
                         const row = $(rowTemplate);
+
+                        console.log('customer ID', item.cID);
+                        console.log('previous reading', item.prev_Reading);
 
                         // Populate data into the row
                         row.find('.form-control-cID').val(item.cID);
