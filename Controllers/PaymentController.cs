@@ -214,6 +214,13 @@ namespace EBS.Controllers
 
                                 foreach (var wrapper in models)
                                 {
+                                    if (wrapper.payDate == DateTime.MinValue)
+                                    {
+                                        DateTime currentDate = DateTime.Now;
+                                        DateTime desiredDate = new DateTime(currentDate.Year, currentDate.Month, 28);
+                                        wrapper.payDate = desiredDate;
+                                    }
+
                                     command.Parameters.AddWithValue("@cID", wrapper.cID);
                                     command.Parameters.AddWithValue("@invoiceID", wrapper.invoiceID);
                                     command.Parameters.AddWithValue("@paidAmount", wrapper.paidAmount);

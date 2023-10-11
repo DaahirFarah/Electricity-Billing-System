@@ -57,7 +57,8 @@
 
                 <div class="form-outline form-group">
                     @*<strong>@Html.LabelFor(model => model[i].SelectedBranch)</strong> <br />*@
-                    @Html.DropDownListFor(m => m[i].SelectedBranch, new SelectList(Model[i].SelectedBranch), "Select Branch", new { id = "branchDropdown" })
+                    @Html.DropDownListFor(m => m[i].SelectedBranch, new SelectList(Model[i].SelectedBranch), "Select Branch", new {
+                   @class = "form-control form-control-lg form-control-Branchh", id = "branchDropdown" })
                     @Html.ValidationMessageFor(model => model[i].SelectedBranch, "", new { @class = "text-danger" })
                 </div>
 
@@ -134,35 +135,35 @@
             </td>
 
             <td>
-                <input type="text" class="form-control-fullName">
+                <input type="text" class="form-control form-control-fullName" style="width: auto;">
             </td>
 
             <td>
-                <input type="number" class="form-control-prev_Reading" readonly style="background-color: lightgray">
+                <input type="number" class="form-control form-control-prev_Reading" readonly style="background-color: lightgray">
             </td>
 
             <td>
-                <input type="number" class="form-control-cur_Reading">
+                <input type="number" class="form-control form-control-cur_Reading">
             </td>
 
             <td>
-                <input type="number" class="form-control-reading_Value" readonly style="background-color: lightgray">
+                <input type="number" class="form-control form-control-reading_Value" readonly style="background-color: lightgray">
             </td>
 
             <td>
-                <input type="number" class="form-control-balance" readonly style="background-color: lightgray">
+                <input type="number" class="form-control form-control-balance" readonly style="background-color: lightgray">
             </td>
 
             <td>
-                <input type="number" class="form-control-Rate" readonly style="background-color: lightgray">
+                <input type="number" class="form-control form-control-Rate" readonly style="background-color: lightgray">
             </td>
 
             <td>
-                <input type="number" class="form-control-charge" readonly style="background-color: lightgray">
+                <input type="number" class="form-control form-control-charge" readonly style="background-color: lightgray">
             </td>
 
             <td>
-                <input type="number" class="form-control-tFee" readonly style="background-color: lightgray">
+                <input type="number" class="form-control form-control-tFee" readonly style="background-color: lightgray">
             </td>
 
             <td>
@@ -180,55 +181,55 @@
 
 
         $('#branchDropdown').on('change', function () {
-            console.log('I only live here!');
+                                    console.log('I only live here!');
 
             // Call method via AJAX
             $.ajax({
-                url: '@Url.Action("GetCustomerBillInfo", "Invoice")',
+                                    url: '@Url.Action("GetCustomerBillInfo", "Invoice")',
                 type: 'POST',
                 data: { branch: $(this).val() },
                 // Use dataSrc
                 dataSrc: function (data) {
-                    // Transform response data as needed
-                    return data.results;
-                },
+                                            // Transform response data as needed
+                                            return data.results;
+                                        },
 
                 success: function (data) {
                     // Empty table
                     $("#tableBody").empty();
 
-                    if (data.length === 0) {
-                        alert("All Customers in This Branch Are Billed This Month!");
-                    } else {
-                        // Loop through data and append rows
-                        data.forEach(item => {
-                            // Clone the template and get its HTML content
-                            const rowTemplate = $("#rowTemplate").html();
-                            const row = $(rowTemplate);
+                                            if (data.length === 0) {
+                                                alert("All Customers in This Branch Are Billed This Month!");
+                                            } else {
+                                                // Loop through data and append rows
+                                                data.forEach(item => {
+                                                    // Clone the template and get its HTML content
+                                                    const rowTemplate = $("#rowTemplate").html();
+                                                    const row = $(rowTemplate);
 
-                            console.log('customer ID', item.cID);
-                            console.log('previous reading', item.prev_Reading);
+                                                    console.log('customer ID', item.cID);
+                                                    console.log('previous reading', item.prev_Reading);
 
-                            // Populate data into the row
-                            row.find('.form-control-cID').val(item.cID);
-                            row.find('.form-control-prev_Reading').val(item.prev_Reading);
-                            row.find('.form-control-balance').val(item.balance);
-                            row.find('.form-control-fullName').val(item.cFullName);
+                                                    // Populate data into the row
+                                                    row.find('.form-control-cID').val(item.cID);
+                                                    row.find('.form-control-prev_Reading').val(item.prev_Reading);
+                                                    row.find('.form-control-balance').val(item.balance);
+                                                    row.find('.form-control-fullName').val(item.cFullName);
 
-                            window.balance = item.balance;
+                                                    window.balance = item.balance;
 
                             // Append the row to the table
                             $("#tableBody").append(row);
-                        });
-                    }
-                },
+                                                });
+                                            }
+                                        },
 
                 error: function () {
-                    alert("Error Occured During Data Retrieval! Try Again or Contact Admin");
-                }
-            });
-        });
-    });
+                                            alert("Error Occured During Data Retrieval! Try Again or Contact Admin");
+                                        }
+                                    });
+                                });
+                            });
 
     </script>
 
@@ -237,150 +238,150 @@
         // Function to hide the modal
         function hideValidationModal() {
             $('#validationModal').modal('hide');
-        }
+                            }
 
-        // Text Input Validation
-        function validateText(input) {
-            if (!isNaN(Number(input.value))) {
+                            // Text Input Validation
+                            function validateText(input) {
+                                if (!isNaN(Number(input.value))) {
                 // Show a Bootstrap modal with the validation message
                 $('#validationModal').modal('show');
-                input.value = '';
-            }
-        }
+                                    input.value = '';
+                                }
+                            }
 
-        // Number validation function
-        function validateNumber(input) {
-            if (isNaN(Number(input.value))) {
+                            // Number validation function
+                            function validateNumber(input) {
+                                if (isNaN(Number(input.value))) {
                 // Show a Bootstrap modal with the validation message
                 $('#validationModal').modal('show');
-                input.value = '';
-            }
-        }
+                                    input.value = '';
+                                }
+                            }
 
-        // Date Validation function
-        function validateDate(input) {
-            var enteredDate = new Date(input.value); // Get the value from the input element
-            var currentDate = new Date();
-            var lastDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
-            var minDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 25);
+                            // Date Validation function
+                            function validateDate(input) {
+                                var enteredDate = new Date(input.value); // Get the value from the input element
+                                var currentDate = new Date();
+                                var lastDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+                                var minDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 25);
 
-            if (enteredDate < minDate || enteredDate > lastDayOfMonth) {
-                alert("Enter a date between the 25th and the last day of the month.");
-                // Clear the input field
-                input.value = ''; // Set the input field's value to an empty string
-            }
-        }
+                                if (enteredDate < minDate || enteredDate > lastDayOfMonth) {
+                                    alert("Enter a date between the 25th and the last day of the month.");
+                                    // Clear the input field
+                                    input.value = ''; // Set the input field's value to an empty string
+                                }
+                            }
 
-        // Attach listeners to input fields by class when they lose focus (blur)
-        const cID = document.querySelectorAll('.form-control-cID');
-        const prev_Reading = document.querySelectorAll('.form-control-prev_Reading');
-        const cur_Reading = document.querySelectorAll('.form-control-cur_Reading');
-        const rDate = document.querySelectorAll('.form-control-rDate');
+                            // Attach listeners to input fields by class when they lose focus (blur)
+                            const cID = document.querySelectorAll('.form-control-cID');
+                            const prev_Reading = document.querySelectorAll('.form-control-prev_Reading');
+                            const cur_Reading = document.querySelectorAll('.form-control-cur_Reading');
+                            const rDate = document.querySelectorAll('.form-control-rDate');
 
 
-        cID.forEach(input => {
+                            cID.forEach(input => {
             input.addEventListener('blur', () => {
                 validateNumber(input);
-            });
+                        });
         });
 
-        prev_Reading.forEach(input => {
-            input.addEventListener('blur', () => {
-                validateNumber(input);
-            });
-        });
+                    prev_Reading.forEach(input => {
+                        input.addEventListener('blur', () => {
+                            validateNumber(input);
+                        });
+                    });
 
-        cur_Reading.forEach(input => {
-            input.addEventListener('blur', () => {
-                validateNumber(input);
-            });
-        });
+                    cur_Reading.forEach(input => {
+                        input.addEventListener('blur', () => {
+                            validateNumber(input);
+                        });
+                    });
 
-        // Assuming rDate is an array of input elements
-        rDate.forEach(input => {
-            input.addEventListener('blur', () => {
-                validateDate(input);
-            });
-        });
+                    // Assuming rDate is an array of input elements
+                    rDate.forEach(input => {
+                        input.addEventListener('blur', () => {
+                            validateDate(input);
+                        });
+                    });
 
         //Perform Usage Calculation
        $(document).ready(function () {
 
-        let calculatedReading;
+                        let calculatedReading;
 
-    function sendReadingValue(row) {
-      if(calculatedReading) {
+                        function sendReadingValue(row) {
+                            if(calculatedReading) {
         $.ajax({
-          url: "@Url.Action("GetRate", "Invoice")",
+                                url: "@Url.Action("GetRate", "Invoice")",
           type: 'POST',
           data: { usage: calculatedReading },
             success: function (data) {
-                var rate = data;
-                var charge = rate * calculatedReading;
-                var Balance = row.find('.form-control-balance').val()
+                                        var rate = data;
+                                        var charge = rate * calculatedReading;
+                                        var Balance = row.find('.form-control-balance').val()
                 var tFee = parseFloat(Balance) + parseFloat(charge);
-                console.log("Charge = ", calculatedReading * rate);
-                console.log('Data from server:', data);
-                console.log("Total Charge = ", window.balance + charge);
-                row.find('.form-control-Rate').val(data);
-                row.find('.form-control-charge').val(charge);
-                row.find('.form-control-tFee').val(tFee);
+                                        console.log("Charge = ", calculatedReading * rate);
+                                        console.log('Data from server:', data);
+                                        console.log("Total Charge = ", window.balance + charge);
+                                        row.find('.form-control-Rate').val(data);
+                                        row.find('.form-control-charge').val(charge);
+                                        row.find('.form-control-tFee').val(tFee);
 
-                // After setting the rate field value
-                console.log('Rate field value after setting:', row.find('.form-control-Rate').val(data));
-            },
+                                        // After setting the rate field value
+                                        console.log('Rate field value after setting:', row.find('.form-control-Rate').val(data));
+                                    },
           error: function() {
-            // handle error
-          }
-        });
-      }
+                                        // handle error
+                                    }
+                                });
+                    }
     }
 
            $('#tableBody').on('blur', '.form-control-prev_Reading, .form-control-cur_Reading', function () {
-               // Save reference to row
-               var row = $(this).closest('tr');
-            // Get values from corresponding fields
-            var cur_Reading = parseFloat($(this).closest('tr').find('.form-control-cur_Reading').val());
-            var prev_Reading = parseFloat($(this).closest('tr').find('.form-control-prev_Reading').val());
+                        // Save reference to row
+                        var row = $(this).closest('tr');
+                        // Get values from corresponding fields
+                        var cur_Reading = parseFloat($(this).closest('tr').find('.form-control-cur_Reading').val());
+                        var prev_Reading = parseFloat($(this).closest('tr').find('.form-control-prev_Reading').val());
 
-            // Calculate the reading difference
-            calculatedReading = isNaN(cur_Reading) || isNaN(prev_Reading) ? '' : (cur_Reading - prev_Reading).toFixed(2);
+                        // Calculate the reading difference
+                        calculatedReading = isNaN(cur_Reading) || isNaN(prev_Reading) ? '' : (cur_Reading - prev_Reading).toFixed(2);
 
-            row.find('.form-control-reading_Value').val(calculatedReading);
+                        row.find('.form-control-reading_Value').val(calculatedReading);
 
-            // Perform additional validation if needed
-            if (cur_Reading < prev_Reading) {
-                window.alert('Current Reading Must be Greater Than Previous Reading');
-            }
-            sendReadingValue(row);
+                        // Perform additional validation if needed
+                        if (cur_Reading < prev_Reading) {
+                            window.alert('Current Reading Must be Greater Than Previous Reading');
+                        }
+                        sendReadingValue(row);
 
-        });
+                    });
 
         $('#datepicker').change(function () {
             $('.form-control-rDatee').val(this.value);
-        });
+                    });
     });
 
    $('#tableBody').on('click', '.btn-save-row', function () {
-      // Get the current row
-      var row = $(this).closest('tr');
+                        // Get the current row
+                        var row = $(this).closest('tr');
 
-       // prototype
-       var date = document.querySelector('.form-control-rDate');
-       var selectedDate = date.value;
-       if (!selectedDate) {
-           alert("Please Select Reading Date");
-           return;
-       }
-       else {
+                        // prototype
+                        var date = document.querySelector('.form-control-rDate');
+                        var selectedDate = date.value;
+                        if (!selectedDate) {
+                            alert("Please Select Reading Date");
+                            return;
+                        }
+                        else {
 
-       }
+                        }
 
-      // Check if the corresponding checkbox is checked
-      var checkbox = row.find('input[type="checkbox"]');
-      if (checkbox.is(':checked')) {
-        // Construct the data object from row elements
-        var model = {
+                        // Check if the corresponding checkbox is checked
+                        var checkbox = row.find('input[type="checkbox"]');
+                        if (checkbox.is(':checked')) {
+                            // Construct the data object from row elements
+                            var model = {
           cID: row.find('.form-control-cID').val(),
           reading_Date: row.find('.form-control-rDatee').val(),
           prev_Reading: row.find('.form-control-prev_Reading').val(),
@@ -388,58 +389,58 @@
           reading_Value: row.find('.form-control-reading_Value').val(),
           };
 
-          var models = [];
-          models.push(model);
+                        var models = [];
+                        models.push(model);
         // Send the form data to the server via AJAX
         $.ajax({
-          type: "POST",
+                        type: "POST",
           url: "@Url.Action("BulkInsert", "Invoice")",
             data: JSON.stringify({ models: models }),
           contentType: "application/json",
           success: function (response, status, xhr) {
-            // Check the response status code
-            if (status === 'success') {
-              alert("Billed Customer Successfully.");
-              // Refresh Page After Billing Customer
-              location.reload();
-            } else {
-              // Handle error, e.g., show an error message to the user
-              alert("Billing Failed! Try Again!: " + response.statusText);
-            }
-          },
+                                // Check the response status code
+                                if (status === 'success') {
+                                    alert("Billed Customer Successfully.");
+                                    // Refresh Page After Billing Customer
+                                    location.reload();
+                                } else {
+                                    // Handle error, e.g., show an error message to the user
+                                    alert("Billing Failed! Try Again!: " + response.statusText);
+                                }
+                            },
           error: function (xhr, status, error) {
-              alert("Billing Failed! Try Again!: " + error);
-          }
-        });
-      }
+                                alert("Billing Failed! Try Again!: " + error);
+                            }
+                        });
+                    }
     });
 
-    // Select the Save All button
-    const saveAllBtn = document.querySelector('#save-all-button');
+                    // Select the Save All button
+                    const saveAllBtn = document.querySelector('#save-all-button');
 
-    // Add click event listener
-    saveAllBtn.addEventListener('click', saveAllRows);
+                    // Add click event listener
+                    saveAllBtn.addEventListener('click', saveAllRows);
 
-    // Save all checked rows
-    function saveAllRows() {
+                    // Save all checked rows
+                    function saveAllRows() {
 
-      // Get all table rows
-      const rows = document.querySelectorAll('tbody tr');
+                        // Get all table rows
+                        const rows = document.querySelectorAll('tbody tr');
 
-      // Array to store data for checked rows
-      const models = [];
+                        // Array to store data for checked rows
+                        const models = [];
 
-      // Loop through rows
-      rows.forEach(row => {
+                        // Loop through rows
+                        rows.forEach(row => {
 
-        // Get checkbox
-        const checkbox = row.querySelector('input[type="checkbox"]');
+                        // Get checkbox
+                        const checkbox = row.querySelector('input[type="checkbox"]');
 
-        // Check if checked
-        if(checkbox.checked) {
+                        // Check if checked
+                        if(checkbox.checked) {
 
-          // Construct data object
-          const model = {
+                            // Construct data object
+                            const model = {
             cID: row.querySelector('.form-control-cID').value,
             reading_Date: row.querySelector('.form-control-rDatee').value,
             prev_Reading: row.querySelector('.form-control-prev_Reading').value,
@@ -447,34 +448,34 @@
             reading_Value: row.querySelector('.form-control-reading_Value').value,
           };
 
-          // Push to models array
-          models.push(model);
+                    // Push to models array
+                    models.push(model);
         }
 
       });
 
-        if (models.length > 0) {
+                    if (models.length > 0) {
             // AJAX request to save models
             $.ajax({
-                url: '@Url.Action("BulkInsert", "Invoice")',
+                        url: '@Url.Action("BulkInsert", "Invoice")',
                 method: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify({ models }),
 
                 success: function (res) {
-                    alert("Billed Customers successfully.");
-                    // Refresh Page
-                    location.reload();
-                },
+                                alert("Billed Customers successfully.");
+                                // Refresh Page
+                                location.reload();
+                            },
 
                 error: function (err) {
-                    alert("Billing Failed! Please Try Again or Contact Admin.");
-                }
-            });
-        }
-        else {
-            alert("No rows are Checked!");
-        }
+                                alert("Billing Failed! Please Try Again or Contact Admin.");
+                            }
+                        });
+                    }
+                    else {
+                        alert("No rows are Checked!");
+                    }
     }
 
     </script>

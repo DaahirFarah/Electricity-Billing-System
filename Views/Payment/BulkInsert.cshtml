@@ -54,7 +54,8 @@
 
                 <div class="form-outline form-group">
                     @*<strong>@Html.LabelFor(model => model[i].SelectedBranch)</strong> <br />*@
-                    @Html.DropDownListFor(m => m[i].SelectedBranch, new SelectList(Model[i].SelectedBranch), "Select Branch", new { id = "branchDropdown" })
+                    @Html.DropDownListFor(m => m[i].SelectedBranch, new SelectList(Model[i].SelectedBranch), "Select Branch", new {
+                   @class = "form-control form-control-lg form-control-selectedBranchh", id = "branchDropdown" })
                     @Html.ValidationMessageFor(model => model[i].SelectedBranch, "", new { @class = "text-danger" })
                 </div>
             </div>
@@ -118,31 +119,31 @@
             </td>
 
             <td style="display:none">
-                <input type="number" class="form-control-cID">
+                <input type="number" class="form-control form-control-cID">
             </td>
 
             <td style="display:none">
-                <input type="number" class="form-control-invoiceID">
+                <input type="number" class="form-control form-control-invoiceID">
             </td>
 
             <td style="display:none">
-                <input type="date" class="form-control-rDatee">
+                <input type="date" class="form-control form-control-rDatee">
             </td>
 
             <td>
-                <input type="text" class="form-control-fullName">
+                <input type="text" class="form-control form-control-fullName" style="width: auto;" >
             </td>
 
             <td>
-                <input type="number" class="form-control-paidAmount">
+                <input type="number" class="form-control form-control-paidAmount">
             </td>
 
             <td>
-                <input type="number" class="form-control-totalFee" readonly style="background-color: lightgray">
+                <input type="number" class="form-control form-control-totalFee" readonly style="background-color: lightgray">
             </td>
 
             <td>
-                <select class="form-control-payMethod">
+                <select class="form-control form-control-payMethod">
                     <option value="Cash">Cash</option>
                     <option value="EVC">EVC</option>
                     <option value="Account to Account">Account to Account</option>
@@ -338,7 +339,82 @@
           }
         });
       }
+        });
+
+        // Select the Save All button
+    const saveAllBtn = document.querySelector('#save-all-button');
+
+    // Add click event listener
+    saveAllBtn.addEventListener('click', saveAllRows);
+
+    // Flag to track if the date has been checked
+let dateChecked = false;
+
+function saveAllRows() {
+  // Check the date only once
+  if (!dateChecked) {
+    // Get the date input
+    const date = document.querySelector('.form-control-rDate');
+    const selectedDate = date.value;
+    if (!selectedDate) {
+      alert("Please Select Reading Date");
+      dateChecked = true; // Set the flag to true to indicate date has been checked
+    }
+  }
+
+  // Continue with the rest of your code for saving rows, if the date has been checked
+  if (dateChecked) {
+    // Get all table rows
+    const rows = document.querySelectorAll('tbody tr');
+
+    // Array to store data for checked rows
+    const models = [];
+
+    // Loop through rows
+    rows.forEach(row => {
+      // Get checkbox
+      const checkbox = row.querySelector('input[type="checkbox"]');
+
+      // Check if checked
+      if (checkbox.checked) {
+        // Construct data object
+        const model = {
+          cID: row.querySelector('.form-control-cID').value,
+          invoiceID: row.querySelector('.form-control-invoiceID').value,
+          payDate: row.querySelector('.form-control-rDatee').value,
+          paidAmount: row.querySelector('.form-control-paidAmount').value,
+          totalFee: row.querySelector('.form-control-totalFee').value,
+          payMethod: row.querySelector('.form-control-payMethod').value,
+        };
+
+        // Push to models array
+        models.push(model);
+      }
     });
+
+    if (models.length > 0) {
+      // AJAX request to save models
+      $.ajax({
+        url: '@Url.Action("BulkInsert", "Payment")',
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ models }),
+
+        success: function (res) {
+          alert("Recorded Bill Payments Successfully.");
+          // Refresh Page
+          location.reload();
+        },
+
+        error: function (err) {
+          alert("Bill Recording Failed! Fill All Fields And Try Again!");
+        }
+      });
+    } else {
+      alert("No rows are Checked!");
+    }
+  }
+}
 
     </script>
 
