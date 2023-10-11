@@ -1,0 +1,225 @@
+﻿
+@model List<EBS.viewModels.payVM>
+
+@{
+    Layout = "~/Views/Shared/_Layout2.cshtml";
+}
+
+<style>
+    .content {
+        display: flex;
+        justify-content: center;
+        padding: 20px; /* Add padding around the table */
+    }
+
+    .table-container {
+        max-width: 700px; /* Set a maximum width for the table container */
+        width: 10%;
+        padding-top: 20px;
+    }
+
+    .table thead th {
+        white-space: nowrap; /* Prevent text wrapping */
+    }
+
+    .container {
+        margin-left: 259px;
+        padding-top: 30px;
+        padding-left: 35px;
+        padding-bottom: 20px;
+    }
+</style>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Record Payments | SEC</title>
+</head>
+<body>
+
+    <div id="container">
+        <h2><strong>Record Payments</strong></h2>
+
+        <br />
+        <br />
+
+        @using (Html.BeginForm("BulkInsert", "Payment", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+
+            <table class="table">
+                <thead class="thead-light">
+                    <tr>
+                        <th>Invoice ID</th>
+                        <th>Customer ID</th>
+                        <th>Paid Amount ($)</th>
+                        <th>Total Fee ($)</th>
+                        <th>Payment Method</th>
+                        <th>Payment Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i <5; i++)
+                    {
+                        <tr>
+                            <td>
+                                @Html.EditorFor(model => Model[i].invoiceID, new { htmlAttributes = new { @class = "form-control form-control-lg form-control-invoiceID" } })
+                                @Html.ValidationMessageFor(m => Model[i].invoiceID, "", new { @class = "text-danger" })
+                            </td>
+
+                            <td>
+                                @Html.EditorFor(model => Model[i].cID, new { htmlAttributes = new { @class = "form-control form-control-lg form-control-cID" } })
+                                @Html.ValidationMessageFor(m => Model[i].cID, "", new { @class = "text-danger" })
+                            </td>
+
+                            <td>
+                                @Html.EditorFor(model => Model[i].paidAmount, new { htmlAttributes = new { @class = "form-control form-control-lg form-control-paidAmount" } })
+                                @Html.ValidationMessageFor(m => Model[i].paidAmount, "", new { @class = "text-danger" })
+                            </td>
+
+                            <td>
+                                @Html.EditorFor(model => Model[i].totalFee, new { htmlAttributes = new { @class = "form-control form-control-lg form-control-totalFee" } })
+                                @Html.ValidationMessageFor(m => Model[i].totalFee, "", new { @class = "text-danger" })
+                            </td>
+
+                            <td>
+                                @Html.EditorFor(model => Model[i].payMethod, new { htmlAttributes = new { @class = "form-control form-control-lg form-control-payMethod" } })
+                                @Html.ValidationMessageFor(m => Model[i].payMethod, "", new { @class = "text-danger" })
+                            </td>
+
+                            <td>
+                                @Html.EditorFor(model => Model[i].payDate, new { htmlAttributes = new { @class = "form-control form-control-lg form-control-payDate", type = "date" } })
+                                @Html.ValidationMessageFor(m => Model[i].payDate, "", new { @class = "text-danger" })
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <br />
+            <br />
+
+            <div class="col-md-6 mb-4 pb-2" style="display: flex; justify-content: center; align-items: center;">
+                <input type="submit" value="Create" class="btn btn-success btn-lg btn-block" />
+                @*<input class="btn btn-primary btn-lg btn-block" type="submit" value="Save" />*@
+            </div>
+        }
+
+    </div>
+
+    <div class="modal fade" id="validationModal" tabindex="-1" role="dialog" aria-labelledby="validationModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="validationModalLabel">Validation Error</h5>
+
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Please enter valid data.
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+</body>
+</html>
+
+<!--Form Fields Validation Script-->
+<script>
+    // Function to hide the modal
+    function hideValidationModal() {
+        $('#validationModal').modal('hide');
+    }
+
+    // Text Input Validation
+    function validateText(input) {
+        if (!isNaN(Number(input.value))) {
+            // Show a Bootstrap modal with the validation message
+            $('#validationModal').modal('show');
+            input.value = '';
+        }
+    }
+
+    // Number validation function
+    function validateNumber(input) {
+        if (isNaN(Number(input.value))) {
+            // Show a Bootstrap modal with the validation message
+            $('#validationModal').modal('show');
+            input.value = '';
+        }
+    }
+
+    // Attach listeners to input fields by class when they lose focus (blur)
+    const invID = document.querySelectorAll('.form-control-invoiceID');
+    const cID = document.querySelectorAll('.form-control-cID');
+    const pAmount = document.querySelectorAll('.form-control-paidAmount');
+    const tFee = document.querySelectorAll('.form-control-totalFee');
+    const pMethod = document.querySelectorAll('.form-control-payMethod');
+
+
+    invID.forEach(input => {
+        input.addEventListener('blur', () => {
+            validateNumber(input);
+        });
+    });
+
+    cID.forEach(input => {
+        input.addEventListener('blur', () => {
+            validateNumber(input);
+        });
+    });
+
+    pAmount.forEach(input => {
+        input.addEventListener('blur', () => {
+            validateNumber(input);
+        });
+    });
+
+    tFee.forEach(input => {
+        input.addEventListener('blur', () => {
+            validateNumber(input);
+        });
+    });
+
+    pMethod.forEach(input => {
+        input.addEventListener('blur', () => {
+            validateText(input);
+        });
+    });
+
+    // Attach click event listener to the "OK" button in the modal
+    document.getElementById('modalOkButton').addEventListener('click', hideValidationModal);
+</script>
+
+<!--Get related Data for each record-->
+<script>
+    console.log('Script is being reached');
+
+    $(document).ready(function () {
+        // Attach a blur event listener to the "invoiceID" field in each row
+        $(".form-control-invoiceID").blur(function () {
+            var invoiceID = $(this).val();
+            var row = $(this).closest("tr"); // Get the parent row
+
+            $.ajax({
+                url: '@Url.Action("GetRelatedData", "Payment")',
+                type: 'POST',
+                data: { id: invoiceID },
+                success: function (data) {
+                    // Populate the form fields within the current row with the retrieved data
+                    row.find(".form-control-cID").val(data.cID);
+                    row.find(".form-control-totalFee").val(data.totalFee);
+
+                },
+                error: function () {
+                    alert("Error fetching Invoice data.");
+                }
+            });
+        });
+    });
+</script>
+

@@ -8,6 +8,14 @@ namespace EBS.viewModels
 {
     public class payVM
     {
+        public payVM()
+        {
+            SelectedBranch = new List<string> { "" };
+        }
+
+        [Display(Name = "Branch")]
+        public List<string> SelectedBranch { get; set; }
+
         [Display(Name = "Payment ID")]
         [Key]
         public int payID { get; set; }
@@ -35,5 +43,21 @@ namespace EBS.viewModels
         [Display(Name = "Payment Date")]
         [Required(ErrorMessage = "This is required.")]
         public DateTime payDate { get; set; }
+
+        [Display(Name = "Payment Date")]
+        [Required(ErrorMessage = "Reading Date is required")]
+        public DateTime selectedDate { get; set; }
+
+        public string cFirstName { get; set; }
+        public string cMidName { get; set; }
+        public string cLastName { get; set; }
+        public string cFullName
+        {
+            get
+            {
+                // Concatenate the first name, middle name, and last name with spaces
+                return $"{cFirstName} {cMidName} {cLastName}";
+            }
+        }
     }
 }

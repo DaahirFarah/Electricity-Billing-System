@@ -16,7 +16,7 @@ using System.Data;
 
 namespace EBS.Controllers
 {
-    [Authorize]
+    //[Authorize]
     public class PaymentController : Controller
     {
         // ConnectionString Instance
@@ -89,6 +89,31 @@ namespace EBS.Controllers
             return Json(new payWrapper(), JsonRequestBehavior.AllowGet);
         }
 
+        // GET Branches
+        [HttpGet]
+        public List<string> GetBranches()
+        {
+            List<string> Branch = new List<string>();
+            string query = "SELECT BranchName FROM Branches";
+
+            using (SqlConnection connection = new SqlConnection(SecConn))
+            {
+                connection.Open();
+                SqlCommand command = new SqlCommand(query, connection);
+                SqlDataReader reader = command.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    string branch = (string)reader["BranchName"];
+                    Branch.Add(branch);
+                }
+            }
+
+
+
+            return Branch;
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public JsonResult UpdatePayment(payWrapper model)
@@ -109,18 +134,65 @@ namespace EBS.Controllers
             return Json(new { success = true, message = "Payment Deleted Successfully!" });
         }
 
+        // Get Unpaid Invoices Data For Recording 
+        [HttpPost]
+        public JsonResult GetBillInfo(string branch)
+        {
+            List<payVM> payment = new List<payVM>();
+            using (SqlConnection connection = new SqlConnection(SecConn))
+            {
+                connection.Open();
+                // String that holds the query to get the customers that are not billed yet and their latest meter reading based on the selected branch
+                string query = ";WITH CTE AS (\r\n    SELECT\r\n        C.cID,\r\n        C.cFirstName,\r\n        C.cMidName,\r\n        C.cLastName,\r\n        I.invoiceID,\r\n        I.total_Fee\r\n    FROM CustomerTbl C\r\n    JOIN InvoiceTbl I ON C.cID = I.cID\r\n    WHERE I.Status = 'Unpaid' AND C.Branch = @branch \r\n)\r\nSELECT\r\n    cID,\r\n    cFirstName,\r\n    cMidName,\r\n    cLastName,\r\n    invoiceID,\r\n    total_Fee\r\nFROM CTE;";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@branch", branch);
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            payment.Add(new payVM
+                            {
+                                cID = Convert.ToInt32(reader["cID"]),
+                                invoiceID = Convert.ToInt32(reader["invoiceID"]),
+                                totalFee = Convert.ToDecimal(reader["total_Fee"]),
+                                cFirstName = reader["cFirstName"].ToString(),
+                                cMidName = reader["cMidName"].ToString(),
+                                cLastName = reader["cLastName"].ToString(),
+
+                            });
+                        }
+                    }
+                }
+            }
+
+            return Json(payment, JsonRequestBehavior.AllowGet);
+        }
+
         // Bulk Insertion  For Payments. upto Five at a time
         // GET: /Meter/BulkInsertion
         [HttpGet]
         public ActionResult BulkInsert()
         {
-            return View();
+            // Create invoiceVM
+            payVM model = new payVM();
+
+            // Populate model properties  
+            model.SelectedBranch = GetBranches();
+
+            // Create list with single item
+            var modelList = new List<payVM>();
+            modelList.Add(model);
+
+            return View(modelList);
         }
 
         // POST: Meter/BulkInsertion
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult BulkInsert(List<payVM> model)
+        //[ValidateAntiForgeryToken]
+        public ActionResult BulkInsert(List<payVM> models)
         {
             try
             {
@@ -140,7 +212,7 @@ namespace EBS.Controllers
                                 command.CommandText = "INSERT INTO PaymentTbl (cID, invoiceID, paidAmount, totalFee, payMethod, payDate )"
                                                     + "VALUES (@cID, @invoiceID, @paidAmount, @totalFee, @payMethod, @payDate)";
 
-                                foreach (var wrapper in model)
+                                foreach (var wrapper in models)
                                 {
                                     command.Parameters.AddWithValue("@cID", wrapper.cID);
                                     command.Parameters.AddWithValue("@invoiceID", wrapper.invoiceID);
@@ -168,7 +240,7 @@ namespace EBS.Controllers
                     }
 
                     // Now, outside the transaction, calculate the balance and update CustomerTbl
-                    foreach (var wrapper in model)
+                    foreach (var wrapper in models)
                     {
                         decimal balanceDifference = wrapper.totalFee - wrapper.paidAmount;
                         string updateBalanceQuery = "UPDATE CustomerTbl SET Balance = Balance + @balanceDifference WHERE cID = @cID";
@@ -179,6 +251,18 @@ namespace EBS.Controllers
                             updateBalanceCommand.Parameters.AddWithValue("@cID", wrapper.cID);
                             updateBalanceCommand.ExecuteNonQuery();
                         }
+
+                    }
+                    foreach (var wrapper in models)
+                    {
+
+                        string updateStatusQuery = "UPDATE InvoiceTbl SET Status = 'Paid' WHERE invoiceID = @invoiceID";
+
+                        using (SqlCommand updateStatusCommand = new SqlCommand(updateStatusQuery, connection))
+                        {
+                            updateStatusCommand.Parameters.AddWithValue("@invoiceID", wrapper.invoiceID);
+                            updateStatusCommand.ExecuteNonQuery();
+                        }
                     }
                 }
 
@@ -188,7 +272,7 @@ namespace EBS.Controllers
             {
                 // Handle the exception and provide appropriate error feedback to the user
                 ModelState.AddModelError("", "An error occurred while inserting data: " + ex.Message);
-                return View(model); // Show the input form with error messages
+                return View(models); // Show the input form with error messages
             }
         }
 
