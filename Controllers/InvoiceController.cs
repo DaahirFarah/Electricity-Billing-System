@@ -343,11 +343,14 @@ namespace EBS.Controllers
                             }
 
                             // Insert the record into the database
-                            string query = "INSERT INTO InvoiceTbl (cID, Rate, prev_Reading, cur_Reading, reading_Value, reading_Date, total_Fee) "
-                                         + "VALUES (@cID, @Rate, @prev_Reading, @cur_Reading, @reading_Value, @reading_Date, @total_Fee + @balance)";
+                            string query = "INSERT INTO InvoiceTbl (cID, Rate, prev_Reading, cur_Reading, reading_Value, reading_Date, total_Fee, Status) "
+                                         + "VALUES (@cID, @Rate, @prev_Reading, @cur_Reading, @reading_Value, @reading_Date, @total_Fee + @balance, @Status)";
 
                             using (SqlCommand command = new SqlCommand(query, connection, transaction))
                             {
+                                string Status = "Unpaid";
+                                wrapper.Status = Status;
+
                                 command.Parameters.AddWithValue("@cID", wrapper.cID);
                                 command.Parameters.AddWithValue("@Rate", wrapper.Rate);
                                 command.Parameters.AddWithValue("@prev_Reading", wrapper.prev_Reading);
@@ -356,6 +359,7 @@ namespace EBS.Controllers
                                 command.Parameters.AddWithValue("@reading_Date", SqlDbType.DateTime2).Value = wrapper.reading_Date;
                                 command.Parameters.AddWithValue("@total_Fee", wrapper.total_Fee);
                                 command.Parameters.AddWithValue("@balance", wrapper.balance);
+                                command.Parameters.AddWithValue("@Status", wrapper.Status);
 
                                 command.ExecuteNonQuery();
                             }

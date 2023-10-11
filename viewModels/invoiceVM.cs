@@ -68,7 +68,7 @@ namespace EBS.viewModels
             }
         }
 
-        public int MyProperty { get; set; }
+        public string Status { get; set; }
 
     }
 }
