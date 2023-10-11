@@ -16,7 +16,7 @@ using System.Data;
 
 namespace EBS.Controllers
 {
-    //[Authorize]
+    [Authorize]
     public class PaymentController : Controller
     {
         // ConnectionString Instance

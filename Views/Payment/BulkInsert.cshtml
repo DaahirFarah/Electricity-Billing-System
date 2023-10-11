@@ -53,7 +53,7 @@
                 </div>
 
                 <div class="form-outline form-group">
-                    @*<strong>@Html.LabelFor(model => model[i].SelectedBranch)</strong> <br />*@
+                    <strong>@Html.LabelFor(model => model[i].SelectedBranch)</strong> <br />
                     @Html.DropDownListFor(m => m[i].SelectedBranch, new SelectList(Model[i].SelectedBranch), "Select Branch", new {
                    @class = "form-control form-control-lg form-control-selectedBranchh", id = "branchDropdown" })
                     @Html.ValidationMessageFor(model => model[i].SelectedBranch, "", new { @class = "text-danger" })
@@ -341,80 +341,63 @@
       }
         });
 
-        // Select the Save All button
-    const saveAllBtn = document.querySelector('#save-all-button');
+   const saveAllBtn = document.querySelector('#save-all-button');
 
-    // Add click event listener
-    saveAllBtn.addEventListener('click', saveAllRows);
-
-    // Flag to track if the date has been checked
-let dateChecked = false;
+// Add click event listener
+saveAllBtn.addEventListener('click', saveAllRows);
 
 function saveAllRows() {
-  // Check the date only once
-  if (!dateChecked) {
-    // Get the date input
-    const date = document.querySelector('.form-control-rDate');
-    const selectedDate = date.value;
-    if (!selectedDate) {
-      alert("Please Select Reading Date");
-      dateChecked = true; // Set the flag to true to indicate date has been checked
+  // Get all table rows
+  const rows = document.querySelectorAll('tbody tr');
+
+  // Array to store data for checked rows
+  const models = [];
+
+  // Loop through rows
+  rows.forEach(row => {
+    // Get checkbox
+    const checkbox = row.querySelector('input[type="checkbox"]');
+
+    // Check if checked
+    if (checkbox.checked) {
+      // Construct data object
+      const model = {
+        cID: row.querySelector('.form-control-cID').value,
+        invoiceID: row.querySelector('.form-control-invoiceID').value,
+        payDate: row.querySelector('.form-control-rDatee').value,
+        paidAmount: row.querySelector('.form-control-paidAmount').value,
+        totalFee: row.querySelector('.form-control-totalFee').value,
+        payMethod: row.querySelector('.form-control-payMethod').value,
+      };
+
+      // Push to models array
+      models.push(model);
     }
-  }
+  });
 
-  // Continue with the rest of your code for saving rows, if the date has been checked
-  if (dateChecked) {
-    // Get all table rows
-    const rows = document.querySelectorAll('tbody tr');
+  if (models.length > 0) {
+    // AJAX request to save models
+    $.ajax({
+      url: '@Url.Action("BulkInsert", "Payment")',
+      method: 'POST',
+      contentType: 'application/json',
+      data: JSON.stringify({ models }),
 
-    // Array to store data for checked rows
-    const models = [];
+      success: function (res) {
+        alert("Recorded Bill Payments Successfully.");
+        // Refresh Page
+        location.reload();
+      },
 
-    // Loop through rows
-    rows.forEach(row => {
-      // Get checkbox
-      const checkbox = row.querySelector('input[type="checkbox"]');
-
-      // Check if checked
-      if (checkbox.checked) {
-        // Construct data object
-        const model = {
-          cID: row.querySelector('.form-control-cID').value,
-          invoiceID: row.querySelector('.form-control-invoiceID').value,
-          payDate: row.querySelector('.form-control-rDatee').value,
-          paidAmount: row.querySelector('.form-control-paidAmount').value,
-          totalFee: row.querySelector('.form-control-totalFee').value,
-          payMethod: row.querySelector('.form-control-payMethod').value,
-        };
-
-        // Push to models array
-        models.push(model);
+      error: function (err) {
+        alert("Bill Recording Failed! Fill All Fields And Try Again!");
       }
     });
-
-    if (models.length > 0) {
-      // AJAX request to save models
-      $.ajax({
-        url: '@Url.Action("BulkInsert", "Payment")',
-        method: 'POST',
-        contentType: 'application/json',
-        data: JSON.stringify({ models }),
-
-        success: function (res) {
-          alert("Recorded Bill Payments Successfully.");
-          // Refresh Page
-          location.reload();
-        },
-
-        error: function (err) {
-          alert("Bill Recording Failed! Fill All Fields And Try Again!");
-        }
-      });
-    } else {
-      alert("No rows are Checked!");
-    }
+  } else {
+    alert("No rows are Checked!");
   }
 }
+
 
     </script>
 
