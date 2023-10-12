@@ -21,7 +21,6 @@ namespace EBS.Controllers
         // ConnectionString Instance
         private readonly string SecConn = ConfigurationManager.ConnectionStrings["SecConn"].ConnectionString;
 
-
         // GET: Invoice
         public ActionResult Index()
         {

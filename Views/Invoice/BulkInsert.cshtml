@@ -57,8 +57,11 @@
 
                 <div class="form-outline form-group">
                     @*<strong>@Html.LabelFor(model => model[i].SelectedBranch)</strong> <br />*@
-                    @Html.DropDownListFor(m => m[i].SelectedBranch, new SelectList(Model[i].SelectedBranch), "Select Branch", new {
-                   @class = "form-control form-control-lg form-control-Branchh", id = "branchDropdown" })
+                    @Html.DropDownListFor(m => m[i].SelectedBranch, new SelectList(Model[i].SelectedBranch), "Select Branch", new
+                    {
+                   @class = "form-control form-control-lg form-control-Branchh",
+                        id = "branchDropdown"
+                    })
                     @Html.ValidationMessageFor(model => model[i].SelectedBranch, "", new { @class = "text-danger" })
                 </div>
 
@@ -127,11 +130,11 @@
             </td>
 
             <td style="display:none">
-                <input type="number" class="form-control-cID">
+                <input type="number" class="form-control form-control-cID">
             </td>
 
             <td style="display:none">
-                <input type="date" class="form-control-rDatee">
+                <input type="date" class="form-control form-control-rDatee">
             </td>
 
             <td>
@@ -355,11 +358,15 @@
                         }
                         sendReadingValue(row);
 
+               $('#datepicker').change(function () {
+                   $('.form-control-rDatee').val(this.value);
+               });
+
                     });
 
-        $('#datepicker').change(function () {
-            $('.form-control-rDatee').val(this.value);
-                    });
+        //$('#datepicker').change(function () {
+        //    $('.form-control-rDatee').val(this.value);
+        //            });
     });
 
    $('#tableBody').on('click', '.btn-save-row', function () {
@@ -380,6 +387,7 @@
                         // Check if the corresponding checkbox is checked
                         var checkbox = row.find('input[type="checkbox"]');
                         if (checkbox.is(':checked')) {
+
                             // Construct the data object from row elements
                             var model = {
           cID: row.find('.form-control-cID').val(),
