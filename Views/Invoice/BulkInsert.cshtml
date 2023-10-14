@@ -56,7 +56,7 @@
                 </div>
 
                 <div class="form-outline form-group">
-                    @*<strong>@Html.LabelFor(model => model[i].SelectedBranch)</strong> <br />*@
+                    <strong>@Html.LabelFor(model => model[i].SelectedBranch)</strong> <br />
                     @Html.DropDownListFor(m => m[i].SelectedBranch, new SelectList(Model[i].SelectedBranch), "Select Branch", new
                     {
                    @class = "form-control form-control-lg form-control-Branchh",
@@ -307,6 +307,11 @@
                         });
                     });
 
+        // populate the hidden date fields from the Payment date (rDate) field
+        $('#datepicker').change(function () {
+            $('.form-control-rDatee').val(this.value);
+        });
+
         //Perform Usage Calculation
        $(document).ready(function () {
 
@@ -358,16 +363,10 @@
                         }
                         sendReadingValue(row);
 
-               $('#datepicker').change(function () {
-                   $('.form-control-rDatee').val(this.value);
-               });
 
                     });
 
-        //$('#datepicker').change(function () {
-        //    $('.form-control-rDatee').val(this.value);
-        //            });
-    });
+       });
 
    $('#tableBody').on('click', '.btn-save-row', function () {
                         // Get the current row
