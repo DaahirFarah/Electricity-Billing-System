@@ -96,9 +96,10 @@
         <br />
         <br />
 
-        <div class="col-md-6 mb-4 pb-2" style="justify-content: center; align-items: center;">
+        <div class="col-md-3 mb-4 pb-2" style="display: flex; align-items: center; justify-content: center;">
             <button id="save-all-button" class="btn btn-success btn-lg btn-block" type="button">Bill All</button>
-            <input type="checkbox" class="form-check-print" style="width: 20px; height: 20px;">
+            <span style="margin-left: 30px; margin-right: 10px; font-size:25px;"> <strong>Print</strong></span>
+            <input type="checkbox" class="form-check-print" style="width: 55px; height: 55px;">
         </div>
 
     </div>
@@ -333,7 +334,7 @@
                                         console.log("Total Charge = ", window.balance + charge);
                                         row.find('.form-control-Rate').val(data);
                                         row.find('.form-control-charge').val(charge);
-                                        row.find('.form-control-tFee').val(tFee).toFixed(2);
+                                        row.find('.form-control-tFee').val(tFee);
 
                                         // After setting the rate field value
                                         console.log('Rate field value after setting:', row.find('.form-control-Rate').val(data));
@@ -368,43 +369,47 @@
 
        });
 
-   $('#tableBody').on('click', '.btn-save-row', function () {
-                        // Get the current row
-                        var row = $(this).closest('tr');
+        $('#tableBody').on('click', '.btn-save-row', function () {
+            // Get the current row
+            var row = $(this).closest('tr');
 
-                        // prototype
-                        var date = document.querySelector('.form-control-rDate');
-                        var selectedDate = date.value;
-                        if (!selectedDate) {
-                            alert("Please Select Reading Date");
-                            return;
-                        }
-                        else {
+            // prototype
+            var date = document.querySelector('.form-control-rDate');
+            var selectedDate = date.value;
+            if (!selectedDate) {
+                alert("Please Select Reading Date");
+                return;
+            }
+            else {
 
-                        }
+            }
 
-                        // Check if the corresponding checkbox is checked
-                        var checkbox = row.find('input[type="checkbox"]');
-                        if (checkbox.is(':checked')) {
+            var model = {
+                cID: row.find('.form-control-cID').val(),
+                reading_Date: row.find('.form-control-rDatee').val(),
+                prev_Reading: row.find('.form-control-prev_Reading').val(),
+                cur_Reading: row.find('.form-control-cur_Reading').val(),
+                reading_Value: row.find('.form-control-reading_Value').val(),
+                customerName: row.find('.form-control-fullName').val(),
+                rate: parseFloat(window.rate),
+                balance: parseFloat(window.Balance),
+                charge: parseFloat(window.charge),
+                total_Fee: parseFloat(window.tFee),
+            };
 
-                            // Construct the data object from row elements
-                            var model = {
-          cID: row.find('.form-control-cID').val(),
-          reading_Date: row.find('.form-control-rDatee').val(),
-          prev_Reading: row.find('.form-control-prev_Reading').val(),
-          cur_Reading: row.find('.form-control-cur_Reading').val(),
-          reading_Value: row.find('.form-control-reading_Value').val(),
-          customerName: row.find('.form-control-fullName').val(),
-          rate: parseFloat(window.rate),
-          balance: parseFloat(window.Balance).toFixed(2),
-          charge: parseFloat(window.charge).toFixed(2),
-          total_Fee: parseFloat(window.tFee).toFixed(2),
-          };
+            var models = [];
+            models.push(model);
 
-          var models = [];
-          models.push(model);
-        // Send the form data to the server via AJAX
-        $.ajax({
+
+
+                        @*// Check if the corresponding checkbox is checked
+                        var checkbox1 = row.find('.form-check-input');
+                        var checkbox2 = row.find('.form-check-print')
+       if (checkbox1.is(':checked') && checkbox2.is(':checked')) {
+           // Construct the data object from row elements
+
+
+          const saveRow =  $.ajax({
                         type: "POST",
           url: "@Url.Action("BulkInsert", "Invoice")",
             data: JSON.stringify({ models: models }),
@@ -424,8 +429,89 @@
                                 alert("Billing Failed! Try Again!: " + error);
                             }
                         });
-                    }
-    });
+
+
+
+          const printrow =  $.ajax({
+                        type: "POST",
+          url: "@Url.Action("CustomerBill", "Invoice")",
+            data: JSON.stringify({ models: models }),
+          contentType: "application/json",
+          success: function (response, status, xhr) {
+                                // Check the response status code
+                                if (status === 'success') {
+
+                                } else {
+                                    // Handle error, e.g., show an error message to the user
+                                    alert("Billing Failed! Try Again!: " + response.statusText);
+                                }
+                            },
+          error: function (xhr, status, error) {
+                                alert("Billing Failed! Try Again!: " + error);
+                            }
+          });
+
+        $.when(saveRow, printrow).then(function () {
+            // Handle responses
+        });*@
+
+
+
+            var checkbox1 = row.find('.form-check-input');
+            var checkbox2 = row.find('.form-check-print');
+            var promises = [];
+            if (checkbox1.is(':checked') && checkbox2.is(':checked')) {
+                
+
+                promises.push($.ajax({
+                    type: "POST",
+                    url: "@Url.Action("BulkInsert", "Invoice")",
+                    data: JSON.stringify({ models: models }),
+                    contentType: "application/json"
+                }));
+
+                promises.push($.ajax({
+                    type: "POST",
+                    url: "@Url.Action("CustomerBill", "Invoice")",
+                    data: JSON.stringify({ models: models }),
+                    contentType: "application/json"
+
+                }));
+
+                    $.when.apply($, promises).then(function (response1, response2) {
+                        // Check the response status codes or handle success/failure for both requests
+                        if (response1[1] === 'success' && response2[1] === 'success') {
+                            alert("Both requests were successful.");
+                            location.reload(); // Refresh the page if needed
+                        } else {
+                            alert("At least one of the requests failed.");
+                        }
+                    })
+
+        } else if (checkbox1.is(':checked')){
+           $.ajax({
+                        type: "POST",
+          url: "@Url.Action("BulkInsert", "Invoice")",
+            data: JSON.stringify({ models: models }),
+          contentType: "application/json",
+          success: function (response, status, xhr) {
+                                // Check the response status code
+                                if (status === 'success') {
+                                    alert("Billed Customer Successfully.");
+                                    // Refresh Page After Billing Customer
+                                    location.reload();
+                                } else {
+                                    // Handle error, e.g., show an error message to the user
+                                    alert("Billing Failed! Try Again!: " + response.statusText);
+                                }
+                            },
+          error: function (xhr, status, error) {
+                                alert("Billing Failed! Try Again!: " + error);
+                            }
+                        });
+       }
+
+   });
 
                     // Select the Save All button
                     const saveAllBtn = document.querySelector('#save-all-button');
@@ -453,16 +539,16 @@
 
                             // Construct data object
                             const model = {
-            cID: row.querySelector('.form-control-cID').value,
-            reading_Date: row.querySelector('.form-control-rDatee').value,
-            prev_Reading: row.querySelector('.form-control-prev_Reading').value,
-            cur_Reading: row.querySelector('.form-control-cur_Reading').value,
-            reading_Value: row.querySelector('.form-control-reading_Value').value,
-            fullName: row.find('.form-control-fullName').val(),
-            rate: row.find('.form-control-Rate').val(),
-            balance: row.find('.form-control-balance').val(),
-            charge: row.find('.form-control-charge').val(),
-            total_Amount: row.find('.form-control-tFee').val(),
+                                cID: row.find('.form-control-cID').val(),
+                                reading_Date: row.find('.form-control-rDatee').val(),
+                                prev_Reading: row.find('.form-control-prev_Reading').val(),
+                                cur_Reading: row.find('.form-control-cur_Reading').val(),
+                                reading_Value: row.find('.form-control-reading_Value').val(),
+                                customerName: row.find('.form-control-fullName').val(),
+                                rate: parseFloat(window.rate),
+                                balance: parseFloat(window.Balance),
+                                charge: parseFloat(window.charge),
+                                total_Fee: parseFloat(window.tFee),
           };
 
                     // Push to models array

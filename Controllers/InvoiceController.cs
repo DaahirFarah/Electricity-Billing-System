@@ -476,7 +476,7 @@ namespace EBS.Controllers
 
                 // Set the response content type and headers
                 Response.ContentType = "application/pdf";
-                Response.AddHeader("content-disposition", $"attachment;filename=Invoice.pdf");
+                Response.AddHeader("content-disposition", $"attachment;filename=Bill.pdf");
 
                 // Write the PDF to the response stream
                 Response.BinaryWrite(memoryStream.ToArray());
