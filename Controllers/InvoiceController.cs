@@ -402,6 +402,93 @@ namespace EBS.Controllers
         }
 
 
+        // print invoice for specific customer (one at a time).
+        // Generating Individual Invoices 
+        public ActionResult CustomerBill(List<invoiceVM> models)
+        {
+            foreach (var wrapper in models)
+            {
+
+                if (wrapper.reading_Date == DateTime.MinValue)
+                {
+                    DateTime curDate = DateTime.Now;
+                    DateTime desiredDate = new DateTime(curDate.Year, curDate.Month, 28);
+                    wrapper.reading_Date = desiredDate;
+                }
+
+                // Create a new document with a smaller page size
+                Document document = new Document(PageSize.A5, 30, 30, 30, 30);
+
+                // Specify the memory stream as the output
+                MemoryStream memoryStream = new MemoryStream();
+                PdfWriter writer = PdfWriter.GetInstance(document, memoryStream);
+
+                // Open the document for writing
+                document.Open();
+
+                // Add image as a logo at the top of the page
+                string imagePath = Server.MapPath("~/Assets/_e407f44c-5341-4a3d-b20e-e7ae5a10e34e.jpg");
+                Image image = Image.GetInstance(imagePath);
+                image.ScaleToFit(100, 100); // Set the width and height of the logo
+                image.Alignment = Element.ALIGN_CENTER;
+                image.SpacingAfter = 20; // Add spacing after the image
+                document.Add(image);
+
+                // Add the title "Somali Electric Company"
+                Font titleFont = FontFactory.GetFont("Times-Roman", 18);
+                Paragraph title = new Paragraph("Somali Electric Company", titleFont);
+                title.Alignment = Element.ALIGN_CENTER;
+                document.Add(title);
+
+                // Add the "Electricity Bill or Invoice" text
+                Font subtitleFont = FontFactory.GetFont("Times-Roman", 14);
+                Paragraph subtitle = new Paragraph("Invoice", subtitleFont);
+                subtitle.Alignment = Element.ALIGN_CENTER;
+                document.Add(subtitle);
+
+                // Add current date (top right side)
+                DateTime currentDate = DateTime.Now;
+                string formattedDate = currentDate.ToString("yyyy-MM-dd");
+                Paragraph dateParagraph = new Paragraph("Date: " + formattedDate);
+                dateParagraph.Alignment = Element.ALIGN_RIGHT;
+                dateParagraph.SpacingAfter = 5;
+                document.Add(dateParagraph);
+
+                // Add the invoice details
+                Font contentFont = FontFactory.GetFont("Times-Roman", 12);
+                contentFont.Color = BaseColor.BLACK;
+
+                // Define line spacing
+                float lineSpacing = 20f;
+
+                // Add the invoice data to the document
+                AddInvoiceLine(document, $"Reading Date:        {wrapper.reading_Date.ToString("dd/MM/yyyy")}", contentFont, lineSpacing);
+                AddInvoiceLine(document, $"Invoice ID:          {wrapper.invoiceID}", contentFont, lineSpacing);
+                AddInvoiceLine(document, $"Customer Name:       {wrapper.customerName}", contentFont, lineSpacing);
+                AddInvoiceLine(document, $"Previous Reading:    {wrapper.prev_Reading} (KwH)", contentFont, lineSpacing);
+                AddInvoiceLine(document, $"Current Reading:     {wrapper.cur_Reading} (KwH)", contentFont, lineSpacing);
+                AddInvoiceLine(document, $"Usage in (KwH):      {wrapper.reading_Value}", contentFont, lineSpacing);
+                AddInvoiceLine(document, $"Rate:                {wrapper.Rate:C}", contentFont, lineSpacing);
+                AddInvoiceLine(document, $"Total Amount:        {wrapper.total_Fee:C}", contentFont, lineSpacing);
+
+                // Close the document
+                document.Close();
+
+                // Set the response content type and headers
+                Response.ContentType = "application/pdf";
+                Response.AddHeader("content-disposition", $"attachment;filename=Invoice.pdf");
+
+                // Write the PDF to the response stream
+                Response.BinaryWrite(memoryStream.ToArray());
+                Response.End();
+
+                
+            }
+
+            return View();
+        }
+
+
         // This action handles exporting Invoices data from the database using a library called iTextSharp. 
         // This actionResult allows the user to easily download the list of Invoices in a pdf format 
         public ActionResult GenerateInvoice()
@@ -490,82 +577,82 @@ namespace EBS.Controllers
             table.AddCell(cell);
         }
 
-        // Generating Individual Invoices 
-        public ActionResult CustomerBill(int id)
-        {
-            // Simulate retrieving invoice data from your database based on invoiceId
-            var invoice = GetInvoiceById(id);
+        //// Generating Individual Invoices 
+        //public ActionResult CustomerBill(int id)
+        //{
+        //    // Simulate retrieving invoice data from your database based on invoiceId
+        //    var invoice = GetInvoiceById(id);
 
 
 
-            // Create a new document with a smaller page size
-            Document document = new Document(PageSize.A5, 30, 30, 30, 30);
+        //    // Create a new document with a smaller page size
+        //    Document document = new Document(PageSize.A5, 30, 30, 30, 30);
 
-            // Specify the memory stream as the output
-            MemoryStream memoryStream = new MemoryStream();
-            PdfWriter writer = PdfWriter.GetInstance(document, memoryStream);
+        //    // Specify the memory stream as the output
+        //    MemoryStream memoryStream = new MemoryStream();
+        //    PdfWriter writer = PdfWriter.GetInstance(document, memoryStream);
 
-            // Open the document for writing
-            document.Open();
+        //    // Open the document for writing
+        //    document.Open();
 
-            // Add image as a logo at the top of the page
-            string imagePath = Server.MapPath("~/Assets/_e407f44c-5341-4a3d-b20e-e7ae5a10e34e.jpg");
-            Image image = Image.GetInstance(imagePath);
-            image.ScaleToFit(100, 100); // Set the width and height of the logo
-            image.Alignment = Element.ALIGN_CENTER;
-            image.SpacingAfter = 20; // Add spacing after the image
-            document.Add(image);
+        //    // Add image as a logo at the top of the page
+        //    string imagePath = Server.MapPath("~/Assets/_e407f44c-5341-4a3d-b20e-e7ae5a10e34e.jpg");
+        //    Image image = Image.GetInstance(imagePath);
+        //    image.ScaleToFit(100, 100); // Set the width and height of the logo
+        //    image.Alignment = Element.ALIGN_CENTER;
+        //    image.SpacingAfter = 20; // Add spacing after the image
+        //    document.Add(image);
 
-            // Add the title "Somali Electric Company"
-            Font titleFont = FontFactory.GetFont("Times-Roman", 18);
-            Paragraph title = new Paragraph("Somali Electric Company", titleFont);
-            title.Alignment = Element.ALIGN_CENTER;
-            document.Add(title);
+        //    // Add the title "Somali Electric Company"
+        //    Font titleFont = FontFactory.GetFont("Times-Roman", 18);
+        //    Paragraph title = new Paragraph("Somali Electric Company", titleFont);
+        //    title.Alignment = Element.ALIGN_CENTER;
+        //    document.Add(title);
 
-            // Add the "Electricity Bill or Invoice" text
-            Font subtitleFont = FontFactory.GetFont("Times-Roman", 14);
-            Paragraph subtitle = new Paragraph("Invoice", subtitleFont);
-            subtitle.Alignment = Element.ALIGN_CENTER;
-            document.Add(subtitle);
+        //    // Add the "Electricity Bill or Invoice" text
+        //    Font subtitleFont = FontFactory.GetFont("Times-Roman", 14);
+        //    Paragraph subtitle = new Paragraph("Invoice", subtitleFont);
+        //    subtitle.Alignment = Element.ALIGN_CENTER;
+        //    document.Add(subtitle);
 
-            // Add current date (top right side)
-            DateTime currentDate = DateTime.Now;
-            string formattedDate = currentDate.ToString("yyyy-MM-dd");
-            Paragraph dateParagraph = new Paragraph("Date: " + formattedDate);
-            dateParagraph.Alignment = Element.ALIGN_RIGHT;
-            dateParagraph.SpacingAfter = 5;
-            document.Add(dateParagraph);
+        //    // Add current date (top right side)
+        //    DateTime currentDate = DateTime.Now;
+        //    string formattedDate = currentDate.ToString("yyyy-MM-dd");
+        //    Paragraph dateParagraph = new Paragraph("Date: " + formattedDate);
+        //    dateParagraph.Alignment = Element.ALIGN_RIGHT;
+        //    dateParagraph.SpacingAfter = 5;
+        //    document.Add(dateParagraph);
 
-            // Add the invoice details
-            Font contentFont = FontFactory.GetFont("Times-Roman", 12);
-            contentFont.Color = BaseColor.BLACK;
+        //    // Add the invoice details
+        //    Font contentFont = FontFactory.GetFont("Times-Roman", 12);
+        //    contentFont.Color = BaseColor.BLACK;
 
-            // Define line spacing
-            float lineSpacing = 20f;
+        //    // Define line spacing
+        //    float lineSpacing = 20f;
 
-            // Add the invoice data to the document
-            AddInvoiceLine(document, $"Reading Date: {invoice.reading_Date.ToString("dd/MM/yyyy")}", contentFont, lineSpacing);
-            AddInvoiceLine(document, $"Invoice ID: {invoice.invoiceID}", contentFont, lineSpacing);
-            AddInvoiceLine(document, $"Customer ID: {invoice.cID}", contentFont, lineSpacing);
-            AddInvoiceLine(document, $"Previous Reading: {invoice.prev_Reading} (KwH)", contentFont, lineSpacing);
-            AddInvoiceLine(document, $"Current Reading: {invoice.cur_Reading} (KwH)", contentFont, lineSpacing);
-            AddInvoiceLine(document, $"Usage in (KwH): {invoice.reading_Value}", contentFont, lineSpacing);
-            AddInvoiceLine(document, $"Rate: {invoice.Rate:C}", contentFont, lineSpacing);
-            AddInvoiceLine(document, $"Total Amount: {invoice.total_Fee:C}", contentFont, lineSpacing);
+        //    // Add the invoice data to the document
+        //    AddInvoiceLine(document, $"Reading Date: {invoice.reading_Date.ToString("dd/MM/yyyy")}", contentFont, lineSpacing);
+        //    AddInvoiceLine(document, $"Invoice ID: {invoice.invoiceID}", contentFont, lineSpacing);
+        //    AddInvoiceLine(document, $"Customer ID: {invoice.cID}", contentFont, lineSpacing);
+        //    AddInvoiceLine(document, $"Previous Reading: {invoice.prev_Reading} (KwH)", contentFont, lineSpacing);
+        //    AddInvoiceLine(document, $"Current Reading: {invoice.cur_Reading} (KwH)", contentFont, lineSpacing);
+        //    AddInvoiceLine(document, $"Usage in (KwH): {invoice.reading_Value}", contentFont, lineSpacing);
+        //    AddInvoiceLine(document, $"Rate: {invoice.Rate:C}", contentFont, lineSpacing);
+        //    AddInvoiceLine(document, $"Total Amount: {invoice.total_Fee:C}", contentFont, lineSpacing);
 
-            // Close the document
-            document.Close();
+        //    // Close the document
+        //    document.Close();
 
-            // Set the response content type and headers
-            Response.ContentType = "application/pdf";
-            Response.AddHeader("content-disposition", $"attachment;filename=Invoice.pdf");
+        //    // Set the response content type and headers
+        //    Response.ContentType = "application/pdf";
+        //    Response.AddHeader("content-disposition", $"attachment;filename=Invoice.pdf");
 
-            // Write the PDF to the response stream
-            Response.BinaryWrite(memoryStream.ToArray());
-            Response.End();
+        //    // Write the PDF to the response stream
+        //    Response.BinaryWrite(memoryStream.ToArray());
+        //    Response.End();
 
-            return View();
-        }
+        //    return View();
+        //}
 
         private void AddInvoiceLine(Document document, string line, Font font, float lineSpacing)
         {

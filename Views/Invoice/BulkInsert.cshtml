@@ -98,8 +98,8 @@
 
         <div class="col-md-6 mb-4 pb-2" style="justify-content: center; align-items: center;">
             <button id="save-all-button" class="btn btn-success btn-lg btn-block" type="button">Bill All</button>
+            <input type="checkbox" class="form-check-print" style="width: 20px; height: 20px;">
         </div>
-
 
     </div>
 
@@ -218,7 +218,7 @@
                                                     row.find('.form-control-prev_Reading').val(item.prev_Reading);
                                                     row.find('.form-control-balance').val(item.balance);
                                                     row.find('.form-control-fullName').val(item.cFullName);
-
+                                                    window.FullName = item.cFullName;
                                                     window.balance = item.balance;
 
                             // Append the row to the table
@@ -324,16 +324,16 @@
           type: 'POST',
           data: { usage: calculatedReading },
             success: function (data) {
-                                        var rate = data;
-                                        var charge = rate * calculatedReading;
-                                        var Balance = row.find('.form-control-balance').val()
-                var tFee = parseFloat(Balance) + parseFloat(charge);
+                                        window.rate = data;
+                                        window.charge = rate * calculatedReading;
+                                        window.Balance = row.find('.form-control-balance').val()
+                                        window.tFee = parseFloat(Balance) + parseFloat(charge);
                                         console.log("Charge = ", calculatedReading * rate);
                                         console.log('Data from server:', data);
                                         console.log("Total Charge = ", window.balance + charge);
                                         row.find('.form-control-Rate').val(data);
                                         row.find('.form-control-charge').val(charge);
-                                        row.find('.form-control-tFee').val(tFee);
+                                        row.find('.form-control-tFee').val(tFee).toFixed(2);
 
                                         // After setting the rate field value
                                         console.log('Rate field value after setting:', row.find('.form-control-Rate').val(data));
@@ -394,10 +394,15 @@
           prev_Reading: row.find('.form-control-prev_Reading').val(),
           cur_Reading: row.find('.form-control-cur_Reading').val(),
           reading_Value: row.find('.form-control-reading_Value').val(),
+          customerName: row.find('.form-control-fullName').val(),
+          rate: parseFloat(window.rate),
+          balance: parseFloat(window.Balance).toFixed(2),
+          charge: parseFloat(window.charge).toFixed(2),
+          total_Fee: parseFloat(window.tFee).toFixed(2),
           };
 
-                        var models = [];
-                        models.push(model);
+          var models = [];
+          models.push(model);
         // Send the form data to the server via AJAX
         $.ajax({
                         type: "POST",
@@ -453,6 +458,11 @@
             prev_Reading: row.querySelector('.form-control-prev_Reading').value,
             cur_Reading: row.querySelector('.form-control-cur_Reading').value,
             reading_Value: row.querySelector('.form-control-reading_Value').value,
+            fullName: row.find('.form-control-fullName').val(),
+            rate: row.find('.form-control-Rate').val(),
+            balance: row.find('.form-control-balance').val(),
+            charge: row.find('.form-control-charge').val(),
+            total_Amount: row.find('.form-control-tFee').val(),
           };
 
                     // Push to models array

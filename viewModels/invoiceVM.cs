@@ -66,7 +66,13 @@ namespace EBS.viewModels
                 // Concatenate the first name, middle name, and last name with spaces
                 return $"{cFirstName} {cMidName} {cLastName}";
             }
+            set
+            {
+
+            }
         }
+
+        public string customerName { get; set; }
 
         public string Status { get; set; }
 
