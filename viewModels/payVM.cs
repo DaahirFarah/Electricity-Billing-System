@@ -11,6 +11,7 @@ namespace EBS.viewModels
         public payVM()
         {
             SelectedBranch = new List<string> { "" };
+            payDate = DateTime.Now;
         }
 
         [Display(Name = "Branch")]
@@ -58,6 +59,12 @@ namespace EBS.viewModels
                 // Concatenate the first name, middle name, and last name with spaces
                 return $"{cFirstName} {cMidName} {cLastName}";
             }
+            set
+            {
+
+            }
         }
+
+        public string fullName { get; set; }
     }
 }

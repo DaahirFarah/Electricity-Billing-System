@@ -74,6 +74,7 @@
                     <th>Paid Amount ($)</th>
                     <th>Total Fee ($)</th>
                     <th>Payment Method</th>
+                    <th>Print</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -84,7 +85,7 @@
         <br />
         <br />
 
-        <div class="col-md-6 mb-4 pb-2" style="justify-content: center; align-items: center;">
+        <div class="col-md-3 mb-4 pb-3" style="justify-content: center; align-items: center;">
             <button id="save-all-button" class="btn btn-success btn-lg btn-block" type="button">Record All</button>
         </div>
 
@@ -131,7 +132,7 @@
             </td>
 
             <td>
-                <input type="text" class="form-control form-control-fullName" style="width: auto;" >
+                <input type="text" class="form-control form-control-fullName" style="width: auto;">
             </td>
 
             <td>
@@ -148,6 +149,10 @@
                     <option value="EVC">EVC</option>
                     <option value="Account to Account">Account to Account</option>
                 </select>
+            </td>
+
+            <td>
+                <input type="checkbox" class="form-check-print" style="width: 20px; height: 20px; margin-top:13px; margin-left:15px;">
             </td>
 
             <td>
@@ -299,43 +304,74 @@
 
             }
 
-      // Check if the corresponding checkbox is checked
-      var checkbox = row.find('input[type="checkbox"]');
-      if (checkbox.is(':checked')) {
-        // Construct the data object from row elements
-        var model = {
-          cID: row.find('.form-control-cID').val(),
-          invoiceID: row.find('.form-control-invoiceID').val(),
-          payDate: row.find('.form-control-rDatee').val(),
-          paidAmount: row.find('.form-control-paidAmount').val(),
-          totalFee: row.find('.form-control-totalFee').val(),
-          payMethod: row.find('.form-control-payMethod').val(),
-          };
+            // Construct the data object from row elements
+            var model = {
+                cID: row.find('.form-control-cID').val(),
+                invoiceID: row.find('.form-control-invoiceID').val(),
+                payDate: row.find('.form-control-rDate').val(),
+                fullName: row.find(".form-control-fullName").val(),
+                paidAmount: row.find('.form-control-paidAmount').val(),
+                totalFee: row.find('.form-control-totalFee').val(),
+                payMethod: row.find('.form-control-payMethod').val(),
+            };
 
-          var models = [];
-          models.push(model);
-        // Send the form data to the server via AJAX
-        $.ajax({
-          type: "POST",
-          url: "@Url.Action("BulkInsert", "Payment")",
-          data: JSON.stringify({ models: models }),
-          contentType: "application/json",
-          success: function (response, status, xhr) {
-            // Check the response status code
-            if (status === 'success') {
-              alert("Recorded Bill Payments Successfully.");
-              // Refresh Page After Billing Customer
-              location.reload();
+            var models = [];
+            models.push(model);
+
+      // Check if the corresponding checkbox is checked
+      var checkbox1 = row.find('.form-check-input');
+      var checkbox2 = row.find('.form-check-print');
+            if (checkbox1.is(':checked') && checkbox2.is(':checked')) {
+
+                // Serialize the model to a JSON string
+                var modelJson = JSON.stringify(model);
+                // Include the serialized model as a query parameter
+                window.location = '@Url.Action("GenerateReceipt", "Payment")' + '?modelJson=' + encodeURIComponent(modelJson);
+
+                // Send the form data to the server via AJAX
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("BulkInsert", "Payment")",
+                    data: JSON.stringify({ models: models }),
+                    contentType: "application/json",
+                    success: function (response, status, xhr) {
+                        // Check the response status code
+                        if (status === 'success') {
+                            alert("Recorded Bill Payments Successfully.");
+                            // Refresh Page After Billing Customer
+                            location.reload();
+                        } else {
+                            // Handle error, e.g., show an error message to the user
+                            alert("Bill Recording Failed! Fill All Fields And Try Again! " + response.statusText);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        alert("Bill Recording Failed! Fill All Fields And Try Again! " + error);
+                    }
+                });
             } else {
-              // Handle error, e.g., show an error message to the user
-              //alert("Bill Recording Failed! Fill All Fields And Try Again! " + response.statusText);
+                // Send the form data to the server via AJAX
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("BulkInsert", "Payment")",
+                    data: JSON.stringify({ models: models }),
+                    contentType: "application/json",
+                    success: function (response, status, xhr) {
+                        // Check the response status code
+                        if (status === 'success') {
+                            alert("Recorded Bill Payments Successfully.");
+                            // Refresh Page After Billing Customer
+                            location.reload();
+                        } else {
+                            // Handle error, e.g., show an error message to the user
+                            alert("Bill Recording Failed! Fill All Fields And Try Again! " + response.statusText);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        alert("Bill Recording Failed! Fill All Fields And Try Again! " + error);
+                    }
+                });
             }
-          },
-          error: function (xhr, status, error) {
-              alert("Bill Recording Failed! Fill All Fields And Try Again! " + error);
-          }
-        });
-      }
         });
 
    const saveAllBtn = document.querySelector('#save-all-button');

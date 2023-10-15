@@ -13,6 +13,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Xml.Linq;
 using System.Data;
+using Newtonsoft.Json;
 
 namespace EBS.Controllers
 {
@@ -113,6 +114,7 @@ namespace EBS.Controllers
 
             return Branch;
         }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -283,6 +285,78 @@ namespace EBS.Controllers
             }
         }
 
+        // print receipt for specific customer (one at a time).
+        // Generating Individual Receipts 
+        public ActionResult GenerateReceipt(string modelJson)
+        {
+            payVM model = JsonConvert.DeserializeObject<payVM>(modelJson);
+            using (MemoryStream memoryStream = new MemoryStream())
+            {
+                if (model.payDate == DateTime.Now)
+                {
+                    DateTime curentDate = DateTime.Now;
+                    DateTime desiredDate = new DateTime(curentDate.Year, curentDate.Month, 28);
+                    model.payDate = desiredDate;
+                }
+
+                Document document = new Document(PageSize.A5, 30, 30, 30, 30);
+                PdfWriter writer = PdfWriter.GetInstance(document, memoryStream);
+
+                document.Open();
+
+                // Add image as a logo at the top of the page
+                string imagePath = Server.MapPath("~/Assets/_e407f44c-5341-4a3d-b20e-e7ae5a10e34e.jpg");
+                Image image = Image.GetInstance(imagePath);
+                image.ScaleToFit(100, 100);
+                image.Alignment = Element.ALIGN_CENTER;
+                image.SpacingAfter = 20;
+                document.Add(image);
+
+                // Add the title "Somali Electric Company"
+                Font titleFont = FontFactory.GetFont("Times-Roman", 18);
+                Paragraph title = new Paragraph("Somali Electric Company", titleFont);
+                title.Alignment = Element.ALIGN_CENTER;
+                document.Add(title);
+
+                // Add the "Electricity Bill or Invoice" text
+                Font subtitleFont = FontFactory.GetFont("Times-Roman", 14);
+                Paragraph subtitle = new Paragraph("Receipt", subtitleFont);
+                subtitle.Alignment = Element.ALIGN_CENTER;
+                document.Add(subtitle);
+
+                // Add current date (top right side)
+                DateTime currentDate = DateTime.Now;
+                string formattedDate = currentDate.ToString("yyyy-MM-dd");
+                Paragraph dateParagraph = new Paragraph("Date: " + formattedDate);
+                dateParagraph.Alignment = Element.ALIGN_RIGHT;
+                dateParagraph.SpacingAfter = 5;
+                document.Add(dateParagraph);
+
+                // Add the invoice details
+                Font contentFont = FontFactory.GetFont("Times-Roman", 12);
+                contentFont.Color = BaseColor.BLACK;
+                float lineSpacing = 20f;
+
+                AddInvoiceLine(document, $"Payment Date:            {model.payDate.ToString("dd/MM/yyyy")}", contentFont, lineSpacing);
+                AddInvoiceLine(document, $"Invoice ID:              {model.invoiceID}", contentFont, lineSpacing);
+                AddInvoiceLine(document, $"Customer ID:             {model.cID}", contentFont, lineSpacing);
+                AddInvoiceLine(document, $"Customer Name:           {model.fullName}", contentFont, lineSpacing);
+                AddInvoiceLine(document, $"Paid Amount:             {model.paidAmount:C}", contentFont, lineSpacing);
+                AddInvoiceLine(document, $"Total Amount:            {model.totalFee:C}", contentFont, lineSpacing);
+                AddInvoiceLine(document, $"Pay Method:              {model.payMethod}", contentFont, lineSpacing);
+
+                document.Close();
+
+                // Set the response content type and headers for download
+                Response.Clear();
+                Response.ContentType = "application/pdf";
+                Response.AddHeader("content-disposition", "attachment;filename=CustomerBill.pdf");
+                Response.BinaryWrite(memoryStream.ToArray());
+                Response.Flush();
+
+                return new EmptyResult();
+            }
+        }
 
         // Retrieve the Invoice Data related to the an ID
         [HttpPost]
