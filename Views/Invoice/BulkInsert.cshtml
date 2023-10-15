@@ -369,149 +369,100 @@
 
        });
 
-        $('#tableBody').on('click', '.btn-save-row', function () {
-            // Get the current row
-            var row = $(this).closest('tr');
+       $('#tableBody').on('click', '.btn-save-row', function () {
+  // Get the current row
+           var row = $(this).closest('tr');
 
-            // prototype
-            var date = document.querySelector('.form-control-rDate');
-            var selectedDate = date.value;
-            if (!selectedDate) {
-                alert("Please Select Reading Date");
-                return;
-            }
-            else {
+  // prototype
+  var date = document.querySelector('.form-control-rDate');
+  var selectedDate = date.value;
 
-            }
+  if (!selectedDate) {
+    alert("Please Select Reading Date");
+    return;
+  }
 
-            var model = {
-                cID: row.find('.form-control-cID').val(),
-                reading_Date: row.find('.form-control-rDatee').val(),
-                prev_Reading: row.find('.form-control-prev_Reading').val(),
-                cur_Reading: row.find('.form-control-cur_Reading').val(),
-                reading_Value: row.find('.form-control-reading_Value').val(),
-                customerName: row.find('.form-control-fullName').val(),
-                rate: parseFloat(window.rate),
-                balance: parseFloat(window.Balance),
-                charge: parseFloat(window.charge),
-                total_Fee: parseFloat(window.tFee),
-            };
+  var model = {
+    cID: row.find('.form-control-cID').val(),
+    reading_Date: row.find('.form-control-rDate').val(),
+    prev_Reading: row.find('.form-control-prev_Reading').val(),
+    cur_Reading: row.find('.form-control-cur_Reading').val(),
+    reading_Value: row.find('.form-control-reading_Value').val(),
+    customerName: row.find('.form-control-fullName').val(),
+    rate: parseFloat(window.rate),
+    balance: parseFloat(window.Balance),
+    charge: parseFloat(window.charge),
+    total_Fee: parseFloat(window.tFee),
+  };
 
-            var models = [];
-            models.push(model);
+// Serialize the model to a JSON string
+var modelJson = JSON.stringify(model);
+// Include the serialized model as a query parameter
+window.location = '@Url.Action("CustomerBill", "Invoice")' + '?modelJson=' + encodeURIComponent(modelJson);
 
+  var models = [model];
+  var checkbox1 = row.find('.form-check-input');
+  // Get first checkbox
+// Get checkbox element
+const checkbox = document.querySelector('.form-check-print');
 
+// Get current checked state
+const checkbox2 = checkbox.checked;
 
-                        @*// Check if the corresponding checkbox is checked
-                        var checkbox1 = row.find('.form-check-input');
-                        var checkbox2 = row.find('.form-check-print')
-       if (checkbox1.is(':checked') && checkbox2.is(':checked')) {
-           // Construct the data object from row elements
+// React to changes
+checkbox.addEventListener('change', (event) => {
+  const checked = event.target.checked;
+});
+  var promises = [];
 
+  if (checkbox1.is(':checked') && checkbox2.checked) {
 
-          const saveRow =  $.ajax({
-                        type: "POST",
-          url: "@Url.Action("BulkInsert", "Invoice")",
-            data: JSON.stringify({ models: models }),
-          contentType: "application/json",
-          success: function (response, status, xhr) {
-                                // Check the response status code
-                                if (status === 'success') {
-                                    alert("Billed Customer Successfully.");
-                                    // Refresh Page After Billing Customer
-                                    location.reload();
-                                } else {
-                                    // Handle error, e.g., show an error message to the user
-                                    alert("Billing Failed! Try Again!: " + response.statusText);
-                                }
-                            },
-          error: function (xhr, status, error) {
-                                alert("Billing Failed! Try Again!: " + error);
-                            }
-                        });
+      promises.push($.ajax({
+        type: "POST",
+        url: "@Url.Action("BulkInsert", "Invoice")",
+        data: JSON.stringify({ models: models }),
+        contentType: "application/json"
+      }));
 
+      promises.push($.ajax({
+        type: "POST",
+        url: "@Url.Action("CustomerBill", "Invoice")",
+        data: JSON.stringify({ models: models }),
+        contentType: "application/json"
+      }));
 
+      $.when.apply($, promises).then(function (response1, response2) {
+          if (response1[1] === 'success' && response2[1] === 'success') {
+              alert("Both requests were successful.");
+              location.reload();
+          } else {
+              alert("At least one of the requests failed.");
+          }
+        });
+      }
+     @*else {
+      // Handle checkbox1 only
+      $.ajax({
+        type: "POST",
+        url: "@Url.Action("CustomerBill", "Invoice")",
+        data: JSON.stringify({ model: model }),
+        contentType: "application/json",
+        success: function (response, status, xhr) {
+          if (status === 'success') {
+            alert("Billed Customer Successfully.");
+            //location.reload();
+          } else {
+            alert("Billing Failed! Try Again!: " + response.statusText);
+          }
+        },
+        error: function (xhr, status, error) {
+          alert("Billing Failed! Try Again!: " + error);
+        }
+      });
+    }*@
 
-          const printrow =  $.ajax({
-                        type: "POST",
-          url: "@Url.Action("CustomerBill", "Invoice")",
-            data: JSON.stringify({ models: models }),
-          contentType: "application/json",
-          success: function (response, status, xhr) {
-                                // Check the response status code
-                                if (status === 'success') {
+});
 
-                                } else {
-                                    // Handle error, e.g., show an error message to the user
-                                    alert("Billing Failed! Try Again!: " + response.statusText);
-                                }
-                            },
-          error: function (xhr, status, error) {
-                                alert("Billing Failed! Try Again!: " + error);
-                            }
-          });
-
-        $.when(saveRow, printrow).then(function () {
-            // Handle responses
-        });*@
-
-
-
-            var checkbox1 = row.find('.form-check-input');
-            var checkbox2 = row.find('.form-check-print');
-            var promises = [];
-            if (checkbox1.is(':checked') && checkbox2.is(':checked')) {
-                
-
-                promises.push($.ajax({
-                    type: "POST",
-                    url: "@Url.Action("BulkInsert", "Invoice")",
-                    data: JSON.stringify({ models: models }),
-                    contentType: "application/json"
-                }));
-
-                promises.push($.ajax({
-                    type: "POST",
-                    url: "@Url.Action("CustomerBill", "Invoice")",
-                    data: JSON.stringify({ models: models }),
-                    contentType: "application/json"
-
-                }));
-
-                    $.when.apply($, promises).then(function (response1, response2) {
-                        // Check the response status codes or handle success/failure for both requests
-                        if (response1[1] === 'success' && response2[1] === 'success') {
-                            alert("Both requests were successful.");
-                            location.reload(); // Refresh the page if needed
-                        } else {
-                            alert("At least one of the requests failed.");
-                        }
-                    })
-
-        } else if (checkbox1.is(':checked')){
-           $.ajax({
-                        type: "POST",
-          url: "@Url.Action("BulkInsert", "Invoice")",
-            data: JSON.stringify({ models: models }),
-          contentType: "application/json",
-          success: function (response, status, xhr) {
-                                // Check the response status code
-                                if (status === 'success') {
-                                    alert("Billed Customer Successfully.");
-                                    // Refresh Page After Billing Customer
-                                    location.reload();
-                                } else {
-                                    // Handle error, e.g., show an error message to the user
-                                    alert("Billing Failed! Try Again!: " + response.statusText);
-                                }
-                            },
-          error: function (xhr, status, error) {
-                                alert("Billing Failed! Try Again!: " + error);
-                            }
-                        });
-       }
-
-   });
 
                     // Select the Save All button
                     const saveAllBtn = document.querySelector('#save-all-button');

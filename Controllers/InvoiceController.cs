@@ -1,6 +1,7 @@
 ﻿using EBS.viewModels;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -404,34 +405,29 @@ namespace EBS.Controllers
 
         // print invoice for specific customer (one at a time).
         // Generating Individual Invoices 
-        public ActionResult CustomerBill(List<invoiceVM> models)
+        public ActionResult CustomerBill(string modelJson)
         {
-            foreach (var wrapper in models)
+            invoiceVM model = JsonConvert.DeserializeObject<invoiceVM>(modelJson);
+            using (MemoryStream memoryStream = new MemoryStream())
             {
-
-                if (wrapper.reading_Date == DateTime.MinValue)
+                if (model.reading_Date == DateTime.MinValue)
                 {
-                    DateTime curDate = DateTime.Now;
-                    DateTime desiredDate = new DateTime(curDate.Year, curDate.Month, 28);
-                    wrapper.reading_Date = desiredDate;
+                    DateTime curentDate = DateTime.Now;
+                    DateTime desiredDate = new DateTime(curentDate.Year, curentDate.Month, 28);
+                    model.reading_Date = desiredDate;
                 }
 
-                // Create a new document with a smaller page size
                 Document document = new Document(PageSize.A5, 30, 30, 30, 30);
-
-                // Specify the memory stream as the output
-                MemoryStream memoryStream = new MemoryStream();
                 PdfWriter writer = PdfWriter.GetInstance(document, memoryStream);
 
-                // Open the document for writing
                 document.Open();
 
                 // Add image as a logo at the top of the page
                 string imagePath = Server.MapPath("~/Assets/_e407f44c-5341-4a3d-b20e-e7ae5a10e34e.jpg");
                 Image image = Image.GetInstance(imagePath);
-                image.ScaleToFit(100, 100); // Set the width and height of the logo
+                image.ScaleToFit(100, 100);
                 image.Alignment = Element.ALIGN_CENTER;
-                image.SpacingAfter = 20; // Add spacing after the image
+                image.SpacingAfter = 20;
                 document.Add(image);
 
                 // Add the title "Somali Electric Company"
@@ -457,37 +453,29 @@ namespace EBS.Controllers
                 // Add the invoice details
                 Font contentFont = FontFactory.GetFont("Times-Roman", 12);
                 contentFont.Color = BaseColor.BLACK;
-
-                // Define line spacing
                 float lineSpacing = 20f;
 
-                // Add the invoice data to the document
-                AddInvoiceLine(document, $"Reading Date:        {wrapper.reading_Date.ToString("dd/MM/yyyy")}", contentFont, lineSpacing);
-                AddInvoiceLine(document, $"Invoice ID:          {wrapper.invoiceID}", contentFont, lineSpacing);
-                AddInvoiceLine(document, $"Customer Name:       {wrapper.customerName}", contentFont, lineSpacing);
-                AddInvoiceLine(document, $"Previous Reading:    {wrapper.prev_Reading} (KwH)", contentFont, lineSpacing);
-                AddInvoiceLine(document, $"Current Reading:     {wrapper.cur_Reading} (KwH)", contentFont, lineSpacing);
-                AddInvoiceLine(document, $"Usage in (KwH):      {wrapper.reading_Value}", contentFont, lineSpacing);
-                AddInvoiceLine(document, $"Rate:                {wrapper.Rate:C}", contentFont, lineSpacing);
-                AddInvoiceLine(document, $"Total Amount:        {wrapper.total_Fee:C}", contentFont, lineSpacing);
+                AddInvoiceLine(document, $"Reading Date:        {model.reading_Date.ToString("dd/MM/yyyy")}", contentFont, lineSpacing);
+                // AddInvoiceLine(document, $"Invoice ID:          {model.invoiceID}", contentFont, lineSpacing);
+                AddInvoiceLine(document, $"Customer Name:       {model.customerName}", contentFont, lineSpacing);
+                AddInvoiceLine(document, $"Previous Reading:    {model.prev_Reading} (KwH)", contentFont, lineSpacing);
+                AddInvoiceLine(document, $"Current Reading:     {model.cur_Reading} (KwH)", contentFont, lineSpacing);
+                AddInvoiceLine(document, $"Usage in (KwH):      {model.reading_Value}", contentFont, lineSpacing);
+                AddInvoiceLine(document, $"Rate:                {model.Rate:C}", contentFont, lineSpacing);
+                AddInvoiceLine(document, $"Total Amount:        {model.total_Fee:C}", contentFont, lineSpacing);
 
-                // Close the document
                 document.Close();
 
-                // Set the response content type and headers
+                // Set the response content type and headers for download
+                Response.Clear();
                 Response.ContentType = "application/pdf";
-                Response.AddHeader("content-disposition", $"attachment;filename=Bill.pdf");
-
-                // Write the PDF to the response stream
+                Response.AddHeader("content-disposition", "attachment;filename=CustomerBill.pdf");
                 Response.BinaryWrite(memoryStream.ToArray());
-                Response.End();
+                Response.Flush();
 
-                
+                return new EmptyResult();
             }
-
-            return View();
         }
-
 
         // This action handles exporting Invoices data from the database using a library called iTextSharp. 
         // This actionResult allows the user to easily download the list of Invoices in a pdf format 
