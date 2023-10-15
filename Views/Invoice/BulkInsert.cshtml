@@ -86,6 +86,7 @@
                     <th>Rate($)</th>
                     <th>Charge($)</th>
                     <th>Amount Due($)</th>
+                    <th>Print</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -96,10 +97,9 @@
         <br />
         <br />
 
-        <div class="col-md-3 mb-4 pb-2" style="display: flex; align-items: center; justify-content: center;">
+        <div class="col-3 md-3 mb-4 pb-3" style="display: flex; align-items: center; justify-content: center;">
             <button id="save-all-button" class="btn btn-success btn-lg btn-block" type="button">Bill All</button>
-            <span style="margin-left: 30px; margin-right: 10px; font-size:25px;"> <strong>Print</strong></span>
-            <input type="checkbox" class="form-check-print" style="width: 55px; height: 55px;">
+           
         </div>
 
     </div>
@@ -168,6 +168,10 @@
 
             <td>
                 <input type="number" class="form-control form-control-tFee" readonly style="background-color: lightgray">
+            </td>
+
+            <td>
+                <input type="checkbox" class="form-check-printInv" style="width: 20px; height: 20px; margin-top:13px; margin-left:15px;">
             </td>
 
             <td>
@@ -395,62 +399,26 @@
     total_Fee: parseFloat(window.tFee),
   };
 
-// Serialize the model to a JSON string
-var modelJson = JSON.stringify(model);
-// Include the serialized model as a query parameter
-window.location = '@Url.Action("CustomerBill", "Invoice")' + '?modelJson=' + encodeURIComponent(modelJson);
-
   var models = [model];
   var checkbox1 = row.find('.form-check-input');
-  // Get first checkbox
-// Get checkbox element
-const checkbox = document.querySelector('.form-check-print');
+  var checkbox3 = row.find('.form-check-printInv');
 
-// Get current checked state
-const checkbox2 = checkbox.checked;
+  if (checkbox1.is(':checked') && checkbox3.is(':checked')) {
 
-// React to changes
-checkbox.addEventListener('change', (event) => {
-  const checked = event.target.checked;
-});
-  var promises = [];
+      // Serialize the model to a JSON string
+            var modelJson = JSON.stringify(model);
+          // Include the serialized model as a query parameter
+            window.location = '@Url.Action("CustomerBill", "Invoice")' + '?modelJson=' + encodeURIComponent(modelJson);
 
-  if (checkbox1.is(':checked') && checkbox2.checked) {
-
-      promises.push($.ajax({
+      $.ajax({
         type: "POST",
         url: "@Url.Action("BulkInsert", "Invoice")",
         data: JSON.stringify({ models: models }),
-        contentType: "application/json"
-      }));
-
-      promises.push($.ajax({
-        type: "POST",
-        url: "@Url.Action("CustomerBill", "Invoice")",
-        data: JSON.stringify({ models: models }),
-        contentType: "application/json"
-      }));
-
-      $.when.apply($, promises).then(function (response1, response2) {
-          if (response1[1] === 'success' && response2[1] === 'success') {
-              alert("Both requests were successful.");
-              location.reload();
-          } else {
-              alert("At least one of the requests failed.");
-          }
-        });
-      }
-     @*else {
-      // Handle checkbox1 only
-      $.ajax({
-        type: "POST",
-        url: "@Url.Action("CustomerBill", "Invoice")",
-        data: JSON.stringify({ model: model }),
         contentType: "application/json",
         success: function (response, status, xhr) {
           if (status === 'success') {
             alert("Billed Customer Successfully.");
-            //location.reload();
+            location.reload();
           } else {
             alert("Billing Failed! Try Again!: " + response.statusText);
           }
@@ -459,7 +427,33 @@ checkbox.addEventListener('change', (event) => {
           alert("Billing Failed! Try Again!: " + error);
         }
       });
-    }*@
+      }
+     else {
+      if (checkbox3.is(':checked')) {
+          // Serialize the model to a JSON string
+            var modelJson = JSON.stringify(model);
+          // Include the serialized model as a query parameter
+            window.location = '@Url.Action("CustomerBill", "Invoice")' + '?modelJson=' + encodeURIComponent(modelJson);
+      }
+      // Handle checkbox1 only
+      $.ajax({
+        type: "POST",
+        url: "@Url.Action("BulkInsert", "Invoice")",
+        data: JSON.stringify({ models: models }),
+        contentType: "application/json",
+        success: function (response, status, xhr) {
+          if (status === 'success') {
+            alert("Billed Customer Successfully.");
+            location.reload();
+          } else {
+            alert("Billing Failed! Try Again!: " + response.statusText);
+          }
+        },
+        error: function (xhr, status, error) {
+          alert("Billing Failed! Try Again!: " + error);
+        }
+      });
+    }
 
 });
 
