@@ -429,11 +429,11 @@
       });
       }
      else {
-      if (checkbox3.is(':checked')) {
+      if (checkbox1.is(':checked')) {
           // Serialize the model to a JSON string
             var modelJson = JSON.stringify(model);
           // Include the serialized model as a query parameter
-            window.location = '@Url.Action("CustomerBill", "Invoice")' + '?modelJson=' + encodeURIComponent(modelJson);
+            //window.location = '@Url.Action("CustomerBill", "Invoice")' + '?modelJson=' + encodeURIComponent(modelJson);
       }
       // Handle checkbox1 only
       $.ajax({
@@ -444,7 +444,7 @@
         success: function (response, status, xhr) {
           if (status === 'success') {
             alert("Billed Customer Successfully.");
-            //location.reload();
+            location.reload();
           } else {
             alert("Billing Failed! Try Again!: " + response.statusText);
           }
