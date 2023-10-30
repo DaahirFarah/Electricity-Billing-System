@@ -436,33 +436,3 @@ function saveAllRows() {
 
 </body>
 </html>
-
-
-
-<!--Get related Data for each record-->
-<!--<script>
-    console.log('Script is being reached');
-
-    $(document).ready(function () {
-        // Attach a blur event listener to the "invoiceID" field in each row
-        $(".form-control-invoiceID").blur(function () {
-            var invoiceID = $(this).val();
-            var row = $(this).closest("tr"); // Get the parent row
-
-            $.ajax({
-                url: '@Url.Action("GetRelatedData", "Payment")',
-                type: 'POST',
-                data: { id: invoiceID },
-                success: function (data) {
-                    // Populate the form fields within the current row with the retrieved data
-                    row.find(".form-control-cID").val(data.cID);
-                    row.find(".form-control-totalFee").val(data.totalFee);
-
-                },
-                error: function () {
-                    alert("Error fetching Invoice data.");
-                }
-            });
-        });
-    });
-</script>-->

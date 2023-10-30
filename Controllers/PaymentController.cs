@@ -144,8 +144,19 @@ namespace EBS.Controllers
             using (SqlConnection connection = new SqlConnection(SecConn))
             {
                 connection.Open();
-                // String that holds the query to get the customers that are not billed yet and their latest meter reading based on the selected branch
-                string query = ";WITH CTE AS (\r\n    SELECT\r\n        C.cID,\r\n        C.cFirstName,\r\n        C.cMidName,\r\n        C.cLastName,\r\n        I.invoiceID,\r\n        I.total_Fee\r\n    FROM CustomerTbl C\r\n    JOIN InvoiceTbl I ON C.cID = I.cID\r\n    WHERE I.Status = 'Unpaid' AND C.Branch = @branch \r\n)\r\nSELECT\r\n    cID,\r\n    cFirstName,\r\n    cMidName,\r\n    cLastName,\r\n    invoiceID,\r\n    total_Fee\r\nFROM CTE;";
+
+                // Query to retrieve unpaid invoices and group them by customer
+                string query = @"
+            SELECT
+                C.cID,
+                C.cFirstName,
+                C.cMidName,
+                C.cLastName,
+                SUM(I.total_Fee) AS total_Fee
+            FROM CustomerTbl C
+            JOIN InvoiceTbl I ON C.cID = I.cID
+            WHERE I.Status = 'Unpaid' AND C.Branch = @branch
+            GROUP BY C.cID, C.cFirstName, C.cMidName, C.cLastName;";
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
@@ -158,12 +169,10 @@ namespace EBS.Controllers
                             payment.Add(new payVM
                             {
                                 cID = Convert.ToInt32(reader["cID"]),
-                                invoiceID = Convert.ToInt32(reader["invoiceID"]),
                                 totalFee = Convert.ToDecimal(reader["total_Fee"]),
                                 cFirstName = reader["cFirstName"].ToString(),
                                 cMidName = reader["cMidName"].ToString(),
                                 cLastName = reader["cLastName"].ToString(),
-
                             });
                         }
                     }
@@ -172,6 +181,43 @@ namespace EBS.Controllers
 
             return Json(payment, JsonRequestBehavior.AllowGet);
         }
+
+
+        //[HttpPost]
+        //public JsonResult GetBillInfo(string branch)
+        //{
+        //    List<payVM> payment = new List<payVM>();
+        //    using (SqlConnection connection = new SqlConnection(SecConn))
+        //    {
+        //        connection.Open();
+        //        // String that holds the query to get the customers that are not billed yet and their latest meter reading based on the selected branch
+        //        string query = ";WITH CTE AS (\r\n    SELECT\r\n        C.cID,\r\n        C.cFirstName,\r\n        C.cMidName,\r\n        C.cLastName,\r\n        I.invoiceID,\r\n        I.total_Fee\r\n    FROM CustomerTbl C\r\n    JOIN InvoiceTbl I ON C.cID = I.cID\r\n    WHERE I.Status = 'Unpaid' AND C.Branch = @branch \r\n)\r\nSELECT\r\n    cID,\r\n    cFirstName,\r\n    cMidName,\r\n    cLastName,\r\n    invoiceID,\r\n    total_Fee\r\nFROM CTE;";
+
+        //        using (SqlCommand command = new SqlCommand(query, connection))
+        //        {
+        //            command.Parameters.AddWithValue("@branch", branch);
+
+        //            using (SqlDataReader reader = command.ExecuteReader())
+        //            {
+        //                while (reader.Read())
+        //                {
+        //                    payment.Add(new payVM
+        //                    {
+        //                        cID = Convert.ToInt32(reader["cID"]),
+        //                        invoiceID = Convert.ToInt32(reader["invoiceID"]),
+        //                        totalFee = Convert.ToDecimal(reader["total_Fee"]),
+        //                        cFirstName = reader["cFirstName"].ToString(),
+        //                        cMidName = reader["cMidName"].ToString(),
+        //                        cLastName = reader["cLastName"].ToString(),
+
+        //                    });
+        //                }
+        //            }
+        //        }
+        //    }
+
+        //    return Json(payment, JsonRequestBehavior.AllowGet);
+        //}
 
         // Bulk Insertion  For Payments. upto Five at a time
         // GET: /Meter/BulkInsertion
@@ -265,7 +311,7 @@ namespace EBS.Controllers
                     foreach (var wrapper in models)
                     {
 
-                        string updateStatusQuery = "UPDATE InvoiceTbl SET Status = 'Paid' WHERE invoiceID = @invoiceID";
+                        string updateStatusQuery = "UPDATE InvoiceTbl SET Status = 'Paid' WHERE cID = @cID";
 
                         using (SqlCommand updateStatusCommand = new SqlCommand(updateStatusQuery, connection))
                         {

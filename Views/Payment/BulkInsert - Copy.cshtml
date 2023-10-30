@@ -30,7 +30,7 @@
     }
 </style>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 <head>
     <title>Record Payments | SEC</title>
 </head>
@@ -40,72 +40,59 @@
         <h2><strong>Record Payments</strong></h2>
 
         <br />
-        <br />
 
-        @using (Html.BeginForm("BulkInsert", "Payment", FormMethod.Post))
+        @for (int i = 0; i < 1; i++)
         {
-            @Html.AntiForgeryToken()
+            <div class="row">
+                <div class="col-md-6 mb-4 d-flex align-items-center">
+                    <div class="form-outline form-group">
+                        <strong> @Html.LabelFor(model => model[i].selectedDate) </strong>
+                        @Html.EditorFor(model => Model[i].selectedDate, new { htmlAttributes = new { @class = "form-control form-control-lg form-control-rDate", type = "Date", id = "datepicker" } })
+                        @Html.ValidationMessageFor(m => Model[i].selectedDate, "", new { @class = "text-danger" })
+                    </div>
+                </div>
 
-            <table class="table">
-                <thead class="thead-light">
-                    <tr>
-                        <th>Invoice ID</th>
-                        <th>Customer ID</th>
-                        <th>Paid Amount ($)</th>
-                        <th>Total Fee ($)</th>
-                        <th>Payment Method</th>
-                        <th>Payment Date</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @for (int i = 0; i <5; i++)
-                    {
-                        <tr>
-                            <td>
-                                @Html.EditorFor(model => Model[i].invoiceID, new { htmlAttributes = new { @class = "form-control form-control-lg form-control-invoiceID" } })
-                                @Html.ValidationMessageFor(m => Model[i].invoiceID, "", new { @class = "text-danger" })
-                            </td>
-
-                            <td>
-                                @Html.EditorFor(model => Model[i].cID, new { htmlAttributes = new { @class = "form-control form-control-lg form-control-cID" } })
-                                @Html.ValidationMessageFor(m => Model[i].cID, "", new { @class = "text-danger" })
-                            </td>
-
-                            <td>
-                                @Html.EditorFor(model => Model[i].paidAmount, new { htmlAttributes = new { @class = "form-control form-control-lg form-control-paidAmount" } })
-                                @Html.ValidationMessageFor(m => Model[i].paidAmount, "", new { @class = "text-danger" })
-                            </td>
-
-                            <td>
-                                @Html.EditorFor(model => Model[i].totalFee, new { htmlAttributes = new { @class = "form-control form-control-lg form-control-totalFee" } })
-                                @Html.ValidationMessageFor(m => Model[i].totalFee, "", new { @class = "text-danger" })
-                            </td>
-
-                            <td>
-                                @Html.EditorFor(model => Model[i].payMethod, new { htmlAttributes = new { @class = "form-control form-control-lg form-control-payMethod" } })
-                                @Html.ValidationMessageFor(m => Model[i].payMethod, "", new { @class = "text-danger" })
-                            </td>
-
-                            <td>
-                                @Html.EditorFor(model => Model[i].payDate, new { htmlAttributes = new { @class = "form-control form-control-lg form-control-payDate", type = "date" } })
-                                @Html.ValidationMessageFor(m => Model[i].payDate, "", new { @class = "text-danger" })
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-
-            <br />
-            <br />
-
-            <div class="col-md-6 mb-4 pb-2" style="display: flex; justify-content: center; align-items: center;">
-                <input type="submit" value="Create" class="btn btn-success btn-lg btn-block" />
-                @*<input class="btn btn-primary btn-lg btn-block" type="submit" value="Save" />*@
+                <div class="form-outline form-group">
+                    <strong>@Html.LabelFor(model => model[i].SelectedBranch)</strong> <br />
+                    @Html.DropDownListFor(m => m[i].SelectedBranch, new SelectList(Model[i].SelectedBranch), "Select Branch", new {
+                   @class = "form-control form-control-lg form-control-selectedBranchh", id = "branchDropdown" })
+                    @Html.ValidationMessageFor(model => model[i].SelectedBranch, "", new { @class = "text-danger" })
+                </div>
             </div>
         }
 
+        <br />
+
+        <table class="table" id="invBulk">
+            <thead class="thead-light">
+                <tr>
+                    <th>Check</th>
+                    <th style="display:none">Invoice ID</th>
+                    <th style="display:none">Customer ID</th>
+                    <th style="display:none">Payment Date</th>
+                    <th>Full Name</th>
+                    <th>Paid Amount ($)</th>
+                    <th>Total Fee ($)</th>
+                    <th>Payment Method</th>
+                    <th>Print</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+            </tbody>
+        </table>
+
+        <br />
+        <br />
+
+        <div class="col-md-3 mb-4 pb-3" style="justify-content: center; align-items: center;">
+            <button id="save-all-button" class="btn btn-success btn-lg btn-block" type="button">Record All</button>
+        </div>
+
+
     </div>
 
+    <!--Input Validation Modal-->
     <div class="modal fade" id="validationModal" tabindex="-1" role="dialog" aria-labelledby="validationModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -124,79 +111,336 @@
         </div>
     </div>
 
+    <!--This is a table template script that the script that retrieves the branch data is going to use-->
+    <script type="text/html" id="rowTemplate">
+
+        <tr>
+            <td>
+                <input type="checkbox" class="form-check-input" style="width: 20px; height: 20px; margin-top:13px; margin-left:15px;">
+            </td>
+
+            <td style="display:none">
+                <input type="number" class="form-control form-control-cID">
+            </td>
+
+            <td style="display:none">
+                <input type="number" class="form-control form-control-invoiceID">
+            </td>
+
+            <td style="display:none">
+                <input type="date" class="form-control form-control-rDatee">
+            </td>
+
+            <td>
+                <input type="text" class="form-control form-control-fullName" style="width: auto;">
+            </td>
+
+            <td>
+                <input type="number" class="form-control form-control-paidAmount">
+            </td>
+
+            <td>
+                <input type="number" class="form-control form-control-totalFee" readonly style="background-color: lightgray">
+            </td>
+
+            <td>
+                <select class="form-control form-control-payMethod">
+                    <option value="Cash">Cash</option>
+                    <option value="EVC">EVC</option>
+                    <option value="Account to Account">Account to Account</option>
+                </select>
+            </td>
+
+            <td>
+                <input type="checkbox" class="form-check-print" style="width: 20px; height: 20px; margin-top:13px; margin-left:15px;">
+            </td>
+
+            <td>
+                <button class="btn btn-success btn-lg btn-block btn-save-row" id="saverow" type="button">Record</button>
+            </td>
+
+        </tr>
+
+    </script>
+
+    <!--Script to call the GetCustomerBillInfo() method to get customer info-->
+    <script>
+
+    $(document).ready(function () {
+
+
+        $('#branchDropdown').on('change', function () {
+            console.log('I only live here!');
+
+            // Call method via AJAX
+            $.ajax({
+                url: '@Url.Action("GetBillInfo", "Payment")',
+                type: 'POST',
+                data: { branch: $(this).val() },
+                // Use dataSrc
+                dataSrc: function (data) {
+                    // Transform response data as needed
+                    return data.results;
+                },
+
+                success: function (data) {
+                    // Empty table
+                    $("#tableBody").empty();
+
+                    if (data.length === 0) {
+                        alert("All Bills in This Branch Are Recorded This Month!");
+                    } else {
+                        // Loop through data and append rows
+                        data.forEach(item => {
+                            // Clone the template and get its HTML content
+                            const rowTemplate = $("#rowTemplate").html();
+                            const row = $(rowTemplate);
+
+                            console.log('customer ID', item.cID);
+                            console.log('previous reading', item.prev_Reading);
+
+                            // Populate data into the row
+                            row.find('.form-control-cID').val(item.cID);
+                            row.find('.form-control-invoiceID').val(item.invoiceID);
+                            row.find('.form-control-totalFee').val(item.totalFee);
+                            row.find('.form-control-fullName').val(item.cFullName);
+
+                            window.balance = item.balance;
+
+                            // Append the row to the table
+                            $("#tableBody").append(row);
+                        });
+                    }
+                },
+
+                error: function () {
+                    alert("Error Occured During Bill Retrieval! Try Again or Contact Admin");
+                }
+            });
+        });
+    });
+
+    </script>
+
+    <!--Form Fields Validation Script-->
+    <script>
+        // Function to hide the modal
+        function hideValidationModal() {
+            $('#validationModal').modal('hide');
+        }
+
+        // Text Input Validation
+        function validateText(input) {
+            if (!isNaN(Number(input.value))) {
+                // Show a Bootstrap modal with the validation message
+                $('#validationModal').modal('show');
+                input.value = '';
+            }
+        }
+
+        // Number validation function
+        function validateNumber(input) {
+            if (isNaN(Number(input.value))) {
+                // Show a Bootstrap modal with the validation message
+                $('#validationModal').modal('show');
+                input.value = '';
+            }
+        }
+
+        // Attach listeners to input fields by class when they lose focus (blur)
+        const invID = document.querySelectorAll('.form-control-invoiceID');
+        const cID = document.querySelectorAll('.form-control-cID');
+        const pAmount = document.querySelectorAll('.form-control-paidAmount');
+        const tFee = document.querySelectorAll('.form-control-totalFee');
+        const pMethod = document.querySelectorAll('.form-control-payMethod');
+
+
+        invID.forEach(input => {
+            input.addEventListener('blur', () => {
+                validateNumber(input);
+            });
+        });
+
+        cID.forEach(input => {
+            input.addEventListener('blur', () => {
+                validateNumber(input);
+            });
+        });
+
+        pAmount.forEach(input => {
+            input.addEventListener('blur', () => {
+                validateNumber(input);
+            });
+        });
+
+        tFee.forEach(input => {
+            input.addEventListener('blur', () => {
+                validateNumber(input);
+            });
+        });
+
+        pMethod.forEach(input => {
+            input.addEventListener('blur', () => {
+                validateText(input);
+            });
+        });
+
+        // populate the hidden date fields from the Payment date (rDate) field
+        $('#datepicker').change(function () {
+            $('.form-control-rDatee').val(this.value);
+        });
+
+        $('#tableBody').on('click', '.btn-save-row', function () {
+      // Get the current row
+      var row = $(this).closest('tr');
+
+       // prototype
+      var date = document.querySelector('.form-control-rDate');
+      var selectedDate = date.value;
+            if (!selectedDate) {
+                alert("Please Select Reading Date");
+                return;
+            } else {
+
+            }
+
+            // Construct the data object from row elements
+            var model = {
+                cID: row.find('.form-control-cID').val(),
+                invoiceID: row.find('.form-control-invoiceID').val(),
+                payDate: row.find('.form-control-rDate').val(),
+                fullName: row.find(".form-control-fullName").val(),
+                paidAmount: row.find('.form-control-paidAmount').val(),
+                totalFee: row.find('.form-control-totalFee').val(),
+                payMethod: row.find('.form-control-payMethod').val(),
+            };
+
+            var models = [];
+            models.push(model);
+
+      // Check if the corresponding checkbox is checked
+      var checkbox1 = row.find('.form-check-input');
+      var checkbox2 = row.find('.form-check-print');
+            if (checkbox1.is(':checked') && checkbox2.is(':checked')) {
+
+                // Serialize the model to a JSON string
+                var modelJson = JSON.stringify(model);
+                // Include the serialized model as a query parameter
+                window.location = '@Url.Action("GenerateReceipt", "Payment")' + '?modelJson=' + encodeURIComponent(modelJson);
+
+                // Send the form data to the server via AJAX
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("BulkInsert", "Payment")",
+                    data: JSON.stringify({ models: models }),
+                    contentType: "application/json",
+                    success: function (response, status, xhr) {
+                        // Check the response status code
+                        if (status === 'success') {
+                            alert("Recorded Bill Payments Successfully.");
+                            // Refresh Page After Billing Customer
+                            //location.reload();
+                        } else {
+                            // Handle error, e.g., show an error message to the user
+                            alert("Bill Recording Failed! Fill All Fields And Try Again! " + response.statusText);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        alert("Bill Recording Failed! Fill All Fields And Try Again! " + error);
+                    }
+                });
+            } else if (checkbox1.is(':checked')) {
+                // Send the form data to the server via AJAX
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("BulkInsert", "Payment")",
+                    data: JSON.stringify({ models: models }),
+                    contentType: "application/json",
+                    success: function (response, status, xhr) {
+                        // Check the response status code
+                        if (status === 'success') {
+                            alert("Recorded Bill Payments Successfully.");
+                            // Refresh Page After Billing Customer
+                            location.reload();
+                        } else {
+                            // Handle error, e.g., show an error message to the user
+                            alert("Bill Recording Failed! Fill All Fields And Try Again! " + response.statusText);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        alert("Bill Recording Failed! Fill All Fields And Try Again! " + error);
+                    }
+                });
+            }
+        });
+
+   const saveAllBtn = document.querySelector('#save-all-button');
+
+// Add click event listener
+saveAllBtn.addEventListener('click', saveAllRows);
+
+function saveAllRows() {
+  // Get all table rows
+  const rows = document.querySelectorAll('tbody tr');
+
+  // Array to store data for checked rows
+  const models = [];
+
+  // Loop through rows
+  rows.forEach(row => {
+    // Get checkbox
+    const checkbox = row.querySelector('input[type="checkbox"]');
+
+    // Check if checked
+    if (checkbox.checked) {
+      // Construct data object
+      const model = {
+        cID: row.querySelector('.form-control-cID').value,
+        invoiceID: row.querySelector('.form-control-invoiceID').value,
+        payDate: row.querySelector('.form-control-rDatee').value,
+        paidAmount: row.querySelector('.form-control-paidAmount').value,
+        totalFee: row.querySelector('.form-control-totalFee').value,
+        payMethod: row.querySelector('.form-control-payMethod').value,
+      };
+
+      // Push to models array
+      models.push(model);
+    }
+  });
+
+  if (models.length > 0) {
+    // AJAX request to save models
+    $.ajax({
+      url: '@Url.Action("BulkInsert", "Payment")',
+      method: 'POST',
+      contentType: 'application/json',
+      data: JSON.stringify({ models }),
+
+      success: function (res) {
+        alert("Recorded Bill Payments Successfully.");
+        // Refresh Page
+        location.reload();
+      },
+
+      error: function (err) {
+        alert("Bill Recording Failed! Fill All Fields And Try Again!");
+      }
+    });
+  } else {
+    alert("No rows are Checked!");
+  }
+}
+
+
+    </script>
 
 </body>
 </html>
 
-<!--Form Fields Validation Script-->
-<script>
-    // Function to hide the modal
-    function hideValidationModal() {
-        $('#validationModal').modal('hide');
-    }
 
-    // Text Input Validation
-    function validateText(input) {
-        if (!isNaN(Number(input.value))) {
-            // Show a Bootstrap modal with the validation message
-            $('#validationModal').modal('show');
-            input.value = '';
-        }
-    }
-
-    // Number validation function
-    function validateNumber(input) {
-        if (isNaN(Number(input.value))) {
-            // Show a Bootstrap modal with the validation message
-            $('#validationModal').modal('show');
-            input.value = '';
-        }
-    }
-
-    // Attach listeners to input fields by class when they lose focus (blur)
-    const invID = document.querySelectorAll('.form-control-invoiceID');
-    const cID = document.querySelectorAll('.form-control-cID');
-    const pAmount = document.querySelectorAll('.form-control-paidAmount');
-    const tFee = document.querySelectorAll('.form-control-totalFee');
-    const pMethod = document.querySelectorAll('.form-control-payMethod');
-
-
-    invID.forEach(input => {
-        input.addEventListener('blur', () => {
-            validateNumber(input);
-        });
-    });
-
-    cID.forEach(input => {
-        input.addEventListener('blur', () => {
-            validateNumber(input);
-        });
-    });
-
-    pAmount.forEach(input => {
-        input.addEventListener('blur', () => {
-            validateNumber(input);
-        });
-    });
-
-    tFee.forEach(input => {
-        input.addEventListener('blur', () => {
-            validateNumber(input);
-        });
-    });
-
-    pMethod.forEach(input => {
-        input.addEventListener('blur', () => {
-            validateText(input);
-        });
-    });
-
-    // Attach click event listener to the "OK" button in the modal
-    document.getElementById('modalOkButton').addEventListener('click', hideValidationModal);
-</script>
 
 <!--Get related Data for each record-->
-<script>
+<!--<script>
     console.log('Script is being reached');
 
     $(document).ready(function () {
@@ -221,5 +465,4 @@
             });
         });
     });
-</script>
-
+</script>-->
