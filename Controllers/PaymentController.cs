@@ -315,7 +315,7 @@ namespace EBS.Controllers
 
                         using (SqlCommand updateStatusCommand = new SqlCommand(updateStatusQuery, connection))
                         {
-                            updateStatusCommand.Parameters.AddWithValue("@invoiceID", wrapper.invoiceID);
+                            updateStatusCommand.Parameters.AddWithValue("@cID", wrapper.cID);
                             updateStatusCommand.ExecuteNonQuery();
                         }
                     }
@@ -362,7 +362,10 @@ namespace EBS.Controllers
                     DateTime curentDate = DateTime.Now;
                     DateTime desiredDate = new DateTime(curentDate.Year, curentDate.Month, 28);
                     model.payDate = desiredDate;
+                                        
                 }
+
+                decimal newBalance = model.totalFee - model.paidAmount;
 
                 Document document = new Document(PageSize.A5, 30, 30, 30, 30);
                 PdfWriter writer = PdfWriter.GetInstance(document, memoryStream);
@@ -402,13 +405,62 @@ namespace EBS.Controllers
                 contentFont.Color = BaseColor.BLACK;
                 float lineSpacing = 20f;
 
-                AddInvoiceLine(document, $"Payment Date:        {model.payDate.ToString("dd/MM/yyyy")}", contentFont, lineSpacing);
-                AddInvoiceLine(document, $"Invoice ID:          {model.invoiceID}", contentFont, lineSpacing);
-                AddInvoiceLine(document, $"Customer ID:         {model.cID}", contentFont, lineSpacing);
-                AddInvoiceLine(document, $"Customer Name:       {model.fullName}", contentFont, lineSpacing);
-                AddInvoiceLine(document, $"Paid Amount:         {model.paidAmount:C}", contentFont, lineSpacing);
-                AddInvoiceLine(document, $"Total Amount:        {model.totalFee:C}", contentFont, lineSpacing);
-                AddInvoiceLine(document, $"Pay Method:          {model.payMethod}", contentFont, lineSpacing);
+                AddInvoiceLine(document, $"Payment Date:            {model.payDate.ToString("dd/MM/yyyy")}", contentFont, lineSpacing);
+                //AddInvoiceLine(document, $"Invoice ID:          {model.invoiceID}", contentFont, lineSpacing);
+                AddInvoiceLine(document, $"Customer ID:             {model.cID}", contentFont, lineSpacing);
+                AddInvoiceLine(document, $"Customer Name:         {model.fullName}", contentFont, lineSpacing);
+                AddInvoiceLine(document, $"Paid Amount:             {model.paidAmount:C}", contentFont, lineSpacing);
+                AddInvoiceLine(document, $"Total Amount:            {model.totalFee:C}", contentFont, lineSpacing);
+                AddInvoiceLine(document, $"Pay Method:               {model.payMethod}", contentFont, lineSpacing);
+
+                document.NewPage();
+
+                // Add image as a logo at the top of the page
+                document.Add(image);
+
+                // Add the title "Somali Electric Company"
+                Font statementTitleFont = FontFactory.GetFont("Times-Roman", 18);
+                Paragraph statementTitle = new Paragraph("Statement of Account", statementTitleFont);
+                Paragraph e = new Paragraph($"");
+
+                statementTitle.Alignment = Element.ALIGN_CENTER;
+                document.Add(statementTitle);
+
+                // Page content
+                Font pageheader = FontFactory.GetFont("Times-Roman", 15);
+                Font pagecontent = FontFactory.GetFont("Times-Roman", 12);
+                Paragraph subtop = new Paragraph("Customer Information:", pageheader);
+                Paragraph cname = new Paragraph($"Name:  {model.fullName}", pagecontent);
+                Paragraph cID = new Paragraph($"ID:    {model.cID}", pagecontent);
+                Paragraph e1 = new Paragraph($"");
+
+                document.Add(subtop);
+                document.Add(cname);
+                document.Add(cID);
+
+                Paragraph stat = new Paragraph("Payment Information:", pageheader);
+                Paragraph pdate = new Paragraph($"Payment Date:  {model.payDate.ToString("dd/mm/yyyy")}", pagecontent);
+                Paragraph pmethod = new Paragraph($"Payment Method:  {model.payMethod}", pagecontent);
+                Paragraph tAmount = new Paragraph($"Total Amount Paid:  {model.paidAmount}", pagecontent);
+                Paragraph e2 = new Paragraph($"");
+                document.Add(stat);
+                document.Add(pdate);
+                document.Add(pmethod);
+                document.Add(tAmount);
+
+                Paragraph aSumarry = new Paragraph("Account Summary:", pageheader);
+                Paragraph outBalance = new Paragraph($"Total Outstanding Balance Before Payment:   ${model.totalFee}", pagecontent);
+                Paragraph paid = new Paragraph($"Total Payment Made:   {model.payMethod}", pagecontent);
+                Paragraph newBalancee = new Paragraph($"New Outstanding Balance After Payment:  ${newBalance}", pagecontent);
+                Paragraph e3 = new Paragraph($"");
+
+                document.Add(aSumarry);
+                document.Add(outBalance);
+                document.Add(paid);
+                document.Add(newBalancee);
+
+                Paragraph closingStat = new Paragraph("Thank You for Your Payment!", pageheader);
+                document.Add(closingStat);
 
                 document.Close();
 
