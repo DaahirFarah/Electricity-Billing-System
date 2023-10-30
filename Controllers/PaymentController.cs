@@ -17,7 +17,7 @@ using Newtonsoft.Json;
 
 namespace EBS.Controllers
 {
-    [Authorize]
+    //[Authorize]
     public class PaymentController : Controller
     {
         // ConnectionString Instance
@@ -285,7 +285,26 @@ namespace EBS.Controllers
             }
         }
 
-        // print receipt for specific customer (one at a time).
+        // Pdf preview action
+        public ActionResult PdfPreview()
+        {
+            // Retrieve the PDF content from TempData
+            byte[] pdfContent = TempData["PdfBytes"] as byte[];
+
+            if (pdfContent != null)
+            {
+                // Pass the PDF content to the view
+                ViewBag.PdfBytes = pdfContent;
+            }
+            else
+            {
+                // Handle the case when the PDF content is not available
+                ViewBag.PdfBytes = new byte[0];
+            }
+
+            return View("PdfPreview");
+        }
+
         // Generating Individual Receipts 
         public ActionResult GenerateReceipt(string modelJson)
         {
@@ -337,24 +356,30 @@ namespace EBS.Controllers
                 contentFont.Color = BaseColor.BLACK;
                 float lineSpacing = 20f;
 
-                AddInvoiceLine(document, $"Payment Date:            {model.payDate.ToString("dd/MM/yyyy")}", contentFont, lineSpacing);
-                AddInvoiceLine(document, $"Invoice ID:              {model.invoiceID}", contentFont, lineSpacing);
-                AddInvoiceLine(document, $"Customer ID:             {model.cID}", contentFont, lineSpacing);
-                AddInvoiceLine(document, $"Customer Name:           {model.fullName}", contentFont, lineSpacing);
-                AddInvoiceLine(document, $"Paid Amount:             {model.paidAmount:C}", contentFont, lineSpacing);
-                AddInvoiceLine(document, $"Total Amount:            {model.totalFee:C}", contentFont, lineSpacing);
-                AddInvoiceLine(document, $"Pay Method:              {model.payMethod}", contentFont, lineSpacing);
+                AddInvoiceLine(document, $"Payment Date:        {model.payDate.ToString("dd/MM/yyyy")}", contentFont, lineSpacing);
+                AddInvoiceLine(document, $"Invoice ID:          {model.invoiceID}", contentFont, lineSpacing);
+                AddInvoiceLine(document, $"Customer ID:         {model.cID}", contentFont, lineSpacing);
+                AddInvoiceLine(document, $"Customer Name:       {model.fullName}", contentFont, lineSpacing);
+                AddInvoiceLine(document, $"Paid Amount:         {model.paidAmount:C}", contentFont, lineSpacing);
+                AddInvoiceLine(document, $"Total Amount:        {model.totalFee:C}", contentFont, lineSpacing);
+                AddInvoiceLine(document, $"Pay Method:          {model.payMethod}", contentFont, lineSpacing);
 
                 document.Close();
 
-                // Set the response content type and headers for download
-                Response.Clear();
-                Response.ContentType = "application/pdf";
-                Response.AddHeader("content-disposition", "attachment;filename=CustomerBill.pdf");
-                Response.BinaryWrite(memoryStream.ToArray());
-                Response.Flush();
+                // Return a View with the PDF content for preview
+                byte[] pdfBytes = memoryStream.ToArray();
+                ViewBag.PdfBytes = pdfBytes;
+                TempData["PdfBytes"] = pdfBytes;
+                return RedirectToAction("PdfPreview"); // Create a PdfPreview view to display the PDF
 
-                return new EmptyResult();
+                // Set the response content type and headers for download
+                //Response.Clear();
+                //Response.ContentType = "application/pdf";
+                //Response.AddHeader("content-disposition", "attachment;filename=CustomerBill.pdf");
+                //Response.BinaryWrite(memoryStream.ToArray());
+                //Response.Flush();
+
+                //return new EmptyResult();
             }
         }
 

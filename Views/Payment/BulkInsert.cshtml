@@ -339,7 +339,7 @@
                         if (status === 'success') {
                             alert("Recorded Bill Payments Successfully.");
                             // Refresh Page After Billing Customer
-                            location.reload();
+                            //location.reload();
                         } else {
                             // Handle error, e.g., show an error message to the user
                             alert("Bill Recording Failed! Fill All Fields And Try Again! " + response.statusText);
@@ -349,7 +349,7 @@
                         alert("Bill Recording Failed! Fill All Fields And Try Again! " + error);
                     }
                 });
-            } else {
+            } else if (checkbox1.is(':checked')) {
                 // Send the form data to the server via AJAX
                 $.ajax({
                     type: "POST",

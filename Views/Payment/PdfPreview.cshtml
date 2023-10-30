@@ -1,0 +1,27 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PDF Preview</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+    <link rel="shortcut icon" href="~/Assets/_e407f44c-5341-4a3d-b20e-e7ae5a10e34e.jpg" type="image/x-icon">
+</head>
+<body>
+    <!--Go back to the bulk Insert view-->
+
+    <h1 style="text-align:center; font-family:Georgia">Receipt Preview</h1>
+
+    <!--pdf preview-->
+    <iframe src="data:application/pdf;base64,@Convert.ToBase64String(ViewBag.PdfBytes)" style="width: 100%; height: 950px;"></iframe>
+
+    <div class="mt-4 pt-2" @*style="padding-left: 40px; margin-left: 100px;"*@>
+        <form action="@Url.Action("BulkInsert", "Payment")" method="get">
+            <input class="btn btn-primary btn-lg btn-block" type="submit" value="Back" />
+        </form>
+    </div>
+
+</body>
+</html>
