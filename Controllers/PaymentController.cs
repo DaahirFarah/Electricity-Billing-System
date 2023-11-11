@@ -453,6 +453,9 @@ namespace EBS.Controllers
                 Paragraph paid = new Paragraph($"Total Payment Made:   {model.payMethod}", pagecontent);
                 Paragraph newBalancee = new Paragraph($"New Outstanding Balance After Payment:  ${newBalance}", pagecontent);
                 Paragraph e3 = new Paragraph($"");
+                Paragraph e4 = new Paragraph($"");
+                Paragraph e44 = new Paragraph($"");
+                Paragraph e33 = new Paragraph($"");
 
                 document.Add(aSumarry);
                 document.Add(outBalance);

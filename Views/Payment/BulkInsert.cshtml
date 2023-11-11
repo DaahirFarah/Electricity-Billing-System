@@ -388,11 +388,13 @@ function saveAllRows() {
 
   // Loop through rows
   rows.forEach(row => {
-    // Get checkbox
-    const checkbox = row.querySelector('input[type="checkbox"]');
+      // Get checkbox
+      var checkboxx = row.querySelector('.form-check-input');
 
-    // Check if checked
-    if (checkbox.checked) {
+      const $checkboxx = $(checkboxx);
+
+      // Use jQuery checked syntax
+      if ($checkboxx.is(':checked')) {
       // Construct data object
       const model = {
         cID: row.querySelector('.form-control-cID').value,

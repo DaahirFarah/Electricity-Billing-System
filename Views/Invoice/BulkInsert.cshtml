@@ -476,20 +476,26 @@
                         // Loop through rows
                         rows.forEach(row => {
 
-                        // Get checkbox
-                        const checkbox = row.querySelector('input[type="checkbox"]');
+                            // Get checkbox
+                            const checkboxx = row.querySelector('.form-check-input');
 
-                        // Check if checked
-                        if(checkbox.checked) {
+                        //// Check if checked
+                        //    if (checkbox.is(':checked')) {
+
+                            const $checkboxx = $(checkboxx);
+
+                            // Use jQuery checked syntax
+                            if ($checkboxx.is(':checked')) {
+
 
                             // Construct data object
                             const model = {
-                                cID: row.find('.form-control-cID').val(),
-                                reading_Date: row.find('.form-control-rDatee').val(),
-                                prev_Reading: row.find('.form-control-prev_Reading').val(),
-                                cur_Reading: row.find('.form-control-cur_Reading').val(),
-                                reading_Value: row.find('.form-control-reading_Value').val(),
-                                customerName: row.find('.form-control-fullName').val(),
+                                cID: row.querySelector('.form-control-cID').value,
+                                reading_Date: row.querySelector('.form-control-rDatee').value,
+                                prev_Reading: row.querySelector('.form-control-prev_Reading').value,
+                                cur_Reading: row.querySelector('.form-control-cur_Reading').value,
+                                reading_Value: row.querySelector('.form-control-reading_Value').value,
+                                customerName: row.querySelector('.form-control-fullName').value,
                                 rate: parseFloat(window.rate),
                                 balance: parseFloat(window.Balance),
                                 charge: parseFloat(window.charge),

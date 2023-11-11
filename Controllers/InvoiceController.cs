@@ -465,7 +465,7 @@ namespace EBS.Controllers
                 // Add current date (top right side)
                 DateTime currentDate = DateTime.Now;
                 string formattedDate = currentDate.ToString("yyyy-MM-dd");
-                Paragraph dateParagraph = new Paragraph("Date: " + formattedDate);
+                Paragraph dateParagraph = new Paragraph("Date: " + formattedDate, subtitleFont);
                 dateParagraph.Alignment = Element.ALIGN_RIGHT;
                 dateParagraph.SpacingAfter = 5;
                 document.Add(dateParagraph);
@@ -481,7 +481,7 @@ namespace EBS.Controllers
                 AddInvoiceLine(document, $"Previous Reading:     {model.prev_Reading} (KwH)", contentFont, lineSpacing);
                 AddInvoiceLine(document, $"Current Reading:       {model.cur_Reading} (KwH)", contentFont, lineSpacing);
                 AddInvoiceLine(document, $"Usage in (KwH):      {model.reading_Value}", contentFont, lineSpacing);
-                AddInvoiceLine(document, $"Rate:                    {model.Rate:C}", contentFont, lineSpacing);
+                AddInvoiceLine(document, $"Rate:                         {model.Rate:C}", contentFont, lineSpacing);
                 AddInvoiceLine(document, $"Total Amount:          {model.total_Fee:C}", contentFont, lineSpacing);
 
                 document.Close();
@@ -499,7 +499,7 @@ namespace EBS.Controllers
             }
         }
 
-       
+
         public ActionResult GenerateInvoice()
         {
 
