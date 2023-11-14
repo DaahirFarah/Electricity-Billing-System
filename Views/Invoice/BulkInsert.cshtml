@@ -433,16 +433,16 @@
 
   // prototype
   var date = document.querySelector('.form-control-rDate');
-  var selectedDate = date.value;
+  window.selectedDate = date.value;
 
-  if (!selectedDate) {
+  if (!window.selectedDate) {
     alert("Please Select Reading Date");
     return;
   }
 
   var model = {
     cID: row.find('.form-control-cID').val(),
-    reading_Date: selectedDate,
+    reading_Date: window.selectedDate,
     prev_Reading: row.find('.form-control-prev_Reading').val(),
     cur_Reading: row.find('.form-control-cur_Reading').val(),
     reading_Value: row.find('.form-control-reading_Value').val(),
@@ -607,9 +607,7 @@
             $('#reportModal').on('hidden.bs.modal', function () {
                   // Reload the page when the modal is hidden
                   location.reload();
-              });
-            
-            
+              });           
             
           } else {
             alert("Billing Failed! Try Again!: " + response.statusText);
@@ -683,7 +681,7 @@
                             // Construct data object
                             const model = {
                                 cID: row.querySelector('.form-control-cID').value,
-                                reading_Date: selectedDate,
+                                reading_Date: window.selectedDate,
                                 prev_Reading: row.querySelector('.form-control-prev_Reading').value,
                                 cur_Reading: row.querySelector('.form-control-cur_Reading').value,
                                 reading_Value: row.querySelector('.form-control-reading_Value').value,

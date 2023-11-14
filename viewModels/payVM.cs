@@ -66,5 +66,7 @@ namespace EBS.viewModels
         }
 
         public string fullName { get; set; }
+
+        public decimal Balance { get; set; }
     }
 }

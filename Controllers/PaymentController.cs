@@ -17,7 +17,7 @@ using Newtonsoft.Json;
 
 namespace EBS.Controllers
 {
-    [Authorize]
+    //[Authorize]
     public class PaymentController : Controller
     {
         // ConnectionString Instance
@@ -152,11 +152,12 @@ namespace EBS.Controllers
                 C.cFirstName,
                 C.cMidName,
                 C.cLastName,
+                C.Balance,
                 SUM(I.total_Fee) AS total_Fee
             FROM CustomerTbl C
             JOIN InvoiceTbl I ON C.cID = I.cID
             WHERE I.Status = 'Unpaid' AND C.Branch = @branch
-            GROUP BY C.cID, C.cFirstName, C.cMidName, C.cLastName;";
+            GROUP BY C.cID, C.cFirstName, C.cMidName, C.Balance, C.cLastName;";
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
@@ -173,6 +174,7 @@ namespace EBS.Controllers
                                 cFirstName = reader["cFirstName"].ToString(),
                                 cMidName = reader["cMidName"].ToString(),
                                 cLastName = reader["cLastName"].ToString(),
+                                Balance = Convert.ToDecimal(reader["Balance"])
                             });
                         }
                     }
