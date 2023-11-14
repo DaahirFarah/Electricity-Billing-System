@@ -25,6 +25,20 @@
             font-family: Verdana, Geneva, Tahoma, sans-serif;
         }
 
+        #cardd .row {
+            margin-left: 0;
+            margin-right: 0;
+        }
+
+        #cardd .col,
+        #cardd .col-md-6 {
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+        #cardd .form-group {
+            width: 100%;
+        }
 
     </style>
     <title>Login | SEC</title>
@@ -40,24 +54,23 @@
             <div class="container py-5 h-100">
                 <div class="row justify-content-center align-items-center h-100">
 
-                    <div class="col-12 col-lg-9 col-xl-7">
+                    <div class="col-6 col-lg-9 col-xl-7">
                         <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">
 
-                            <div class="card-body p-4 p-md-5" id="cbody">
-                                <h2 class="mb-4 pb-2 pb-md-0 mb-md-5" style="align-content:center"><strong>User Login</strong></h2>
+                            <div class="card-body p-4 p-md-5" id="cbody" style="align-content:center">
+                                <h2 class="mb-4 pb-2 pb-md-0 mb-md-5" style="align-content:center"><strong>Login</strong></h2>
 
                                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-                                <div>
+                            <div>
 
-                                    <div class="form-outline form-group">
+                                <div class="form-outline form-group">
+                                    @Html.EditorFor(model => model.Username, new { htmlAttributes = new { @class = "form-control form-control-lg" } })
+                                    @Html.LabelFor(m => m.Username)
+                                    @Html.ValidationMessageFor(model => model.Username, "", new { @class = "text-danger" })
+                                </div>                                                    
 
-                                        @Html.EditorFor(model => model.Username, new { htmlAttributes = new { @class = "form-control form-control-lg"} })
-                                        @Html.LabelFor(m => m.Username)
-                                        @Html.ValidationMessageFor(model => model.Username, "", new { @class = "text-danger" })
-                                    </div>
-
-                                </div>
+                            </div>
                                 <div>
 
                                     <div class="form-outline form-group">
@@ -70,8 +83,8 @@
 
 
 
-                                <div class="col-md-6 mb-4 pb-2" style="align-content:center">
-                                    <button type="submit" value="Login" class="btn btn-primary btn-lg btn-block">Sign In</button>
+                                <div style="align-content:center">
+                                    <button type="submit" value="Login" class="btn btn-primary btn-lg btn-block">Login</button>
                                 </div>
 
                             </div>

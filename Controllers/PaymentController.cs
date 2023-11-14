@@ -425,6 +425,7 @@ namespace EBS.Controllers
 
                 statementTitle.Alignment = Element.ALIGN_CENTER;
                 document.Add(statementTitle);
+                document.Add(e);
 
                 // Page content
                 Font pageheader = FontFactory.GetFont("Times-Roman", 15);
@@ -433,20 +434,26 @@ namespace EBS.Controllers
                 Paragraph cname = new Paragraph($"Name:  {model.fullName}", pagecontent);
                 Paragraph cID = new Paragraph($"ID:    {model.cID}", pagecontent);
                 Paragraph e1 = new Paragraph($"");
+                Paragraph e11 = new Paragraph($"");
 
                 document.Add(subtop);
                 document.Add(cname);
                 document.Add(cID);
+                document.Add(e1);
+                document.Add(e11);
 
                 Paragraph stat = new Paragraph("Payment Information:", pageheader);
                 Paragraph pdate = new Paragraph($"Payment Date:  {model.payDate.ToString("dd/mm/yyyy")}", pagecontent);
                 Paragraph pmethod = new Paragraph($"Payment Method:  {model.payMethod}", pagecontent);
                 Paragraph tAmount = new Paragraph($"Total Amount Paid:  {model.paidAmount}", pagecontent);
                 Paragraph e2 = new Paragraph($"");
+                Paragraph e22 = new Paragraph($"");
                 document.Add(stat);
                 document.Add(pdate);
                 document.Add(pmethod);
                 document.Add(tAmount);
+                document.Add(e2);
+                document.Add(e22);
 
                 Paragraph aSumarry = new Paragraph("Account Summary:", pageheader);
                 Paragraph outBalance = new Paragraph($"Total Outstanding Balance Before Payment:   ${model.totalFee}", pagecontent);
@@ -461,6 +468,10 @@ namespace EBS.Controllers
                 document.Add(outBalance);
                 document.Add(paid);
                 document.Add(newBalancee);
+                document.Add(e3);
+                document.Add(e4);
+                document.Add(e44);
+                document.Add(e33);
 
                 Paragraph closingStat = new Paragraph("Thank You for Your Payment!", pageheader);
                 document.Add(closingStat);

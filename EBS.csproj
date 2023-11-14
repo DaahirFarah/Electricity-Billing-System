@@ -405,10 +405,10 @@
     <Content Include="Views\Meter\BulkInsert.cshtml" />
     <Content Include="Views\Payment\BulkInsert.cshtml" />
     <Content Include="Views\Invoice\BulkInsert.cshtml" />
-    <Content Include="Views\Invoice\BulkInsert - Copy.cshtml" />
     <Content Include="Views\Invoice\PdfPreview.cshtml" />
     <Content Include="Views\Payment\PdfPreview.cshtml" />
     <Content Include="Views\Payment\BulkInsert - Copy.cshtml" />
+    <Content Include="Views\Invoice\BulkInsert - Copy.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

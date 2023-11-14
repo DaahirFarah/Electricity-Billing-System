@@ -12,7 +12,7 @@ using System.Web.Mvc;
 
 namespace EBS.Controllers
 {
-    [Authorize]
+    //[Authorize]
     public class InvoiceController : Controller
     {
         // This variable holds the balance so that it can be accessed in all methods
@@ -292,6 +292,12 @@ namespace EBS.Controllers
             var modelList = new List<invoiceVM>();
             modelList.Add(model);
 
+            //byte[] pdfBytes = TempData["PdfBytes"] as byte[];
+
+            //// Add pdfBytes to ViewData
+            //ViewData["PdfBytes"] = pdfBytes;
+
+
             return View(modelList);
         }
 
@@ -490,12 +496,13 @@ namespace EBS.Controllers
                 // Response.Clear();
                 // Response.ContentType = "application/pdf";
                 // Response.AddHeader("content-disposition", "attachment;filename=CustomerBill.pdf");
-
-                // Return a View with the PDF content for preview
+                                
                 byte[] pdfBytes = memoryStream.ToArray();
+                
+                // Return a View with the PDF content for preview
                 ViewBag.PdfBytes = pdfBytes;
                 TempData["PdfBytes"] = pdfBytes;
-                return RedirectToAction("PdfPreview");
+                return RedirectToAction("BulkInsert");
             }
         }
 
