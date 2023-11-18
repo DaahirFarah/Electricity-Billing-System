@@ -7,7 +7,7 @@ using System.Web.Mvc;
 
 namespace EBS.Controllers
 {
-    [Authorize]
+    //[Authorize]
     public class RatesController : Controller
     {
         // Instance of the connection String
@@ -63,7 +63,8 @@ namespace EBS.Controllers
                             {
                                 Id = Convert.ToInt32(reader["Id"]),
                                 UsageLevelName = reader["UsageLevelName"].ToString(),
-                                UsageLevelNumber = Convert.ToInt32(reader["UsageLevelNumber"]),
+                                UsageLevelNumberStarts = Convert.ToInt32(reader["UsageLevelNumberStarts"]),
+                                UsageLevelNumberEnds = Convert.ToInt32(reader["UsageLevelNumberEnds"]),
                                 Rate = Convert.ToDecimal(reader["Rate"])
                             };
 
@@ -115,7 +116,8 @@ namespace EBS.Controllers
                             {
                                 Id = Convert.ToInt32(reader["Id"]),
                                 UsageLevelName = reader["UsageLevelName"].ToString(),
-                                UsageLevelNumber = Convert.ToInt32(reader["UsageLevelNumber"]),
+                                UsageLevelNumberStarts = Convert.ToInt32(reader["UsageLevelNumberStarts"]),
+                                UsageLevelNumberEnds = Convert.ToInt32(reader["UsageLevelNumberEnds"]),
                                 Rate = Convert.ToDecimal(reader["Rate"])
 
                             });
@@ -133,13 +135,14 @@ namespace EBS.Controllers
             using (SqlConnection connection = new SqlConnection(SecConn))
             {
                 connection.Open();
-                string Insertquery = "INSERT INTO Rates (UsageLevelName, UsageLevelNumber, Rate) VALUES"
-                                   + "(@UsageLevelName, @UsageLevelNumber, @Rate)";
+                string Insertquery = "INSERT INTO Rates (UsageLevelName, UsageLevelNumberStarts, UsageLevelNumberEnds, Rate) VALUES"
+                                   + "(@UsageLevelName, @UsageLevelNumberStarts, @UsageLevelNumberEnds, @Rate)";
 
                 using (SqlCommand command = new SqlCommand(Insertquery, connection))
                 {
                     command.Parameters.AddWithValue("@usageLevelName", model.UsageLevelName);
-                    command.Parameters.AddWithValue("@UsageLevelNumber", model.UsageLevelNumber);
+                    command.Parameters.AddWithValue("@UsageLevelNumberStarts", model.UsageLevelNumberStarts);
+                    command.Parameters.AddWithValue("@UsageLevelNumberEnds", model.UsageLevelNumberEnds);
                     command.Parameters.AddWithValue("@Rate", model.Rate);
 
                     command.ExecuteNonQuery();
@@ -153,14 +156,15 @@ namespace EBS.Controllers
             using (SqlConnection connection = new SqlConnection(SecConn))
             {
                 connection.Open();
-                string UpdateQuery = "UPDATE Rates SET UsageLevelName = @UsageLevelName, UsageLevelNumber = @UsageLevelNumber, "
-                                   + " Rate = @Rate WHERE Id = @Id";
+                string UpdateQuery = "UPDATE Rates SET UsageLevelName = @UsageLevelName, UsageLevelNumberStarts = @UsageLevelNumberStarts, "
+                                   + " UsageLevelNumberEnds = @UsageLevelNumberEnds, Rate = @Rate WHERE Id = @Id";
 
                 using (SqlCommand command = new SqlCommand(UpdateQuery, connection))
                 {
                     command.Parameters.AddWithValue("@Id", model.Id);
                     command.Parameters.AddWithValue("@UsageLevelName", model.UsageLevelName);
-                    command.Parameters.AddWithValue("@UsageLevelNumber", model.UsageLevelNumber);
+                    command.Parameters.AddWithValue("@UsageLevelNumberStarts", model.UsageLevelNumberStarts);
+                    command.Parameters.AddWithValue("@UsageLevelNumberEnds", model.UsageLevelNumberEnds);
                     command.Parameters.AddWithValue("@Rate", model.Rate);
 
                     command.ExecuteNonQuery();

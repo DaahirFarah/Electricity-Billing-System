@@ -20,7 +20,11 @@ namespace EBS.viewModels
 
         [Required(ErrorMessage = "Please Insert Usage Level Amount")]
         [Display(Name = "Usage Amount (Kw/H)")]
-        public int UsageLevelNumber { get; set; }
+        public int UsageLevelNumberStarts { get; set; }
+
+        [Required(ErrorMessage = "Please Insert Usage Level Amount")]
+        [Display(Name = "Usage Amount (Kw/H)")]
+        public int UsageLevelNumberEnds { get; set; }
 
         [Required(ErrorMessage = "Please Provide the Rate")]
         [Display(Name = "Rate")]

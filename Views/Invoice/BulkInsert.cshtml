@@ -447,7 +447,7 @@
     cur_Reading: row.find('.form-control-cur_Reading').val(),
     reading_Value: row.find('.form-control-reading_Value').val(),
     customerName: row.find('.form-control-fullName').val(),
-    rate: parseFloat(window.rate),
+    Rate: parseFloat(window.rate),
     balance: parseFloat(window.Balance),
     charge: parseFloat(window.charge),
     total_Fee: parseFloat(window.tFee),
@@ -511,7 +511,7 @@
 
                // Rate
                doc.setFontSize(12);
-               doc.text("Rate in ($):                " + model.rate, doc.internal.pageSize.getWidth() / leftMargin, 110, null, null, 'left');
+               doc.text("Rate in ($):                " + model.Rate, doc.internal.pageSize.getWidth() / leftMargin, 110, null, null, 'left');
 
                // Balance
                doc.setFontSize(12);
@@ -557,7 +557,7 @@
                doc.text("Previous Reading:    " + model.prev_Reading, doc.internal.pageSize.getWidth() / leftMargin, doc.internal.pageSize.getHeight() / 2 + 105, null, null, 'left');
                doc.text("Current Reading:      " + model.cur_Reading, doc.internal.pageSize.getWidth() / leftMargin, doc.internal.pageSize.getHeight() / 2 + 110, null, null, 'left');
                doc.text("Usage (KwH):           " + model.reading_Value, doc.internal.pageSize.getWidth() / leftMargin, doc.internal.pageSize.getHeight() / 2 + 115, null, null, 'left');
-               doc.text("Rate in ($):                " + model.rate, doc.internal.pageSize.getWidth() / leftMargin, doc.internal.pageSize.getHeight() / 2 + 120, null, null, 'left');
+               doc.text("Rate in ($):                " + model.Rate, doc.internal.pageSize.getWidth() / leftMargin, doc.internal.pageSize.getHeight() / 2 + 120, null, null, 'left');
                doc.text("Balance in ($):           " + model.balance, doc.internal.pageSize.getWidth() / leftMargin, doc.internal.pageSize.getHeight() / 2 + 125, null, null, 'left');
                doc.text("Amount Due ($):        " + model.total_Fee, doc.internal.pageSize.getWidth() / leftMargin, doc.internal.pageSize.getHeight() / 2 + 130, null, null, 'left');
 
@@ -686,7 +686,7 @@
                                 cur_Reading: row.querySelector('.form-control-cur_Reading').value,
                                 reading_Value: row.querySelector('.form-control-reading_Value').value,
                                 customerName: row.querySelector('.form-control-fullName').value,
-                                rate: parseFloat(window.rate),
+                                Rate: parseFloat(window.rate),
                                 balance: parseFloat(window.Balance),
                                 charge: parseFloat(window.charge),
                                 total_Fee: parseFloat(window.tFee),

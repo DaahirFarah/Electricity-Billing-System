@@ -246,8 +246,9 @@ namespace EBS.Controllers
             {
                 connection.Open();
                 // Retrieve the usage level and rate for each record
-                string rateQuery = "SELECT UsageLevelNumber, Rate FROM Rates";
-                List<int> usageLevel = new List<int>();
+                string rateQuery = "SELECT UsageLevelNumberStarts, UsageLevelNumberEnds, Rate FROM Rates";
+                List<int> usageLevelStarts = new List<int>();
+                List<int> usageLevelEnds = new List<int>();
                 List<decimal> rate = new List<decimal>();
 
 
@@ -258,15 +259,17 @@ namespace EBS.Controllers
                         while (reader.Read())
                         {
                             int intFromDatabase = reader.GetInt32(0);
-                            decimal decimalFromDatabase = reader.GetDecimal(1);
+                            int intFromDatabase2 = reader.GetInt32(1);
+                            decimal decimalFromDatabase = reader.GetDecimal(2);
 
-                            usageLevel.Add(intFromDatabase);
+                            usageLevelStarts.Add(intFromDatabase);
+                            usageLevelEnds.Add(intFromDatabase2);
                             rate.Add(decimalFromDatabase);
                         }
                     }
-                    for (int i = 0; i < usageLevel.Count; i++)
+                    for (int i = 0; i < usageLevelStarts.Count; i++)
                     {
-                        if (usage < usageLevel[i])
+                        if (usage >= usageLevelStarts[i] && usage <= usageLevelEnds[i])
                         {
                             Rate = rate[i];
                             break;
@@ -316,35 +319,7 @@ namespace EBS.Controllers
                     try
                     {
                         foreach (var wrapper in models)
-                        {
-                            // Retrieve the usage level and rate for each record
-                            string rateQuery = "SELECT UsageLevelNumber, Rate FROM Rates";
-                            List<int> usageLevel = new List<int>();
-                            List<decimal> rate = new List<decimal>();
-
-                            using (SqlCommand commandRate = new SqlCommand(rateQuery, connection, transaction))
-                            {
-                                using (SqlDataReader reader = commandRate.ExecuteReader())
-                                {
-                                    while (reader.Read())
-                                    {
-                                        int intFromDatabase = reader.GetInt32(0);
-                                        decimal decimalFromDatabase = reader.GetDecimal(1);
-
-                                        usageLevel.Add(intFromDatabase);
-                                        rate.Add(decimalFromDatabase);
-                                    }
-
-                                    // Set the date to 25 of the month if the date field is empty
-                                    if (wrapper.reading_Date == DateTime.MinValue)
-                                    {
-                                        DateTime currentDate = DateTime.Now;
-                                        DateTime desiredDate = new DateTime(currentDate.Year, currentDate.Month, 28);
-                                        wrapper.reading_Date = desiredDate;
-                                    }
-                                }
-                            }
-
+                        {                            
                             // Retrieve the customer's balance for each record
                             string balanceQuery = "SELECT BALANCE FROM CustomerTbl WHERE cID = @cID";
                             using (SqlCommand commandBalance = new SqlCommand(balanceQuery, connection, transaction))
@@ -357,17 +332,7 @@ namespace EBS.Controllers
                                 }
                             }
 
-                            // Calculate the rate and total fee for each record
-                            for (int i = 0; i < usageLevel.Count; i++)
-                            {
-                                if (wrapper.reading_Value < usageLevel[i])
-                                {
-                                    wrapper.Rate = rate[i];
-                                    wrapper.total_Fee = wrapper.reading_Value * wrapper.Rate;
-                                    break;
-                                }
-                            }
-
+                            
                             // Insert the record into the database
                             string query = "INSERT INTO InvoiceTbl (cID, Rate, prev_Reading, cur_Reading, reading_Value, reading_Date, total_Fee, Status) "
                                          + "VALUES (@cID, @Rate, @prev_Reading, @cur_Reading, @reading_Value, @reading_Date, @total_Fee + @balance, @Status)";

@@ -111,9 +111,23 @@
                                             <div class="col-md-4 mb-4">
 
                                                 <div class="form-outline form-group">
-                                                    @Html.LabelFor(model => model.UsageLevelNumber)
-                                                    @Html.EditorFor(model => model.UsageLevelNumber, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "ulNumber" } })
-                                                    @Html.ValidationMessageFor(model => model.UsageLevelNumber, "", new { @class = "text-danger" })
+                                                    @Html.LabelFor(model => model.UsageLevelNumberStarts)
+                                                    @Html.EditorFor(model => model.UsageLevelNumberStarts, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "ulNumber" } })
+                                                    @Html.ValidationMessageFor(model => model.UsageLevelNumberStarts, "", new { @class = "text-danger" })
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                        <div class="row">
+
+                                            <div class="col-md-4 mb-4">
+
+                                                <div class="form-outline form-group">
+                                                    @Html.LabelFor(model => model.UsageLevelNumberEnds)
+                                                    @Html.EditorFor(model => model.UsageLevelNumberEnds, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "ulNumberEnds" } })
+                                                    @Html.ValidationMessageFor(model => model.UsageLevelNumberEnds, "", new { @class = "text-danger" })
                                                 </div>
 
                                             </div>
@@ -224,9 +238,23 @@
                                             <div class="col-md-4 mb-4">
 
                                                 <div class="form-outline form-group">
-                                                    @Html.LabelFor(model => model.UsageLevelNumber)
-                                                    @Html.EditorFor(model => model.UsageLevelNumber, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "ulNumberUpdate" } })
-                                                    @Html.ValidationMessageFor(model => model.UsageLevelNumber, "", new { @class = "text-danger" })
+                                                    @Html.LabelFor(model => model.UsageLevelNumberStarts)
+                                                    @Html.EditorFor(model => model.UsageLevelNumberStarts, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "ulNumberUpdate" } })
+                                                    @Html.ValidationMessageFor(model => model.UsageLevelNumberStarts, "", new { @class = "text-danger" })
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                        <div class="row">
+
+                                            <div class="col-md-4 mb-4">
+
+                                                <div class="form-outline form-group">
+                                                    @Html.LabelFor(model => model.UsageLevelNumberEnds)
+                                                    @Html.EditorFor(model => model.UsageLevelNumberEnds, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "ulNumberEndsUpdate" } })
+                                                    @Html.ValidationMessageFor(model => model.UsageLevelNumberEnds, "", new { @class = "text-danger" })
                                                 </div>
 
                                             </div>
@@ -296,9 +324,22 @@
                                             <div class="col-md-4 mb-4">
 
                                                 <div class="form-outline form-group">
-                                                    @Html.LabelFor(model => model.UsageLevelNumber)
-                                                    @Html.EditorFor(model => model.UsageLevelNumber, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "ulNumberUpdate", @readonly = "readonly" } })
-                                                    @Html.ValidationMessageFor(model => model.UsageLevelNumber, "", new { @class = "text-danger" })
+                                                    @Html.LabelFor(model => model.UsageLevelNumberStarts)
+                                                    @Html.EditorFor(model => model.UsageLevelNumberStarts, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "ulNumberUpdate", @readonly = "readonly" } })
+                                                    @Html.ValidationMessageFor(model => model.UsageLevelNumberStarts, "", new { @class = "text-danger" })
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-4 mb-4">
+
+                                                <div class="form-outline form-group">
+                                                    @Html.LabelFor(model => model.UsageLevelNumberEnds)
+                                                    @Html.EditorFor(model => model.UsageLevelNumberEnds, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "ulNumberEndsDelete", @readonly = "readonly" } })
+                                                    @Html.ValidationMessageFor(model => model.UsageLevelNumberEnds, "", new { @class = "text-danger" })
                                                 </div>
 
                                             </div>
@@ -338,7 +379,8 @@
                 <tr>
                     <th>Rate ID</th>
                     <th>Usage Level Name</th>
-                    <th>Usage Level Amount (Kw/H)</th>
+                    <th>Usage Level Range Starts (Kw/H)</th>
+                    <th>Usage Level Range Ends (Kw/H)</th>
                     <th>Rate</th>
                     <th>Actions</th>
 
@@ -351,7 +393,8 @@
 
                         <td>@Html.DisplayFor(model => item.Id)</td>
                         <td>@Html.DisplayFor(model => item.UsageLevelName)</td>
-                        <td>@Html.DisplayFor(model => item.UsageLevelNumber)</td>
+                        <td>@Html.DisplayFor(model => item.UsageLevelNumberStarts)</td>
+                        <td>@Html.DisplayFor(model => item.UsageLevelNumberEnds)</td>
                         <td>@Html.DisplayFor(model => item.Rate)</td>
                         <td>
 
@@ -395,7 +438,8 @@
                                 // Populate the form fields with the retrieved data
                                 $("#updateID").val(RateID);
                                 $("#ulNameUpdate").val(data.UsageLevelName);
-                                $("#ulNumberUpdate").val(data.UsageLevelNumber);
+                                $("#ulNumberUpdate").val(data.UsageLevelNumberStarts);
+                                $("#ulNumberEndsUpdate").val(data.UsageLevelNumberEnds);
                                 $("#rateUpdate").val(data.Rate);
 
 
@@ -452,7 +496,8 @@
                                 // Populate the form fields with the retrieved data
                                 $("#DeleteID").val(RateID);
                                 $("#ulNameDelete").val(data.UsageLevelName);
-                                $("#ulNumberDelete").val(data.UsageLevelNumber);
+                                $("#ulNumberDelete").val(data.UsageLevelNumberStarts);
+                                $("#ulNumberEndsDelete").val(data.UsageLevelNumberEnds);
                                 $("#rateDelete").val(data.Rate);
 
 
