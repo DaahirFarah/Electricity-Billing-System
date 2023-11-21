@@ -74,6 +74,9 @@ namespace EBS.viewModels
         [Display(Name = "Balance")]
         public decimal Balance { get; set; }
 
+        public DateTime RegisteredOn { get; set; }
+
+        public int isBilledThisMonth { get; set; }
 
     }
 }

@@ -509,6 +509,7 @@
                     <th>Lock Number</th>
                     <th>Branch</th>
                     <th>Balance</th>
+                    <th>Registered On</th>
                     <th>Actions</th>
 
                 </tr>
@@ -528,6 +529,7 @@
                         <td>@Html.DisplayFor(modelItem => item.lockNumber)</td>
                         <td>@Html.DisplayFor(modelItem => item.Branch)</td>
                         <td>@Html.DisplayFor(modelItem => item.Balance)</td>
+                        <td>@(item.RegisteredOn.Date.ToString("d"))</td>
                         <td>
                             <a href="#" data-toggle="modal" data-target="#updateCustomerModal" id="@item.cID">
                                 <i class="fa-solid fa-square-pen fa-1x" style="color: #1ABC9C;"></i>

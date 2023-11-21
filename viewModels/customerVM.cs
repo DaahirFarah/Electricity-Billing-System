@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace EBS.viewModels
@@ -68,5 +69,8 @@ namespace EBS.viewModels
         [Display(Name = "Balance")]
         public decimal Balance { get; set; }
 
+        public DateTime RegisteredOn { get; set; }
+
+        public int isBilledThisMonth { get; set; }
     }
 }

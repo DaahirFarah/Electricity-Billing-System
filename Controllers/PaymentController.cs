@@ -17,7 +17,7 @@ using Newtonsoft.Json;
 
 namespace EBS.Controllers
 {
-    //[Authorize]
+    [Authorize]
     public class PaymentController : Controller
     {
         // ConnectionString Instance

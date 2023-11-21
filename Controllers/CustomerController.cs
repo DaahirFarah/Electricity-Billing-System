@@ -386,6 +386,7 @@ namespace EBS.Controllers
                                 Balance = Convert.ToDecimal(reader["Balance"]),
                                 lockNumber = Convert.ToInt32(reader["lockNumber"]),
                                 Type = reader["Type"].ToString(),
+                                RegisteredOn = Convert.ToDateTime(reader["RegisteredOn"]),
 
                             });
                         }
@@ -404,11 +405,16 @@ namespace EBS.Controllers
             using (SqlConnection connection = new SqlConnection(SecConn))
             {
                 connection.Open();
-                
+
+                DateTime registerDate = DateTime.Now;
+                int isbilled = 0;
+
+                model.RegisteredOn = registerDate;
+                model.isBilledThisMonth = isbilled;
 
                 // This variable captures the selected meterID for the customer and then it will be the one to have the value that will go to the db
 
-                string query = "INSERT INTO CustomerTbl (cFirstName, cMidName, cLastName, cAddress, cNumber, cNumberOp, Branch, Type, lockNumber, Balance) VALUES (@cFirstName, @cMidName, @cLastName, @cAddress, @cNumber, @cNumberOp, @Branch, @Type, @lockNumber, 0)";
+                string query = "INSERT INTO CustomerTbl (cFirstName, cMidName, cLastName, cAddress, cNumber, cNumberOp, Branch, Type, lockNumber, Balance, RegisteredOn, isBilledThisMonth) VALUES (@cFirstName, @cMidName, @cLastName, @cAddress, @cNumber, @cNumberOp, @Branch, @Type, @lockNumber, 0, @RegisteredOn, @isBilledThisMonth)";
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@cFirstName", model.cFirstName);
@@ -427,6 +433,8 @@ namespace EBS.Controllers
                     command.Parameters.AddWithValue("@Branch", model.Branch);
                     command.Parameters.AddWithValue("@Type", model.Type);
                     command.Parameters.AddWithValue("@lockNumber", model.lockNumber);
+                    command.Parameters.AddWithValue("@RegisteredOn", model.RegisteredOn);
+                    command.Parameters.AddWithValue("isBilledThisMonth", model.isBilledThisMonth);
 
                     command.ExecuteNonQuery();
 
