@@ -69,6 +69,12 @@ namespace EBS.viewModels
         [Display(Name = "Balance")]
         public decimal Balance { get; set; }
 
+        [Display(Name = "Is Organization")]
+        public string isOrg { get; set; }
+
+        [Display(Name = "Org Name")]
+        public string Name { get; set; }
+
         public DateTime RegisteredOn { get; set; }
 
         public int isBilledThisMonth { get; set; }

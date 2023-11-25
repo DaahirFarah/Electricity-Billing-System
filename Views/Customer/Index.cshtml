@@ -200,6 +200,28 @@
 
                                         <div class="row">
                                             <div class="col-md-6 mb-4 pb-2">
+
+                                                <div class="form-outline form-group">
+                                                    @Html.LabelFor(model => model.isOrg)
+                                                    @Html.DropDownListFor(model => model.isOrg, new SelectList(new[] { "No", "Yes" }), new { @class = "form-control form-control-lg", @id = "isOrg" })
+                                                    @Html.ValidationMessageFor(model => model.isOrg, "", new { @class = "text-danger" })
+                                                </div>
+
+
+                                            </div>
+                                            <div class="col-md-6 mb-4 pb-2">
+
+                                                <div class="form-outline form-group">
+                                                    @Html.LabelFor(model => model.Name)
+                                                    @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "Name" } })
+                                                    @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-6 mb-4 pb-2">
                                                 <input type="submit" value="Create" class="btn btn-success btn-lg btn-block" />
                                             </div>
                                         </div>
@@ -336,14 +358,36 @@
                                             </div>
 
                                         </div>
-                                                                               
-                                            <div class="row">
-                                                <div class="col-md-6 mb-4 pb-2">
-                                                    <input type="submit" value="Update" class="btn btn-primary btn-lg btn-block" />
-                                                </div>
-                                            </div>
 
+                                        <div class="row">
+                                            <div class="col-md-6 mb-4 pb-2">
+
+                                                <div class="form-outline form-group">
+                                                    @Html.LabelFor(model => model.isOrg)
+                                                    @Html.DropDownListFor(model => model.isOrg, new SelectList(new[] { "No", "Yes" }), new { @class = "form-control form-control-lg", @id = "isOrgUpdate" })
+                                                    @Html.ValidationMessageFor(model => model.isOrg, "", new { @class = "text-danger" })
+                                                </div>
+
+
+                                            </div>
+                                            <div class="col-md-6 mb-4 pb-2">
+
+                                                <div class="form-outline form-group">
+                                                    @Html.LabelFor(model => model.Name)
+                                                    @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "NameUpdate" } })
+                                                    @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                                                </div>
+
+                                            </div>
                                         </div>
+
+                                        <div class="row">
+                                            <div class="col-md-6 mb-4 pb-2">
+                                                <input type="submit" value="Update" class="btn btn-primary btn-lg btn-block" />
+                                            </div>
+                                        </div>
+
+                                    </div>
                                     </div>
                             }
                         </div>
@@ -478,12 +522,34 @@
                                         </div>
 
                                         <div class="row">
-                                                <div class="col-md-6 mb-4 pb-2">
-                                                    <button type="submit" class="btn btn-danger btn-lg btn-block">Delete</button>
+                                            <div class="col-md-6 mb-4 pb-2">
+
+                                                <div class="form-outline form-group">
+                                                    @Html.LabelFor(model => model.isOrg)
+                                                    @Html.EditorFor(model => model.isOrg, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "isOrgDelete", @readonly = "readonly" } })
+                                                    @Html.ValidationMessageFor(model => model.isOrg, "", new { @class = "text-danger" })
                                                 </div>
+
+
+                                            </div>
+                                            <div class="col-md-6 mb-4 pb-2">
+
+                                                <div class="form-outline form-group">
+                                                    @Html.LabelFor(model => model.Name)
+                                                    @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control form-control-lg", @id = "NameDelete", @readonly = "readonly" } })
+                                                    @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                                                </div>
+
+                                            </div>
                                         </div>
 
+                                        <div class="row">
+                                            <div class="col-md-6 mb-4 pb-2">
+                                                <button type="submit" class="btn btn-danger btn-lg btn-block">Delete</button>
+                                            </div>
                                         </div>
+
+                                    </div>
                                     </div>
                             }
                         </div>
@@ -509,6 +575,8 @@
                     <th>Lock Number</th>
                     <th>Branch</th>
                     <th>Balance</th>
+                    <th>Is Org</th>
+                    <th>Name</th>
                     <th>Registered On</th>
                     <th>Actions</th>
 
@@ -529,6 +597,8 @@
                         <td>@Html.DisplayFor(modelItem => item.lockNumber)</td>
                         <td>@Html.DisplayFor(modelItem => item.Branch)</td>
                         <td>@Html.DisplayFor(modelItem => item.Balance)</td>
+                        <td>@Html.DisplayFor(modelItem => item.isOrg)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Name)</td>
                         <td>@(item.RegisteredOn.Date.ToString("d"))</td>
                         <td>
                             <a href="#" data-toggle="modal" data-target="#updateCustomerModal" id="@item.cID">
@@ -726,7 +796,8 @@
                                 $("#numberUpdate").val(data.cNumber);
                                 $("#number2Update").val(data.cNumberOp);
                                 $("#lockNumberUpdate").val(data.lockNumber);
-                                $("#type").val(data.Type);
+                                $("#type").val(data.Type);                                
+                                $("#NameUpdate").val(data.Name);
                             },
                             error: function () {
                                 alert("Error fetching invoice data.");
@@ -788,6 +859,8 @@
                                 $("#number2Delete").val(data.cNumberOp);
                                 $("#lockNumberDelete").val(data.lockNumber);
                                 $("#typeDelete").val(data.Type);
+                                $("#isOrgDelete").val(data.isOrg);
+                                $("#NameDelete").val(data.Name);
 
                             },
                             error: function () {

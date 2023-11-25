@@ -18,9 +18,6 @@ namespace EBS.Controllers
 
         private readonly string SecConn = ConfigurationManager.ConnectionStrings["SecConn"].ConnectionString;
 
-
-
-        [Authorize]
         // GET: Customer
         public ActionResult Index()
         {
@@ -152,7 +149,9 @@ namespace EBS.Controllers
                                 Branch = reader["Branch"].ToString(),
                                 Balance = Convert.ToDecimal(reader["Balance"]),
                                 lockNumber = Convert.ToInt32(reader["lockNumber"]),
-                                Type = reader["Type"].ToString()
+                                Type = reader["Type"].ToString(),
+                                Name = reader["Name"].ToString(),
+                                isOrg = reader["isOrg"].ToString(),
                             };
 
                             // Return the Invoice Data as JSON
@@ -386,6 +385,8 @@ namespace EBS.Controllers
                                 Balance = Convert.ToDecimal(reader["Balance"]),
                                 lockNumber = Convert.ToInt32(reader["lockNumber"]),
                                 Type = reader["Type"].ToString(),
+                                isOrg = reader["isOrg"].ToString(),
+                                Name = reader["Name"] != DBNull.Value ? reader["Name"].ToString() : "N/A",
                                 RegisteredOn = Convert.ToDateTime(reader["RegisteredOn"]),
 
                             });
@@ -414,7 +415,7 @@ namespace EBS.Controllers
 
                 // This variable captures the selected meterID for the customer and then it will be the one to have the value that will go to the db
 
-                string query = "INSERT INTO CustomerTbl (cFirstName, cMidName, cLastName, cAddress, cNumber, cNumberOp, Branch, Type, lockNumber, Balance, RegisteredOn, isBilledThisMonth) VALUES (@cFirstName, @cMidName, @cLastName, @cAddress, @cNumber, @cNumberOp, @Branch, @Type, @lockNumber, 0, @RegisteredOn, @isBilledThisMonth)";
+                string query = "INSERT INTO CustomerTbl (cFirstName, cMidName, cLastName, cAddress, cNumber, cNumberOp, Branch, Type, lockNumber, Balance, RegisteredOn, isBilledThisMonth, isOrg, Name) VALUES (@cFirstName, @cMidName, @cLastName, @cAddress, @cNumber, @cNumberOp, @Branch, @Type, @lockNumber, 0, @RegisteredOn, @isBilledThisMonth, @isOrg, @Name)";
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@cFirstName", model.cFirstName);
@@ -434,6 +435,8 @@ namespace EBS.Controllers
                     command.Parameters.AddWithValue("@Type", model.Type);
                     command.Parameters.AddWithValue("@lockNumber", model.lockNumber);
                     command.Parameters.AddWithValue("@RegisteredOn", model.RegisteredOn);
+                    command.Parameters.AddWithValue("@isOrg", model.isOrg);
+                    command.Parameters.AddWithValue("@Name", model.Name);
                     command.Parameters.AddWithValue("isBilledThisMonth", model.isBilledThisMonth);
 
                     command.ExecuteNonQuery();
@@ -500,7 +503,9 @@ namespace EBS.Controllers
                                 cNumber = Convert.ToInt32(reader["cNumber"]),
                                 cNumberOp = reader["cNumberOp"].ToString(),
                                 Branch = reader["Branch"].ToString(),
-                                Balance = Convert.ToDecimal(reader["Balance"])
+                                Balance = Convert.ToDecimal(reader["Balance"]),
+                                isOrg = reader["isOrg"].ToString(),
+                                Name = reader["Name"].ToString(),
 
                             };
                         }
@@ -519,7 +524,7 @@ namespace EBS.Controllers
             {
                 connection.Open();
 
-                string query = "UPDATE CustomerTbl SET cFirstName = @cFirstName, cMidName = @cMidName, cLastName = @cLastName, cAddress = @cAddress, cNumber = @cNumber, cNumberOp = @cNumberOp, Branch = @Branch, Type = @Type, lockNumber = @lockNumber WHERE cID = @cID";
+                string query = "UPDATE CustomerTbl SET cFirstName = @cFirstName, cMidName = @cMidName, cLastName = @cLastName, cAddress = @cAddress, cNumber = @cNumber, cNumberOp = @cNumberOp, Branch = @Branch, Type = @Type, isOrg = @isOrg, Name = @Name, lockNumber = @lockNumber WHERE cID = @cID";
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@cID", model.cID);
@@ -535,6 +540,15 @@ namespace EBS.Controllers
                     else
                     {
                         command.Parameters.AddWithValue("@cNumberOp", model.cNumberOp);
+                    }
+                    command.Parameters.AddWithValue("@isOrg", model.isOrg);
+                    if (string.IsNullOrWhiteSpace(model.Name))
+                    {
+                        command.Parameters.AddWithValue("@Name", DBNull.Value);
+                    }
+                    else
+                    {
+                        command.Parameters.AddWithValue("@Name", model.Name);
                     }
                     command.Parameters.AddWithValue("@Branch", model.Branch);
                     command.Parameters.AddWithValue("@Type", model.Type);
