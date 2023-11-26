@@ -27,5 +27,15 @@ namespace EBS.viewModels
         [Required(ErrorMessage = "Please Provide the Rate")]
         [Display(Name = "Rate")]
         public decimal Rate { get; set; }
+
+
+        [Display(Name = "Rate ID")]
+        public int RateID { get; set; }
+
+        [Display(Name = "Fixed Fee ($)")]
+        public int SpecialFixedFee { get; set; }
+
+        [Display(Name = "Special Rate ($)")]
+        public decimal SpecialRate { get; set; }
     }
 }

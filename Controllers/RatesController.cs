@@ -91,7 +91,7 @@ namespace EBS.Controllers
         }
 
         [HttpPost]
-        public JsonResult Delete (int id)
+        public JsonResult Delete(int id)
         {
             DeleteTarrif(id);
             return Json(new { success = true, message = "Rate Deleted Successfully!" });
@@ -128,7 +128,7 @@ namespace EBS.Controllers
 
             return rates;
         }
-               
+
         // Insert Tarrif
         private void InsertTarrif(rateWrapper model)
         {
@@ -175,17 +175,156 @@ namespace EBS.Controllers
         // Delete Tarrif
         private void DeleteTarrif(int Id)
         {
-            using(SqlConnection connection = new SqlConnection(SecConn))
+            using (SqlConnection connection = new SqlConnection(SecConn))
             {
                 connection.Open();
                 string DeleteQuery = "DELETE FROM Rates WHERE Id = @Id";
 
-                using(SqlCommand command = new SqlCommand(DeleteQuery, connection))
+                using (SqlCommand command = new SqlCommand(DeleteQuery, connection))
                 {
                     command.Parameters.AddWithValue("Id", Id);
                     command.ExecuteNonQuery();
                 }
             }
         }
+
+
+        // SPECIAL RATES SECTION STARTS HERE !!! ///
+
+        // Special Rates
+        // Rates/SpecialRatesIndex
+        public ActionResult SpecialRatesIndex()
+        {
+            rateWrapper wrapper = new rateWrapper();
+            wrapper.rateList = GetSpecialRates();
+            return View(wrapper);
+        }
+
+        // Update Special Rates
+        [HttpPost]
+        public JsonResult UpdateSpecialRates(rateWrapper model)
+        {
+            if (ModelState.IsValid)
+            {
+                UpdateSpecialTarrif(model);
+                return Json(new { success = true, message = "Rate Update Successfully!" });
+            }
+            return Json(new { success = false, message = "Rate Update Failed. Please Try Again!" });
+        }
+
+        // GET: SpecialRates
+        private List<RateVM> GetSpecialRates()
+        {
+            List<RateVM> rates = new List<RateVM>();
+
+            using (SqlConnection Connection = new SqlConnection(SecConn))
+            {
+                Connection.Open();
+                string query = "SELECT * FROM SpecialRates";
+                using (SqlCommand command = new SqlCommand(query, Connection))
+                {
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            rates.Add(new RateVM
+                            {
+                                RateID = Convert.ToInt32(reader["RateID"]),
+                                SpecialFixedFee = Convert.ToInt32(reader["SpecialFixedFee"]),
+                                SpecialRate = Convert.ToDecimal(reader["SpecialRate"]),
+                                //Rate = Convert.ToDecimal(reader["Rate"])
+
+                            });
+                        }
+                    }
+                }
+            }
+
+            return rates;
+        }
+
+        [HttpPost]
+        // Update Tarrif Info
+        private void UpdateSpecialTarrif(rateWrapper model)
+        {
+            using (SqlConnection connection = new SqlConnection(SecConn))
+            {
+                connection.Open();
+                string UpdateQuery = "UPDATE SpecialRates SET SpecialFixedFee = @SpecialFixedFee, SpecialRate = @SpecialRate "
+                                   + " WHERE RateID = @RateID";
+
+                using (SqlCommand command = new SqlCommand(UpdateQuery, connection))
+                {
+                    command.Parameters.AddWithValue("@RateID", model.RateID);
+                    command.Parameters.AddWithValue("@SpecialFixedFee", model.SpecialFixedFee);
+                    command.Parameters.AddWithValue("@SpecialRate", model.SpecialRate);
+                    
+
+                    command.ExecuteNonQuery();
+                };
+            }
+        }
+
+        // GET Rate
+        [HttpPost]
+        public JsonResult GetSpecialRate(int id)
+        {
+            using (SqlConnection connection = new SqlConnection(SecConn))
+            {
+
+                connection.Open();
+                string query = "SELECT * FROM SpecialRates WHERE RateID = @Id";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@Id", id);
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            // Populate the invoice object
+                            rateWrapper rate = new rateWrapper
+                            {
+                                RateID = Convert.ToInt32(reader["RateID"]),
+                                SpecialFixedFee = Convert.ToInt32(reader["SpecialFixedFee"]),
+                                SpecialRate = Convert.ToDecimal(reader["SpecialRate"]),
+                            };
+
+                            // Return the Invoice Data as JSON
+                            return Json(rate, JsonRequestBehavior.AllowGet);
+                        }
+                    }
+                }
+            }
+
+            // If no data found, return an empty JSON object
+            return Json(new rateWrapper(), JsonRequestBehavior.AllowGet);
+        }
+
+
+
+        [HttpPost]
+        public JsonResult DeleteSpecialRate(int id)
+        {
+            DeleteSpecialTarrif(id);
+            return Json(new { success = true, message = "Rate Deleted Successfully!" });
+        }
+
+        //// Delete Tarrif
+        private void DeleteSpecialTarrif(int Id)
+        {
+            using (SqlConnection connection = new SqlConnection(SecConn))
+            {
+                connection.Open();
+                string DeleteQuery = "DELETE FROM SpecialRates WHERE RateID = @Id";
+
+                using (SqlCommand command = new SqlCommand(DeleteQuery, connection))
+                {
+                    command.Parameters.AddWithValue("Id", Id);
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
     }
 }
