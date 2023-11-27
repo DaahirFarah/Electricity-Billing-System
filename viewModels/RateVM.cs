@@ -37,5 +37,7 @@ namespace EBS.viewModels
 
         [Display(Name = "Special Rate ($)")]
         public decimal SpecialRate { get; set; }
+
+        public int UseFixedFee { get; set; }
     }
 }

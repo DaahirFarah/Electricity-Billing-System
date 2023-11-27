@@ -1,10 +1,108 @@
 ﻿
+@model EBS.viewModels.rateWrapper
+
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Settings | SEC";
     Layout = "~/Views/Shared/_Layout2.cshtml";
 }
 
-<div class="form-check">
-    <input type="checkbox" id="useFixedFee" name="useFixedFee" />
-    <label for="useFixedFee">Use Fixed Fee</label>
-</div>
+<html>
+<head>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Bootstrap -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css" rel="stylesheet" />
+    <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap4.min.css" rel="stylesheet" />
+
+    <title>Settings | SEC</title>
+    <style>
+        .content {
+            display: flex;
+            justify-content: center;
+            padding: 20px; /* Add padding around the table */
+        }
+
+        .table-container {
+            max-width: 700px; /* Set a maximum width for the table container */
+            width: 10%;
+            padding-top: 20px;
+        }
+
+        .table thead th {
+            white-space: nowrap; /* Prevent text wrapping */
+        }
+
+        .container {
+            margin-left: 100px;
+            padding-top: 30px;
+            padding-left: 35px;
+            padding-bottom: 20px;
+        }
+
+        .form-switch {
+            font-size: 30px;
+        }
+
+        .form-check-input {
+            padding: 10px;
+        }
+
+        .form-check-label {
+            padding: 10px 16px;
+        }
+    </style>
+
+</head>
+<body>
+
+    <!--Breadcrump Code-->
+    <ol class="breadcrumb" style="margin-left:130px;">
+        <li class="breadcrumb-item">SEC</li>
+        <li class="breadcrumb-item"><a href="#">Settings</a></li>
+    </ol>
+
+    <br />
+
+    <div id="container">
+        <h4 style="margin-left: 135px;">Prices</h4>
+
+        <div class="form-check form-switch" style="margin-left: 150px;">
+
+            <h5 style="margin-left:-33px;">Toggle for fixed pricing</h5>
+
+            @if (ViewBag.ToggleState == 1)
+            {
+                <input type="checkbox" class="form-check-input" id="statusSwitch" checked style="margin-left:-33px;">
+            }
+            else
+            {
+                <input type="checkbox" class="form-check-input" id="statusSwitch" style="margin-left:-33px;">
+            }
+
+            <label class="form-check-label" for="statusSwitch"></label>
+
+        </div>
+
+    </div>
+
+</body>
+</html>
+
+<script>
+    $("#statusSwitch").change(function() {
+      var status = this.checked ? 1 : 0;
+      $.post("@Url.Action("priceChanger")", { status: status }, function(data) {
+
+      if(data.success) {
+      alert(data.message);
+      //location.reload();
+    }
+
+  });
+    });
+</script>
