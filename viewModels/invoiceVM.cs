@@ -76,5 +76,16 @@ namespace EBS.viewModels
 
         public string Status { get; set; }
 
+        [Display(Name = "Rate ID")]
+        public int RateID { get; set; }
+
+        [Display(Name = "Fixed Fee ($)")]
+        public decimal SpecialFixedFee { get; set; }
+
+        [Display(Name = "Special Rate ($)")]
+        public decimal SpecialRate { get; set; }
+
+        public int UseFixedFee { get; set; }
+
     }
 }

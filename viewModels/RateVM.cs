@@ -33,7 +33,7 @@ namespace EBS.viewModels
         public int RateID { get; set; }
 
         [Display(Name = "Fixed Fee ($)")]
-        public int SpecialFixedFee { get; set; }
+        public decimal SpecialFixedFee { get; set; }
 
         [Display(Name = "Special Rate ($)")]
         public decimal SpecialRate { get; set; }

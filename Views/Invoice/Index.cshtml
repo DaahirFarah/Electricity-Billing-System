@@ -71,16 +71,22 @@
 
     <div class="mt-4 pt-2" style="padding-left: 40px; margin-left: 100px;">
         <form action="@Url.Action("BulkInsert", "Invoice")" method="get">
-            <input class="btn btn-secondary btn-lg btn-block" type="submit" value="Multi-Customer Billing" />
+            <input class="btn btn-primary btn-lg btn-block" type="submit" value="Customer Billing" />
+        </form>
+    </div>
+
+    <div class="mt-4 pt-2" style="padding-left: 40px; margin-left: 100px;">
+        <form action="@Url.Action("BulkInsertSpecial", "Invoice")" method="get">
+            <input class="btn btn-secondary btn-lg btn-block" type="submit" value="Special Case Billing" />
         </form>
     </div>
 
     <!--Modal Activation Button-->
-    <div class="mt-4 pt-2" style="padding-left: 40px; margin-left: 100px;">
+    @*<div class="mt-4 pt-2" style="padding-left: 40px; margin-left: 100px;">
 
         <input data-toggle="modal" data-target="#createInvoiceModal" class="btn btn-primary btn-lg btn-block" type="submit" value="Customer-Specific Billing" />
 
-    </div>
+    </div>*@
     <!--Create Invoice Modal-->
     <div class="modal fade" id="createInvoiceModal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="createInvoiceModalLabel" aria-hidden="true" style="color:black">
         <div class="modal-dialog modal-lg">
@@ -618,8 +624,6 @@
     </script>
 
     <!--Fields Data Checker Script-->
-  
-
     <!--Update Invoice Script-->
     <script>
     $(document).ready(function () {
@@ -630,7 +634,7 @@
 
             $.ajax({
                 type: "POST",
-                url: "@Url.Action("UpdateInvoice", "Invoice")", 
+                url: "@Url.Action("UpdateInvoice", "Invoice")",
                 data: formData,
                 success: function (response) {
                     if (response.success) {

@@ -2,17 +2,20 @@
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 using Newtonsoft.Json;
+using Org.BouncyCastle.Asn1.X509;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
+using System.Security.Cryptography;
 using System.Web.Mvc;
 
 namespace EBS.Controllers
 {
-    [Authorize]
+    //[Authorize]
     public class InvoiceController : Controller
     {
         // This variable holds the balance so that it can be accessed in all methods
@@ -138,7 +141,26 @@ namespace EBS.Controllers
             {
                 connection.Open();
                 // String that holds the query to get the customers that are not billed yet and their latest meter reading based on the selected branch
-                string query = ";WITH CTE AS (\r\n    SELECT \r\n        C.cID,\r\n        C.cFirstName, \r\n        C.cMidName, \r\n        C.cLastName, \r\n        C.Balance,\r\n        COALESCE(I.cur_Reading, 0) AS cur_Reading,\r\n        ROW_NUMBER() OVER (PARTITION BY C.cID ORDER BY I.invoiceID DESC) AS rn\r\n    FROM CustomerTbl C\r\n    LEFT JOIN InvoiceTbl I ON C.cID = I.cID\r\n    WHERE C.isBilledThisMonth = 0\r\n    AND C.Branch = @branch\r\n)\r\nSELECT cID, cFirstName, cMidName, cLastName, cur_Reading, Balance\r\nFROM CTE\r\nWHERE rn = 1";
+                string query = @"
+                WITH CTE AS (
+                    SELECT
+                        C.cID,
+                        C.cFirstName,
+                        C.cMidName,
+                        C.cLastName,
+                        C.Balance,
+                        C.isOrg,
+                        COALESCE(I.cur_Reading, 0) AS cur_Reading,
+                        ROW_NUMBER() OVER (PARTITION BY C.cID ORDER BY I.invoiceID DESC) AS rn
+                    FROM CustomerTbl C
+                    LEFT JOIN InvoiceTbl I ON C.cID = I.cID
+                    WHERE C.isBilledThisMonth = 0
+                        AND C.Branch = @branch
+                        AND C.isOrg = 'No'
+                )
+                SELECT cID, cFirstName, cMidName, cLastName, cur_Reading, Balance
+                FROM CTE
+                WHERE rn = 1;";
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
@@ -920,6 +942,205 @@ namespace EBS.Controllers
             return Json(new { balance = balance }, JsonRequestBehavior.AllowGet);
         }
 
+        // Special Cases Billing code starts here
+        public JsonResult GetSpecialCustomerBillInfo(string branch)
+        {
+            List<invoiceVM> invoice = new List<invoiceVM>();
+            using (SqlConnection connection = new SqlConnection(SecConn))
+            {
+                connection.Open();
+                // String that holds the query to get the customers that are not billed yet and their latest meter reading based on the selected branch
+                string query = @"
+                WITH CTE AS (
+                    SELECT
+                        C.cID,
+                        C.cFirstName,
+                        C.cMidName,
+                        C.cLastName,
+                        C.Balance,
+                        C.isOrg,
+                        COALESCE(I.cur_Reading, 0) AS cur_Reading,
+                        ROW_NUMBER() OVER (PARTITION BY C.cID ORDER BY I.invoiceID DESC) AS rn
+                    FROM CustomerTbl C
+                    LEFT JOIN InvoiceTbl I ON C.cID = I.cID
+                    WHERE C.isBilledThisMonth = 0
+                        AND C.Branch = @branch
+                        AND C.isOrg = 'Yes'
+                )
+                SELECT cID, cFirstName, cMidName, cLastName, cur_Reading, Balance
+                FROM CTE
+                WHERE rn = 1;";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@branch", branch);
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            invoice.Add(new invoiceVM
+                            {
+                                cID = Convert.ToInt32(reader["cID"]),
+                                balance = Convert.ToDecimal(reader["Balance"]),
+                                prev_Reading = Convert.ToDecimal(reader["cur_Reading"]),
+                                cFirstName = reader["cFirstName"].ToString(),
+                                cMidName = reader["cMidName"].ToString(),
+                                cLastName = reader["cLastName"].ToString(),
+
+                            });
+                        }
+                    }
+                }
+            }
+
+            return Json(invoice, JsonRequestBehavior.AllowGet);
+        }
+
+
+        // GET: /Invoices/BulkInsert
+        [HttpGet]
+        public ActionResult BulkInsertSpecial()
+        {
+            // Create invoiceVM
+            invoiceVM model = new invoiceVM();
+
+            // Populate model properties  
+            model.SelectedBranch = GetBranches();
+
+            // Create list with single item
+            var modelList = new List<invoiceVM>();
+            modelList.Add(model);
+
+            //byte[] pdfBytes = TempData["PdfBytes"] as byte[];
+
+            //// Add pdfBytes to ViewData
+            //ViewData["PdfBytes"] = pdfBytes;
+
+
+            return View(modelList);
+        }
+
+        // POST: /Invoices/BulkInsert
+        [HttpPost]
+        //[ValidateAntiForgeryToken]
+        public ActionResult BulkInsertSpecial(List<invoiceVM> models)
+        {
+            using (SqlConnection connection = new SqlConnection(SecConn))
+            {
+                connection.Open();
+
+                // Start a SQL transaction
+                using (SqlTransaction transaction = connection.BeginTransaction())
+                {
+                    try
+                    {
+                        foreach (var wrapper in models)
+                        {
+                            // Retrieve the customer's balance for each record
+                            string balanceQuery = "SELECT BALANCE FROM CustomerTbl WHERE cID = @cID";
+                            using (SqlCommand commandBalance = new SqlCommand(balanceQuery, connection, transaction))
+                            {
+                                commandBalance.Parameters.AddWithValue("@cID", wrapper.cID);
+                                object balanceResult = commandBalance.ExecuteScalar();
+                                if (balanceResult != null && balanceResult != DBNull.Value)
+                                {
+                                    wrapper.balance = Convert.ToDecimal(balanceResult);
+                                }
+                            }
+
+
+                            // Insert the record into the database
+                            string query = "INSERT INTO InvoiceTbl (cID, Rate, prev_Reading, cur_Reading, reading_Value, reading_Date, total_Fee, Status) "
+                                         + "VALUES (@cID, @Rate, @prev_Reading, @cur_Reading, @reading_Value, @reading_Date, @total_Fee + @balance, @Status)";
+
+                            using (SqlCommand command = new SqlCommand(query, connection, transaction))
+                            {
+                                string Status = "Unpaid";
+                                wrapper.Status = Status;
+
+                                command.Parameters.AddWithValue("@cID", wrapper.cID);
+                                command.Parameters.AddWithValue("@Rate", wrapper.Rate);
+                                command.Parameters.AddWithValue("@prev_Reading", wrapper.prev_Reading);
+                                command.Parameters.AddWithValue("@cur_Reading", wrapper.cur_Reading);
+                                command.Parameters.AddWithValue("@reading_Value", wrapper.reading_Value);
+                                command.Parameters.AddWithValue("@reading_Date", SqlDbType.DateTime2).Value = wrapper.reading_Date;
+                                command.Parameters.AddWithValue("@total_Fee", wrapper.total_Fee);
+                                command.Parameters.AddWithValue("@balance", wrapper.balance);
+                                command.Parameters.AddWithValue("@Status", wrapper.Status);
+
+                                command.ExecuteNonQuery();
+                            }
+                        }
+
+                        // Commit the transaction if everything is successful
+                        transaction.Commit();
+                    }
+                    catch (Exception ex)
+                    {
+                        // Roll back the transaction if an error occurs
+                        transaction.Rollback();
+                        ModelState.AddModelError("", "An Error Occurred While Inserting Records, Please Try Again!" + ex.Message);
+                    }
+                }
+
+                // Update the customer's balance after the transaction is committed
+                foreach (var wrapper in models)
+                {
+                    string updateBalanceQuery = "UPDATE CustomerTbl SET Balance = 0 WHERE cID = @cID";
+                    using (SqlCommand updateBalanceCommand = new SqlCommand(updateBalanceQuery, connection))
+                    {
+                        updateBalanceCommand.Parameters.AddWithValue("@cID", wrapper.cID);
+                        updateBalanceCommand.ExecuteNonQuery();
+                    }
+                }
+
+                foreach (var wrapper in models)
+                {
+                    string billMarkquery = "UPDATE CustomerTbl SET isBilledThisMonth = 1 WHERE cID = @cID";
+                    using (SqlCommand updateBalanceCommand = new SqlCommand(billMarkquery, connection))
+                    {
+                        updateBalanceCommand.Parameters.AddWithValue("@cID", wrapper.cID);
+                        updateBalanceCommand.ExecuteNonQuery();
+                    }
+                }
+
+                return RedirectToAction("Index");
+            }
+
+        }
+
+        // GET special rates for 
+        public JsonResult GetSpecialRate()
+        {
+            List<invoiceVM> invoice = new List<invoiceVM>();
+            using (SqlConnection connection = new SqlConnection(SecConn))
+            {
+                connection.Open();
+                // String that holds the query to get the customers that are not billed yet and their latest meter reading based on the selected branch
+                string query = "SELECT * FROM SpecialRates";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            invoice.Add(new invoiceVM
+                            {
+                                RateID = Convert.ToInt32(reader["RateID"]),
+                                SpecialFixedFee = Convert.ToDecimal(reader["SpecialFixedFee"]),
+                                SpecialRate = Convert.ToDecimal(reader["SpecialRate"]),
+                                UseFixedFee = Convert.ToInt32(reader["UseFixedFee"]),
+
+                            });
+                        }
+                    }
+                }
+            }
+
+            return Json(invoice, JsonRequestBehavior.AllowGet);
+        }
 
 
     }

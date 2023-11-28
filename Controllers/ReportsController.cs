@@ -15,7 +15,7 @@ namespace EBS.Controllers
         // GET: Reports
         public ActionResult Index()
         {
-            bool toggleState;
+            int toggleState;
 
             using (SqlConnection conn = new SqlConnection(SecConn))
             {
@@ -25,12 +25,12 @@ namespace EBS.Controllers
 
                 using (SqlCommand cmd = new SqlCommand(sql, conn))
                 {
-                    toggleState = (bool)cmd.ExecuteScalar();
+                    toggleState = (int)cmd.ExecuteScalar();
                 }
 
             }
 
-            int intState = (toggleState) ? 1 : 0;
+            int intState = toggleState;
 
             ViewBag.ToggleState = intState;
 
