@@ -8,6 +8,7 @@ using System.Web.Mvc;
 
 namespace EBS.Controllers
 {
+    [Authorize]
     public class ReportsController : Controller
     {
         private readonly string SecConn = ConfigurationManager.ConnectionStrings["SecConn"].ConnectionString;

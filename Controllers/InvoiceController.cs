@@ -15,7 +15,7 @@ using System.Web.Mvc;
 
 namespace EBS.Controllers
 {
-    //[Authorize]
+    [Authorize]
     public class InvoiceController : Controller
     {
         // This variable holds the balance so that it can be accessed in all methods

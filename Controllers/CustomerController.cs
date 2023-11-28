@@ -12,7 +12,7 @@ using System.Web.Mvc;
 
 namespace EBS.Controllers
 {
-    //[Authorize]
+    [Authorize]
     public class CustomerController : Controller
     {
 
